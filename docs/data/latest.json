@@ -1,6 +1,6 @@
 {
   "date": "2026-03-31",
-  "generated_at": "2026-03-31T05:27:18+00:00",
+  "generated_at": "2026-03-31T06:02:11+00:00",
   "trend_source": "https://newsnow.busiyi.world/api/s/entire",
   "star_repo_source": "stars_cache.json",
   "mode": "live-with-deterministic-ideas",
@@ -49,7 +49,7 @@
       "id": "coolapk",
       "name": "Coolapk",
       "status": "cache",
-      "item_count": 18
+      "item_count": 17
     },
     {
       "id": "douban",
@@ -85,7 +85,7 @@
       "id": "hupu",
       "name": "Hupu",
       "status": "cache",
-      "item_count": 30
+      "item_count": 19
     },
     {
       "id": "ifeng",
@@ -242,7 +242,7 @@
       "status": "cache",
       "title": "重磅消息！Apple 智能现已可以在国行设备上启用 #iOS26# #iPhone17ProMax# #AppleIntelligence#",
       "context": "",
-      "info": "124.2万热度 3.1万讨论",
+      "info": "125.7万热度 3.1万讨论",
       "url": "https://www.coolapk.com/feed/70973626"
     },
     {
@@ -282,7 +282,7 @@
       "status": "cache",
       "title": "microsoft /      VibeVoice",
       "context": "Open-Source Frontier Voice AI",
-      "info": "✰ 31,217",
+      "info": "✰ 31,343",
       "url": "https://github.com/microsoft/VibeVoice"
     },
     {
@@ -292,7 +292,7 @@
       "status": "cache",
       "title": "Axios compromised on NPM – Malicious versions drop remote access trojan",
       "context": "",
-      "info": "258 points",
+      "info": "321 points",
       "url": "https://news.ycombinator.com/item?id=47582220"
     },
     {
@@ -310,7 +310,7 @@
       "source_name": "Ifeng",
       "source_rank": 1,
       "status": "cache",
-      "title": "美以伊战争丨美军使用钻地弹袭击伊朗大型弹药库",
+      "title": "美以伊战争丨\"伊朗前领导人对特朗普撒谎，所以被杀\"",
       "context": "",
       "info": "",
       "url": "https://news.ifeng.com/loc/timeline/event/8r727OWpK5W"
@@ -418,7 +418,7 @@
           "html_url": "https://github.com/zubair-trabzada/geo-seo-claude",
           "category": "SEO & Marketing",
           "description": "GEO-first SEO skill for Claude Code. Comprehensive AI search optimization for any website — citability scoring, AI crawler analysis, brand authority, schema markup, platform-specific optimization, and PDF reports.  If you want learn how to sell this to real businesses, check out the skool community",
-          "stars": 4565,
+          "stars": 4567,
           "tags": []
         },
         {
@@ -426,7 +426,7 @@
           "html_url": "https://github.com/GEO-SEO/seo-geo-audit",
           "category": "SEO & Marketing",
           "description": "Professional SEO and GEO audit workflows for brands, SaaS teams, SEO operators, agencies, and AI-search growth teams.",
-          "stars": 125,
+          "stars": 126,
           "tags": []
         }
       ],
@@ -524,7 +524,7 @@
           "html_url": "https://github.com/mvanhorn/last30days-skill",
           "category": "Finance & Trading",
           "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
-          "stars": 16503,
+          "stars": 16545,
           "tags": [
             "ai-prompts",
             "ai-skill",
@@ -626,7 +626,7 @@
           "html_url": "https://github.com/hacksider/Deep-Live-Cam",
           "category": "AI Content & Media",
           "description": "real time face swap and one-click video deepfake with only a single image",
-          "stars": 86509,
+          "stars": 86576,
           "tags": [
             "ai",
             "ai-deep-fake",
@@ -652,7 +652,7 @@
           "html_url": "https://github.com/ruvnet/RuView",
           "category": "AI Content & Media",
           "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
-          "stars": 44751,
+          "stars": 44766,
           "tags": [
             "agentic-ai",
             "densepose",
@@ -669,7 +669,7 @@
           "status": "cache",
           "title": "重磅消息！Apple 智能现已可以在国行设备上启用 #iOS26# #iPhone17ProMax# #AppleIntelligence#",
           "context": "",
-          "info": "124.2万热度 3.1万讨论",
+          "info": "125.7万热度 3.1万讨论",
           "url": "https://www.coolapk.com/feed/70973626"
         }
       ],
@@ -733,7 +733,7 @@
           "html_url": "https://github.com/chenhg5/cc-connect",
           "category": "AI Coding Tools",
           "description": "Bridge local AI coding agents (Claude Code, Cursor, Gemini CLI, Codex) to messaging platforms (Feishu/Lark, DingTalk, Slack, Telegram, Discord, LINE, WeChat Work). Chat with your AI dev assistant from anywhere — no public IP required for most platforms.",
-          "stars": 3724,
+          "stars": 3746,
           "tags": []
         },
         {
@@ -741,7 +741,7 @@
           "html_url": "https://github.com/affaan-m/everything-claude-code",
           "category": "AI Coding Tools",
           "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-          "stars": 120676,
+          "stars": 121082,
           "tags": [
             "ai-agents",
             "anthropic",
@@ -754,7 +754,7 @@
           "html_url": "https://github.com/BloopAI/vibe-kanban",
           "category": "AI Coding Tools",
           "description": "Get 10X more out of Claude Code, Codex or any coding agent",
-          "stars": 24096,
+          "stars": 24098,
           "tags": [
             "agent",
             "ai-agents",
