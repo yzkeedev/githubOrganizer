@@ -1,6 +1,6 @@
 {
   "date": "2026-03-31",
-  "generated_at": "2026-03-31T06:02:11+00:00",
+  "generated_at": "2026-03-31T06:17:39+00:00",
   "trend_source": "https://newsnow.busiyi.world/api/s/entire",
   "star_repo_source": "stars_cache.json",
   "mode": "live-with-deterministic-ideas",
@@ -260,10 +260,10 @@
       "source_name": "Douyin",
       "source_rank": 1,
       "status": "cache",
-      "title": "苹果客服回应撤回国行AI",
+      "title": "国足vs喀麦隆",
       "context": "",
       "info": "",
-      "url": "https://www.douyin.com/hot/2449610"
+      "url": "https://www.douyin.com/hot/2449453"
     },
     {
       "source_id": "freebuf",
@@ -292,7 +292,7 @@
       "status": "cache",
       "title": "Axios compromised on NPM – Malicious versions drop remote access trojan",
       "context": "",
-      "info": "321 points",
+      "info": "388 points",
       "url": "https://news.ycombinator.com/item?id=47582220"
     },
     {
@@ -378,8 +378,8 @@
         "Generate audit briefs and outreach lists"
       ],
       "trends": [
-        "苹果客服回应撤回国行AI",
-        "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」"
+        "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
+        "microsoft /      VibeVoice"
       ],
       "repos": [
         "brightdata/geo-ai-agent",
@@ -418,7 +418,7 @@
           "html_url": "https://github.com/zubair-trabzada/geo-seo-claude",
           "category": "SEO & Marketing",
           "description": "GEO-first SEO skill for Claude Code. Comprehensive AI search optimization for any website — citability scoring, AI crawler analysis, brand authority, schema markup, platform-specific optimization, and PDF reports.  If you want learn how to sell this to real businesses, check out the skool community",
-          "stars": 4567,
+          "stars": 4569,
           "tags": []
         },
         {
@@ -432,16 +432,6 @@
       ],
       "trend_details": [
         {
-          "source_id": "douyin",
-          "source_name": "Douyin",
-          "source_rank": 1,
-          "status": "cache",
-          "title": "苹果客服回应撤回国行AI",
-          "context": "",
-          "info": "",
-          "url": "https://www.douyin.com/hot/2449610"
-        },
-        {
           "source_id": "freebuf",
           "source_name": "Freebuf",
           "source_rank": 1,
@@ -450,6 +440,16 @@
           "context": "3 月 25 日晚，Gitee CodePecker 举办「AI 重塑代码安全」线上发布会，正式发布新一代混合智能体代码安全审计平台「图智 ...",
           "info": "",
           "url": "https://www.freebuf.com/articles/475221.html"
+        },
+        {
+          "source_id": "github-trending-today",
+          "source_name": "Github Trending Today",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "microsoft /      VibeVoice",
+          "context": "Open-Source Frontier Voice AI",
+          "info": "✰ 31,343",
+          "url": "https://github.com/microsoft/VibeVoice"
         }
       ],
       "founder_memo": {
@@ -524,7 +524,7 @@
           "html_url": "https://github.com/mvanhorn/last30days-skill",
           "category": "Finance & Trading",
           "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
-          "stars": 16545,
+          "stars": 16553,
           "tags": [
             "ai-prompts",
             "ai-skill",
@@ -626,7 +626,7 @@
           "html_url": "https://github.com/hacksider/Deep-Live-Cam",
           "category": "AI Content & Media",
           "description": "real time face swap and one-click video deepfake with only a single image",
-          "stars": 86576,
+          "stars": 86591,
           "tags": [
             "ai",
             "ai-deep-fake",
@@ -652,7 +652,7 @@
           "html_url": "https://github.com/ruvnet/RuView",
           "category": "AI Content & Media",
           "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
-          "stars": 44766,
+          "stars": 44769,
           "tags": [
             "agentic-ai",
             "densepose",
@@ -706,8 +706,8 @@
         "Sell team dashboards and automations"
       ],
       "trends": [
-        "苹果客服回应撤回国行AI",
-        "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」"
+        "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
+        "microsoft /      VibeVoice"
       ],
       "repos": [
         "chenhg5/cc-connect",
@@ -733,7 +733,7 @@
           "html_url": "https://github.com/chenhg5/cc-connect",
           "category": "AI Coding Tools",
           "description": "Bridge local AI coding agents (Claude Code, Cursor, Gemini CLI, Codex) to messaging platforms (Feishu/Lark, DingTalk, Slack, Telegram, Discord, LINE, WeChat Work). Chat with your AI dev assistant from anywhere — no public IP required for most platforms.",
-          "stars": 3746,
+          "stars": 3748,
           "tags": []
         },
         {
@@ -741,7 +741,7 @@
           "html_url": "https://github.com/affaan-m/everything-claude-code",
           "category": "AI Coding Tools",
           "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-          "stars": 121082,
+          "stars": 121194,
           "tags": [
             "ai-agents",
             "anthropic",
@@ -754,7 +754,7 @@
           "html_url": "https://github.com/BloopAI/vibe-kanban",
           "category": "AI Coding Tools",
           "description": "Get 10X more out of Claude Code, Codex or any coding agent",
-          "stars": 24098,
+          "stars": 24099,
           "tags": [
             "agent",
             "ai-agents",
@@ -765,16 +765,6 @@
       ],
       "trend_details": [
         {
-          "source_id": "douyin",
-          "source_name": "Douyin",
-          "source_rank": 1,
-          "status": "cache",
-          "title": "苹果客服回应撤回国行AI",
-          "context": "",
-          "info": "",
-          "url": "https://www.douyin.com/hot/2449610"
-        },
-        {
           "source_id": "freebuf",
           "source_name": "Freebuf",
           "source_rank": 1,
@@ -783,6 +773,16 @@
           "context": "3 月 25 日晚，Gitee CodePecker 举办「AI 重塑代码安全」线上发布会，正式发布新一代混合智能体代码安全审计平台「图智 ...",
           "info": "",
           "url": "https://www.freebuf.com/articles/475221.html"
+        },
+        {
+          "source_id": "github-trending-today",
+          "source_name": "Github Trending Today",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "microsoft /      VibeVoice",
+          "context": "Open-Source Frontier Voice AI",
+          "info": "✰ 31,343",
+          "url": "https://github.com/microsoft/VibeVoice"
         }
       ],
       "founder_memo": {
