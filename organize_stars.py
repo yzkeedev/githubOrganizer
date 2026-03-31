@@ -15,8 +15,12 @@ from urllib import error, parse, request
 
 
 CATEGORIES = [
-    "AI & Agents",
-    "Web Scraping & Automation",
+    "AI Agents & Automation",
+    "AI Coding Tools",
+    "AI Models & Research",
+    "AI Content & Media",
+    "Web Scraping & Browser Automation",
+    "SEO & Marketing",
     "Web Development",
     "Developer Tools",
     "Data & Analytics",
@@ -24,14 +28,16 @@ CATEGORIES = [
     "Security & Privacy",
     "Design & UI",
     "Mobile & Desktop",
-    "Fun & Experimental",
+    "Finance & Trading",
     "Productivity",
+    "Fun & Experimental",
     "Other",
 ]
 
 BATCH_SIZE = 30
 LLM_TIMEOUT_SECONDS = 20
 LLM_WORKERS = 5
+TAXONOMY_VERSION = 3
 
 SYSTEM_PROMPT = """You categorize GitHub repositories into one primary category.
 Return strict JSON only with this shape:
@@ -40,7 +46,47 @@ Return strict JSON only with this shape:
   "tags": ["up to 4 short tags"]
 }
 Choose exactly one primary category from the provided list.
+Category guidance:
+- AI Agents & Automation: agent frameworks, orchestration, copilots, autonomous workflows, MCP-first assistants, AI bots.
+- AI Coding Tools: coding assistants, Claude Code/Codex/OpenCode tooling, code intelligence, dev workflows centered on AI coding.
+- AI Models & Research: model training, inference stacks, evals, RL, papers, research repos, model serving.
+- AI Content & Media: image, video, audio, voice, design, content generation with AI.
+- Web Scraping & Browser Automation: scraping, crawling, extraction, browser control, Playwright/Puppeteer/Selenium.
+- SEO & Marketing: SEO, GEO, search visibility, content audits, growth, marketing automation.
+- Finance & Trading: trading bots, valuation, market making, finance analytics.
+- Developer Tools: general developer utilities not primarily AI coding tools.
+- Web Development: websites, frontend, backend, full-stack apps not better matched elsewhere.
+- General CLI utilities, terminal UI kits, charting tools, editors, note tools, and docs search tools belong in Developer Tools or Productivity, not AI Agents.
+- If a repo mainly generates images, video, voice, logos, presentations, or media with AI, place it in AI Content & Media.
+- If a repo is about SEO/GEO, ranking, keywords, audits, distribution channels, or growth, place it in SEO & Marketing.
 Prefer concise, concrete labels and avoid markdown."""
+
+OPPORTUNITY_CLUSTERS = [
+    {
+        "name": "SEO Lead Engine",
+        "description": "Combine crawling, AI analysis, and SEO workflows into an audit or lead-gen product for websites.",
+        "categories": ["SEO & Marketing", "Web Scraping & Browser Automation", "AI Agents & Automation"],
+        "keywords": ["seo", "geo", "crawl", "scrap", "audit", "lead", "browser", "agent"],
+    },
+    {
+        "name": "AI Coding Workflow SaaS",
+        "description": "Combine coding agents, code intelligence, and developer tooling into a team productivity product.",
+        "categories": ["AI Coding Tools", "AI Agents & Automation", "Developer Tools"],
+        "keywords": ["claude code", "codex", "cursor", "code intelligence", "developer", "coding agent", "plugin", "cli"],
+    },
+    {
+        "name": "Content Repurposing Studio",
+        "description": "Combine media generation, marketing workflows, and web delivery into content production services or products.",
+        "categories": ["AI Content & Media", "SEO & Marketing", "Web Development"],
+        "keywords": ["content", "video", "image", "voice", "logo", "marketing", "landing", "media"],
+    },
+    {
+        "name": "Trading Intelligence Stack",
+        "description": "Combine trading engines, analytics, and agent automation into niche research or automation products.",
+        "categories": ["Finance & Trading", "Data & Analytics", "AI Agents & Automation"],
+        "keywords": ["trading", "quant", "market", "finance", "forecast", "analytics", "research", "agent"],
+    },
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -190,6 +236,7 @@ def build_classification_prompt(repos: list[dict[str, Any]]) -> str:
         "Return strict JSON only with this shape:\n"
         '{\n  "results": [\n    {\n      "full_name": "owner/repo",\n      "category": "one allowed category",\n'
         '      "tags": ["up to 4 short tags"]\n    }\n  ]\n}\n'
+        "Choose the single best category for each repository.\n"
         f"Repositories to classify:\n{json.dumps(metadata, ensure_ascii=False, indent=2)}"
     )
 
@@ -222,19 +269,53 @@ def fallback_classification(repo: dict[str, Any]) -> dict[str, Any]:
         ]
     ).lower()
     keyword_map = {
-        "AI & Agents": [
+        "AI Agents & Automation": [
             "ai",
-            "llm",
             "agent",
-            "anthropic",
-            "openai",
-            "copilot",
-            "rag",
-            "prompt",
             "mcp",
-            "model",
+            "assistant",
+            "autonomous",
+            "orchestration",
+            "workflow",
+            "copilot",
+            "multi-agent",
         ],
-        "Web Scraping & Automation": [
+        "AI Coding Tools": [
+            "claude code",
+            "codex",
+            "opencode",
+            "code intelligence",
+            "ai coding",
+            "developer agent",
+            "code review",
+            "codebase",
+        ],
+        "AI Models & Research": [
+            "llm",
+            "model",
+            "inference",
+            "training",
+            "fine-tuning",
+            "eval",
+            "benchmark",
+            "rl",
+            "reasoning",
+            "research",
+            "rag",
+        ],
+        "AI Content & Media": [
+            "image",
+            "video",
+            "audio",
+            "voice",
+            "music",
+            "logo",
+            "avatar",
+            "deepfake",
+            "content generator",
+            "audiobook",
+        ],
+        "Web Scraping & Browser Automation": [
             "scrap",
             "crawler",
             "crawl",
@@ -243,6 +324,21 @@ def fallback_classification(repo: dict[str, Any]) -> dict[str, Any]:
             "selenium",
             "automation",
             "puppeteer",
+            "extract",
+            "chrome",
+            "web data",
+        ],
+        "SEO & Marketing": [
+            "seo",
+            "geo",
+            "marketing",
+            "growth",
+            "content audit",
+            "search visibility",
+            "search engine",
+            "keyword",
+            "landing page",
+            "analytics seo",
         ],
         "Web Development": [
             "next.js",
@@ -271,6 +367,17 @@ def fallback_classification(repo: dict[str, Any]) -> dict[str, Any]:
             "pipeline",
             "etl",
             "dashboard",
+        ],
+        "Finance & Trading": [
+            "trading",
+            "arbitrage",
+            "polymarket",
+            "valuation",
+            "market maker",
+            "stock",
+            "finance",
+            "quant",
+            "dcf",
         ],
         "Infrastructure & DevOps": [
             "docker",
@@ -345,6 +452,40 @@ def fallback_classification(repo: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def apply_category_overrides(repo: dict[str, Any], classification: dict[str, Any]) -> dict[str, Any]:
+    text = " ".join(
+        [
+            repo.get("full_name", ""),
+            repo.get("description", ""),
+            repo.get("language", ""),
+            " ".join(repo.get("topics", [])),
+            repo.get("homepage", ""),
+        ]
+    ).lower()
+    category = classification.get("category") or "Other"
+
+    if any(keyword in text for keyword in ["awesome-list", "curated list", "collection of", "list of free apis", "public-apis/public-apis"]):
+        category = "Other"
+    elif any(keyword in text for keyword in ["seo", "geo", "keyword", "marketing", "growth", "early user", "search visibility"]):
+        category = "SEO & Marketing"
+    elif any(keyword in text for keyword in ["arbitrage", "polymarket", "trading", "quant", "valuation", "dcf", "market maker", "stock"]):
+        category = "Finance & Trading"
+    elif any(keyword in text for keyword in ["crawler", "scraper", "scraping", "playwright", "puppeteer", "selenium", "browser automation", "web extraction"]):
+        category = "Web Scraping & Browser Automation"
+    elif any(keyword in text for keyword in ["logo generator", "video", "voice", "audio", "image generation", "audiobook", "deepfake", "ppt", "presentation", "content generator"]):
+        category = "AI Content & Media"
+    elif any(keyword in text for keyword in ["claude code", "codex", "opencode", "cursor", "code intelligence", "coding agent", "code review", "agentic coding"]):
+        category = "AI Coding Tools"
+    elif any(keyword in text for keyword in ["terminal ui", "tui", "cli tool", "markdown editor", "plugin", "speed reader", "docs search", "search engine for your docs", "terminal charts", "chart cli"]):
+        category = "Developer Tools"
+    elif any(keyword in text for keyword in ["agent", "orchestrator", "assistant", "mcp", "autonomous", "coworker", "multi-agent", "workflow automation"]):
+        category = "AI Agents & Automation"
+
+    result = dict(classification)
+    result["category"] = category
+    return result
+
+
 def classify_with_llm(repos: list[dict[str, Any]], env: dict[str, str]) -> dict[str, dict[str, Any]]:
     base_url = env["ANTHROPIC_BASE_URL"].rstrip("/")
     endpoint = f"{base_url}/v1/messages"
@@ -414,7 +555,9 @@ def classify_repos(repos: list[dict[str, Any]], env: dict[str, str]) -> dict[str
         batch_results = batch_results_map.get(batch_index, {})
         for repo in batch:
             result = batch_results.get(repo["full_name"]) or fallback_classification(repo)
+            result = apply_category_overrides(repo, result)
             result["classified_at"] = utc_now()
+            result["taxonomy_version"] = TAXONOMY_VERSION
             if not result.get("summary"):
                 result["summary"] = repo["description"] or repo["full_name"]
             if not result.get("reason"):
@@ -425,6 +568,55 @@ def classify_repos(repos: list[dict[str, Any]], env: dict[str, str]) -> dict[str
 
 def markdown_escape(value: str) -> str:
     return value.replace("\n", " ").strip()
+
+
+def score_opportunity_repo(repo: dict[str, Any], cluster: dict[str, Any]) -> int:
+    text = " ".join(
+        [
+            repo.get("full_name", ""),
+            repo.get("description", ""),
+            repo.get("language", ""),
+            " ".join(repo.get("topics", [])),
+        ]
+    ).lower()
+    excluded_terms = [
+        "awesome",
+        "curated list",
+        "collection of",
+        "template",
+        "starter",
+        "boilerplate",
+        "public api",
+        "list of",
+    ]
+    if any(term in text for term in excluded_terms):
+        return -1
+    keyword_score = sum(1 for keyword in cluster.get("keywords", []) if keyword in text)
+    if keyword_score == 0:
+        return -1
+    category_bonus = 5 if repo["category"] == cluster["categories"][0] else 0
+    stars_bonus = min(repo["stargazers_count"] // 5000, 20)
+    return keyword_score * 10 + category_bonus + stars_bonus
+
+
+def build_opportunity_section(repos: list[dict[str, Any]]) -> list[str]:
+    lines = ["## Opportunity Clusters", ""]
+    for cluster in OPPORTUNITY_CLUSTERS:
+        cluster_repos = [repo for repo in repos if repo["category"] in cluster["categories"]]
+        scored_repos = [
+            (score_opportunity_repo(repo, cluster), repo)
+            for repo in cluster_repos
+        ]
+        ranked_repos = sorted(scored_repos, key=lambda item: (item[0], item[1]["stargazers_count"]), reverse=True)
+        top_repos = [repo for score, repo in ranked_repos if score >= 0][:5]
+        lines.append(f"### {cluster['name']}")
+        lines.append(cluster["description"])
+        lines.append(f"Focus categories: {', '.join(cluster['categories'])}")
+        if top_repos:
+            repo_links = ", ".join(f"[{repo['full_name']}]({repo['html_url']})" for repo in top_repos[:3])
+            lines.append(f"Starter repos: {repo_links}")
+        lines.append("")
+    return lines
 
 
 def render_readme(username: str, repos: list[dict[str, Any]], generated_at: str, new_count: int) -> str:
@@ -445,6 +637,7 @@ def render_readme(username: str, repos: list[dict[str, Any]], generated_at: str,
     for category in CATEGORIES:
         if counts.get(category):
             lines.append(f"| {category} | {counts[category]} |")
+    lines.extend([""] + build_opportunity_section(repos))
     for category in CATEGORIES:
         category_repos = [repo for repo in repos if repo["category"] == category]
         if not category_repos:
@@ -466,13 +659,14 @@ def render_readme(username: str, repos: list[dict[str, Any]], generated_at: str,
 
 
 def merge_cache_entry(repo: dict[str, Any], existing: dict[str, Any] | None) -> tuple[dict[str, Any], bool]:
-    if existing and existing.get("category") in CATEGORIES:
+    if existing and existing.get("category") in CATEGORIES and existing.get("taxonomy_version") == TAXONOMY_VERSION:
         classification = {
             "category": existing["category"],
             "tags": existing.get("tags") or [],
             "summary": existing.get("summary") or repo["description"] or repo["full_name"],
             "reason": existing.get("reason") or "Cached classification.",
             "classified_at": existing.get("classified_at") or utc_now(),
+            "taxonomy_version": existing.get("taxonomy_version") or TAXONOMY_VERSION,
         }
         is_new = False
     else:
@@ -493,18 +687,25 @@ def main() -> int:
     username = parse_username(args.target)
     env = read_minimax_env(config_path)
     github_token = os.environ.get(args.github_token_env) or env.get(args.github_token_env)
-
-    repos = fetch_starred_repositories(username, github_token)
     cache = load_json_file(cache_path, {"repos": {}})
     cached_repos = cache.get("repos", {}) if isinstance(cache, dict) else {}
     if not isinstance(cached_repos, dict):
         cached_repos = {}
 
+    fetch_warning = ""
+    try:
+        raw_repos = fetch_starred_repositories(username, github_token)
+        repos = [extract_repo_metadata(raw_repo) for raw_repo in raw_repos]
+    except Exception as exc:
+        if not cached_repos:
+            raise
+        fetch_warning = str(exc)
+        repos = [extract_repo_metadata(repo) for repo in cached_repos.values() if isinstance(repo, dict)]
+
     organized: list[dict[str, Any]] = []
     repos_to_classify: list[dict[str, Any]] = []
     new_count = 0
-    for raw_repo in repos:
-        repo = extract_repo_metadata(raw_repo)
+    for repo in repos:
         merged, is_new = merge_cache_entry(repo, cached_repos.get(repo["full_name"]))
         organized.append(merged)
         if is_new:
@@ -515,8 +716,9 @@ def main() -> int:
     for repo in organized:
         if repo.get("category") in CATEGORIES:
             continue
-        repo.update(classifications.get(repo["full_name"]) or fallback_classification(repo))
+        repo.update(apply_category_overrides(repo, classifications.get(repo["full_name"]) or fallback_classification(repo)))
         repo["classified_at"] = repo.get("classified_at") or utc_now()
+        repo["taxonomy_version"] = repo.get("taxonomy_version") or TAXONOMY_VERSION
 
     generated_at = utc_now()
     organized.sort(key=lambda item: (CATEGORIES.index(item["category"]), item["full_name"].lower()))
@@ -527,10 +729,13 @@ def main() -> int:
     cache_payload = {
         "generated_at": generated_at,
         "username": username,
+        "taxonomy_version": TAXONOMY_VERSION,
         "repos": {repo["full_name"]: repo for repo in organized},
     }
     save_json_file(cache_path, cache_payload)
 
+    if fetch_warning:
+        print(f"Warning: using cached repository data because live fetch failed: {fetch_warning}")
     print(f"Generated {readme_path}")
     print(f"Updated cache: {cache_path}")
     print(f"Repositories processed: {len(organized)}")
