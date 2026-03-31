@@ -1,0 +1,808 @@
+{
+  "date": "2026-03-31",
+  "generated_at": "2026-03-31T05:27:18+00:00",
+  "trend_source": "https://newsnow.busiyi.world/api/s/entire",
+  "star_repo_source": "stars_cache.json",
+  "mode": "live-with-deterministic-ideas",
+  "available_categories": [
+    "AI Coding Tools",
+    "AI Content & Media",
+    "Data & Analytics",
+    "Developer Tools",
+    "Finance & Trading",
+    "SEO & Marketing",
+    "Web Development",
+    "Web Scraping & Browser Automation"
+  ],
+  "source_health": [
+    {
+      "id": "36kr-renqi",
+      "name": "36kr Renqi",
+      "status": "cache",
+      "item_count": 20
+    },
+    {
+      "id": "baidu",
+      "name": "Baidu",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "bilibili-hot-search",
+      "name": "Bilibili HOT Search",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "chongbuluo-hot",
+      "name": "Chongbuluo HOT",
+      "status": "cache",
+      "item_count": 27
+    },
+    {
+      "id": "cls-hot",
+      "name": "CLS HOT",
+      "status": "cache",
+      "item_count": 13
+    },
+    {
+      "id": "coolapk",
+      "name": "Coolapk",
+      "status": "cache",
+      "item_count": 18
+    },
+    {
+      "id": "douban",
+      "name": "Douban",
+      "status": "cache",
+      "item_count": 20
+    },
+    {
+      "id": "douyin",
+      "name": "Douyin",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "freebuf",
+      "name": "Freebuf",
+      "status": "cache",
+      "item_count": 1
+    },
+    {
+      "id": "github-trending-today",
+      "name": "Github Trending Today",
+      "status": "cache",
+      "item_count": 10
+    },
+    {
+      "id": "hackernews",
+      "name": "Hackernews",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "hupu",
+      "name": "Hupu",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "ifeng",
+      "name": "Ifeng",
+      "status": "cache",
+      "item_count": 12
+    },
+    {
+      "id": "iqiyi-hot-ranklist",
+      "name": "Iqiyi HOT Ranklist",
+      "status": "cache",
+      "item_count": 25
+    },
+    {
+      "id": "juejin",
+      "name": "Juejin",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "nowcoder",
+      "name": "Nowcoder",
+      "status": "cache",
+      "item_count": 20
+    },
+    {
+      "id": "producthunt",
+      "name": "Producthunt",
+      "status": "cache",
+      "item_count": 20
+    },
+    {
+      "id": "qqvideo-tv-hotsearch",
+      "name": "Qqvideo TV Hotsearch",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "sspai",
+      "name": "Sspai",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "steam",
+      "name": "Steam",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "tencent-hot",
+      "name": "Tencent HOT",
+      "status": "cache",
+      "item_count": 16
+    },
+    {
+      "id": "thepaper",
+      "name": "Thepaper",
+      "status": "cache",
+      "item_count": 20
+    },
+    {
+      "id": "tieba",
+      "name": "Tieba",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "toutiao",
+      "name": "Toutiao",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "wallstreetcn-hot",
+      "name": "Wallstreetcn HOT",
+      "status": "cache",
+      "item_count": 10
+    },
+    {
+      "id": "weibo",
+      "name": "Weibo",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "xueqiu-hotstock",
+      "name": "Xueqiu Hotstock",
+      "status": "cache",
+      "item_count": 30
+    },
+    {
+      "id": "zhihu",
+      "name": "Zhihu",
+      "status": "cache",
+      "item_count": 20
+    }
+  ],
+  "trends": [
+    {
+      "source_id": "36kr-renqi",
+      "source_name": "36kr Renqi",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "8点1氪丨全国猪价跌破5元创历史新低；雀巢12吨巧克力被盗；起诉小米汽车的“老头乐”企业致歉",
+      "context": "卓创资讯监测全国瘦肉型生猪交易均价为9.71元/公斤，创历史新低。",
+      "info": "8点1氪  |  398.86热度",
+      "url": "https://36kr.com/p/3744669439508484"
+    },
+    {
+      "source_id": "baidu",
+      "source_name": "Baidu",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "浙江宣传：李白之争不能“又能怎”",
+      "context": "歌手单依纯未经授权演唱李荣浩代表作《李白》引发热议。单依纯致歉并愿担责，李荣浩回应“不需要”赔偿。事件折射出行业版权意识淡薄、违规成本低、责任链条断裂等痼疾。文章呼吁，尊重版权不能靠“又能怎”，必须让规则跑在热搜前面。​​​​",
+      "info": "",
+      "url": "https://www.baidu.com/s?wd=%E6%B5%99%E6%B1%9F%E5%AE%A3%E4%BC%A0%EF%BC%9A%E6%9D%8E%E7%99%BD%E4%B9%8B%E4%BA%89%E4%B8%8D%E8%83%BD%E2%80%9C%E5%8F%88%E8%83%BD%E6%80%8E%E2%80%9D"
+    },
+    {
+      "source_id": "bilibili-hot-search",
+      "source_name": "Bilibili HOT Search",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "张雪早年采访曝光",
+      "context": "",
+      "info": "",
+      "url": "https://search.bilibili.com/all?keyword=%E5%BC%A0%E9%9B%AA%E6%97%A9%E5%B9%B4%E9%87%87%E8%AE%BF%E6%9B%9D%E5%85%89"
+    },
+    {
+      "source_id": "chongbuluo-hot",
+      "source_name": "Chongbuluo HOT",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "最近逛论坛逛上瘾了，有没有推荐的论坛",
+      "context": "最近逛论坛逛上瘾了，有没有推荐的论坛",
+      "info": "",
+      "url": "https://www.chongbuluo.com/thread-24194-1-1.html"
+    },
+    {
+      "source_id": "cls-hot",
+      "source_name": "CLS HOT",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "【早报】法案通过！伊朗：拟对霍尔木兹海峡征收通行费；美油近四年来首次站上100美元",
+      "context": "",
+      "info": "",
+      "url": "https://www.cls.cn/detail/2329802"
+    },
+    {
+      "source_id": "coolapk",
+      "source_name": "Coolapk",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "重磅消息！Apple 智能现已可以在国行设备上启用 #iOS26# #iPhone17ProMax# #AppleIntelligence#",
+      "context": "",
+      "info": "124.2万热度 3.1万讨论",
+      "url": "https://www.coolapk.com/feed/70973626"
+    },
+    {
+      "source_id": "douban",
+      "source_name": "Douban",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "浴血黑帮：不朽传奇",
+      "context": "2026 / 英国 法国 美国 / 剧情 历史 犯罪 / 汤姆·哈伯 / 基里安·墨菲 丽贝卡·弗格森",
+      "info": "2026 / 英国 法国 美国 / 剧情 历史 犯罪",
+      "url": "https://movie.douban.com/subject/30382501"
+    },
+    {
+      "source_id": "douyin",
+      "source_name": "Douyin",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "苹果客服回应撤回国行AI",
+      "context": "",
+      "info": "",
+      "url": "https://www.douyin.com/hot/2449610"
+    },
+    {
+      "source_id": "freebuf",
+      "source_name": "Freebuf",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
+      "context": "3 月 25 日晚，Gitee CodePecker 举办「AI 重塑代码安全」线上发布会，正式发布新一代混合智能体代码安全审计平台「图智 ...",
+      "info": "",
+      "url": "https://www.freebuf.com/articles/475221.html"
+    },
+    {
+      "source_id": "github-trending-today",
+      "source_name": "Github Trending Today",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "microsoft /      VibeVoice",
+      "context": "Open-Source Frontier Voice AI",
+      "info": "✰ 31,217",
+      "url": "https://github.com/microsoft/VibeVoice"
+    },
+    {
+      "source_id": "hackernews",
+      "source_name": "Hackernews",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "Axios compromised on NPM – Malicious versions drop remote access trojan",
+      "context": "",
+      "info": "258 points",
+      "url": "https://news.ycombinator.com/item?id=47582220"
+    },
+    {
+      "source_id": "hupu",
+      "source_name": "Hupu",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "这主播也太良心了吧",
+      "context": "",
+      "info": "",
+      "url": "https://bbs.hupu.com/638167708.html"
+    },
+    {
+      "source_id": "ifeng",
+      "source_name": "Ifeng",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "美以伊战争丨美军使用钻地弹袭击伊朗大型弹药库",
+      "context": "",
+      "info": "",
+      "url": "https://news.ifeng.com/loc/timeline/event/8r727OWpK5W"
+    },
+    {
+      "source_id": "iqiyi-hot-ranklist",
+      "source_name": "Iqiyi HOT Ranklist",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "逐玉",
+      "context": "本剧讲述了屠户女樊长玉与落难侯爷谢征于风雪中宿命相逢，一个父母双亡要做女户主，一个隐姓埋名报十七年前血仇，二人“各有目的”地演出了一场假婚真爱！利用变成真爱，真爱却带来了血腥战事，相爱之人被迫分离。樊长玉拿着杀猪刀上战场，寻亲寻夫寻正义；谢征恢复铁血侯爷，护国护爱护真相！两人终于战场重逢，并肩搏杀，不畏生死；揭破真相，不惧威权；回归家园，不忘初心！",
+      "info": "先婚后爱烽火炼真情",
+      "url": "https://www.iqiyi.com/v_170ouizih30.html"
+    },
+    {
+      "source_id": "juejin",
+      "source_name": "Juejin",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "为什么全国人民都能秒开同一个视频？",
+      "context": "",
+      "info": "",
+      "url": "https://juejin.cn/post/7621753314950692870"
+    },
+    {
+      "source_id": "nowcoder",
+      "source_name": "Nowcoder",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "被笔试耽误了一天day16（为什么携程第三题始终是0呢",
+      "context": "",
+      "info": "",
+      "url": "https://www.nowcoder.com/feed/main/detail/4e32e59cee3c4c1f8e3f8807cfe3f455"
+    },
+    {
+      "source_id": "producthunt",
+      "source_name": "Producthunt",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "Stitch 2.0 by Google",
+      "context": "Vibe design beautiful production-ready UI in seconds",
+      "info": " △︎ 824",
+      "url": "https://www.producthunt.com/products/stitch-2-0-by-google-2?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+    },
+    {
+      "source_id": "qqvideo-tv-hotsearch",
+      "source_name": "Qqvideo TV Hotsearch",
+      "source_rank": 1,
+      "status": "cache",
+      "title": "白日提灯",
+      "context": "万灵之主 vs 少年将军",
+      "info": "",
+      "url": "https://v.qq.com/x/cover/mzc00200wm1zlyh.html"
+    }
+  ],
+  "ideas": [
+    {
+      "name": "Trend-to-SEO Audit Bot",
+      "summary": "Turn hot topics into landing-page audits and quick-win content briefs for indie brands.",
+      "why_now": "Search visibility keeps shifting toward AI-assisted discovery, and live trend changes create short windows for ranking and distribution.",
+      "revenue_model": "Monthly subscription for audit credits plus white-label agency reports.",
+      "build_plan": [
+        "Watch trend feeds",
+        "Crawl target sites",
+        "Generate audit briefs and outreach lists"
+      ],
+      "trends": [
+        "苹果客服回应撤回国行AI",
+        "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」"
+      ],
+      "repos": [
+        "brightdata/geo-ai-agent",
+        "zubair-trabzada/geo-seo-claude",
+        "GEO-SEO/seo-geo-audit"
+      ],
+      "category_focus": [
+        "SEO & Marketing",
+        "Web Scraping & Browser Automation"
+      ],
+      "confidence": "medium",
+      "trend_repo_match_score": 80,
+      "revenue_score": 92,
+      "niche_difficulty_score": 16,
+      "build_speed_score": 87,
+      "monetization_latency_score": 90,
+      "recurring_revenue_score": 54,
+      "founder_score": 81,
+      "opportunity_score": 85,
+      "repo_details": [
+        {
+          "full_name": "brightdata/geo-ai-agent",
+          "html_url": "https://github.com/brightdata/geo-ai-agent",
+          "category": "SEO & Marketing",
+          "description": "AI-powered tool to audit and optimize website content by crawling URLs, analyzing H1s, and generating actionable GEO recommendations with CrewAI.",
+          "stars": 149,
+          "tags": [
+            "agent",
+            "ai",
+            "brightdata",
+            "crewai"
+          ]
+        },
+        {
+          "full_name": "zubair-trabzada/geo-seo-claude",
+          "html_url": "https://github.com/zubair-trabzada/geo-seo-claude",
+          "category": "SEO & Marketing",
+          "description": "GEO-first SEO skill for Claude Code. Comprehensive AI search optimization for any website — citability scoring, AI crawler analysis, brand authority, schema markup, platform-specific optimization, and PDF reports.  If you want learn how to sell this to real businesses, check out the skool community",
+          "stars": 4565,
+          "tags": []
+        },
+        {
+          "full_name": "GEO-SEO/seo-geo-audit",
+          "html_url": "https://github.com/GEO-SEO/seo-geo-audit",
+          "category": "SEO & Marketing",
+          "description": "Professional SEO and GEO audit workflows for brands, SaaS teams, SEO operators, agencies, and AI-search growth teams.",
+          "stars": 125,
+          "tags": []
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "douyin",
+          "source_name": "Douyin",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "苹果客服回应撤回国行AI",
+          "context": "",
+          "info": "",
+          "url": "https://www.douyin.com/hot/2449610"
+        },
+        {
+          "source_id": "freebuf",
+          "source_name": "Freebuf",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
+          "context": "3 月 25 日晚，Gitee CodePecker 举办「AI 重塑代码安全」线上发布会，正式发布新一代混合智能体代码安全审计平台「图智 ...",
+          "info": "",
+          "url": "https://www.freebuf.com/articles/475221.html"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The pricing surface is visible from day one.",
+        "biggest_risk": "The business model risks looking one-off instead of compounding.",
+        "fastest_mvp": "Ship only the first wedge: Watch trend feeds.",
+        "first_customer": "Content platforms with moderation and rights risk",
+        "why_high": "The pricing surface is visible from day one. The score rises when it can ship, charge, and repeat without needing heavy scale.",
+        "why_low": "The business model risks looking one-off instead of compounding. Retention loop is weak, so monthly revenue is less certain.",
+        "top_penalties": [
+          "Retention loop is weak, so monthly revenue is less certain."
+        ],
+        "improve_next": [
+          "Add a recurring alert, report, or compliance loop so usage repeats monthly.",
+          "Swap one generic repo dependency for tooling that matches the active trend more directly."
+        ]
+      },
+      "build_decision": {
+        "label": "Build now",
+        "tone": "good",
+        "summary": "The pricing surface is visible from day one."
+      }
+    },
+    {
+      "name": "Market Pulse Research Terminal",
+      "summary": "Track retail market narratives and turn them into niche trading or business-intelligence alerts.",
+      "why_now": "Finance chatter and macro headlines move fast, and solo operators need opinionated tools instead of generic news dashboards.",
+      "revenue_model": "Paid newsletter, premium alerts, or analyst dashboards.",
+      "build_plan": [
+        "Monitor hot finance topics",
+        "Score market signals",
+        "Ship alerts and research summaries"
+      ],
+      "trends": [
+        "8点1氪丨全国猪价跌破5元创历史新低；雀巢12吨巧克力被盗；起诉小米汽车的“老头乐”企业致歉",
+        "浙江宣传：李白之争不能“又能怎”"
+      ],
+      "repos": [
+        "StockSharp/StockSharp",
+        "mvanhorn/last30days-skill",
+        "Jon-Becker/prediction-market-analysis"
+      ],
+      "category_focus": [
+        "Finance & Trading",
+        "Data & Analytics"
+      ],
+      "confidence": "medium",
+      "trend_repo_match_score": 70,
+      "revenue_score": 78,
+      "niche_difficulty_score": 52,
+      "build_speed_score": 74,
+      "monetization_latency_score": 66,
+      "recurring_revenue_score": 55,
+      "founder_score": 63,
+      "opportunity_score": 70,
+      "repo_details": [
+        {
+          "full_name": "StockSharp/StockSharp",
+          "html_url": "https://github.com/StockSharp/StockSharp",
+          "category": "Finance & Trading",
+          "description": "Algorithmic trading and quantitative trading open source platform to develop trading robots (stock markets, forex, crypto, bitcoins, and options).",
+          "stars": 9495,
+          "tags": [
+            "algorithmic-trading",
+            "algorithmic-trading-engine",
+            "backtesting",
+            "bitcoins"
+          ]
+        },
+        {
+          "full_name": "mvanhorn/last30days-skill",
+          "html_url": "https://github.com/mvanhorn/last30days-skill",
+          "category": "Finance & Trading",
+          "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
+          "stars": 16503,
+          "tags": [
+            "ai-prompts",
+            "ai-skill",
+            "bluesky",
+            "claude"
+          ]
+        },
+        {
+          "full_name": "Jon-Becker/prediction-market-analysis",
+          "html_url": "https://github.com/Jon-Becker/prediction-market-analysis",
+          "category": "Finance & Trading",
+          "description": "A framework for collecting and analyzing prediction market data, including the largest publicly available dataset of Polymarket and Kalshi market and trade data.",
+          "stars": 2460,
+          "tags": [
+            "data",
+            "data-science",
+            "datasets",
+            "kalshi"
+          ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "36kr-renqi",
+          "source_name": "36kr Renqi",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "8点1氪丨全国猪价跌破5元创历史新低；雀巢12吨巧克力被盗；起诉小米汽车的“老头乐”企业致歉",
+          "context": "卓创资讯监测全国瘦肉型生猪交易均价为9.71元/公斤，创历史新低。",
+          "info": "8点1氪  |  398.86热度",
+          "url": "https://36kr.com/p/3744669439508484"
+        },
+        {
+          "source_id": "baidu",
+          "source_name": "Baidu",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "浙江宣传：李白之争不能“又能怎”",
+          "context": "歌手单依纯未经授权演唱李荣浩代表作《李白》引发热议。单依纯致歉并愿担责，李荣浩回应“不需要”赔偿。事件折射出行业版权意识淡薄、违规成本低、责任链条断裂等痼疾。文章呼吁，尊重版权不能靠“又能怎”，必须让规则跑在热搜前面。​​​​",
+          "info": "",
+          "url": "https://www.baidu.com/s?wd=%E6%B5%99%E6%B1%9F%E5%AE%A3%E4%BC%A0%EF%BC%9A%E6%9D%8E%E7%99%BD%E4%B9%8B%E4%BA%89%E4%B8%8D%E8%83%BD%E2%80%9C%E5%8F%88%E8%83%BD%E6%80%8E%E2%80%9D"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The pricing surface is visible from day one.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "fastest_mvp": "Ship only the first wedge: Monitor hot finance topics.",
+        "first_customer": "Operators who react to live market or risk data",
+        "why_high": "The pricing surface is visible from day one. The score rises when it can ship, charge, and repeat without needing heavy scale.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. Retention loop is weak, so monthly revenue is less certain.",
+        "top_penalties": [
+          "Retention loop is weak, so monthly revenue is less certain."
+        ],
+        "improve_next": [
+          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
+          "Add a recurring alert, report, or compliance loop so usage repeats monthly."
+        ]
+      },
+      "build_decision": {
+        "label": "Build now",
+        "tone": "good",
+        "summary": "The pricing surface is visible from day one."
+      }
+    },
+    {
+      "name": "Viral Content Repurposer",
+      "summary": "Convert live hot topics into social assets, explainers, and landing pages for creators or micro-brands.",
+      "why_now": "Trend windows are short, and creators need fast production pipelines that package text, images, and pages together.",
+      "revenue_model": "Subscription for content packs or done-for-you service retainers.",
+      "build_plan": [
+        "Ingest trends",
+        "Generate media assets",
+        "Publish channel-ready packages"
+      ],
+      "trends": [
+        "重磅消息！Apple 智能现已可以在国行设备上启用 #iOS26# #iPhone17ProMax# #AppleIntelligence#"
+      ],
+      "repos": [
+        "hacksider/Deep-Live-Cam",
+        "Finrandojin/alexandria-audiobook",
+        "ruvnet/RuView"
+      ],
+      "category_focus": [
+        "AI Content & Media",
+        "Web Development"
+      ],
+      "confidence": "medium",
+      "trend_repo_match_score": 65,
+      "revenue_score": 60,
+      "niche_difficulty_score": 34,
+      "build_speed_score": 66,
+      "monetization_latency_score": 52,
+      "recurring_revenue_score": 62,
+      "founder_score": 62,
+      "opportunity_score": 62,
+      "repo_details": [
+        {
+          "full_name": "hacksider/Deep-Live-Cam",
+          "html_url": "https://github.com/hacksider/Deep-Live-Cam",
+          "category": "AI Content & Media",
+          "description": "real time face swap and one-click video deepfake with only a single image",
+          "stars": 86509,
+          "tags": [
+            "ai",
+            "ai-deep-fake",
+            "ai-face",
+            "ai-webcam"
+          ]
+        },
+        {
+          "full_name": "Finrandojin/alexandria-audiobook",
+          "html_url": "https://github.com/Finrandojin/alexandria-audiobook",
+          "category": "AI Content & Media",
+          "description": "AI-powered multi-voice audiobook generator — LLM script annotation, voice cloning, voice design, LoRA training, per-line style control, and export to MP3, chaptered M4B, or Audacity multi-track. Built on Qwen3-TTS.",
+          "stars": 475,
+          "tags": [
+            "ai",
+            "audiobook",
+            "audiobook-generator",
+            "audiobookshelf"
+          ]
+        },
+        {
+          "full_name": "ruvnet/RuView",
+          "html_url": "https://github.com/ruvnet/RuView",
+          "category": "AI Content & Media",
+          "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
+          "stars": 44751,
+          "tags": [
+            "agentic-ai",
+            "densepose",
+            "esp32",
+            "firmware"
+          ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "coolapk",
+          "source_name": "Coolapk",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "重磅消息！Apple 智能现已可以在国行设备上启用 #iOS26# #iPhone17ProMax# #AppleIntelligence#",
+          "context": "",
+          "info": "124.2万热度 3.1万讨论",
+          "url": "https://www.coolapk.com/feed/70973626"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "It looks shippable as a narrow first release.",
+        "biggest_risk": "Value may be obvious before willingness to pay is.",
+        "fastest_mvp": "Ship only the first wedge: Ingest trends.",
+        "first_customer": "Content platforms with moderation and rights risk",
+        "why_high": "It looks shippable as a narrow first release. The score rises when it can ship, charge, and repeat without needing heavy scale.",
+        "why_low": "Value may be obvious before willingness to pay is. Revenue likely arrives after proof, not at first contact.",
+        "top_penalties": [
+          "Revenue likely arrives after proof, not at first contact.",
+          "Packaging still needs a sharper buyer and price point."
+        ],
+        "improve_next": [
+          "Sell the first version as a done-for-you service before broadening into product.",
+          "Add a recurring alert, report, or compliance loop so usage repeats monthly."
+        ]
+      },
+      "build_decision": {
+        "label": "Validate first",
+        "tone": "caution",
+        "summary": "Value may be obvious before willingness to pay is."
+      }
+    },
+    {
+      "name": "AI Coding Ops Inbox",
+      "summary": "Bundle coding-agent workflows, remote alerts, and code intelligence into a lightweight team command center.",
+      "why_now": "Coding agents are spreading quickly, but teams still lack simple visibility and control over parallel AI work.",
+      "revenue_model": "Per-seat SaaS for agencies and small dev teams.",
+      "build_plan": [
+        "Connect agent tools",
+        "Track tasks and alerts",
+        "Sell team dashboards and automations"
+      ],
+      "trends": [
+        "苹果客服回应撤回国行AI",
+        "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」"
+      ],
+      "repos": [
+        "chenhg5/cc-connect",
+        "affaan-m/everything-claude-code",
+        "BloopAI/vibe-kanban"
+      ],
+      "category_focus": [
+        "AI Coding Tools",
+        "Developer Tools"
+      ],
+      "confidence": "medium",
+      "trend_repo_match_score": 80,
+      "revenue_score": 82,
+      "niche_difficulty_score": 50,
+      "build_speed_score": 60,
+      "monetization_latency_score": 58,
+      "recurring_revenue_score": 62,
+      "founder_score": 61,
+      "opportunity_score": 73,
+      "repo_details": [
+        {
+          "full_name": "chenhg5/cc-connect",
+          "html_url": "https://github.com/chenhg5/cc-connect",
+          "category": "AI Coding Tools",
+          "description": "Bridge local AI coding agents (Claude Code, Cursor, Gemini CLI, Codex) to messaging platforms (Feishu/Lark, DingTalk, Slack, Telegram, Discord, LINE, WeChat Work). Chat with your AI dev assistant from anywhere — no public IP required for most platforms.",
+          "stars": 3724,
+          "tags": []
+        },
+        {
+          "full_name": "affaan-m/everything-claude-code",
+          "html_url": "https://github.com/affaan-m/everything-claude-code",
+          "category": "AI Coding Tools",
+          "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+          "stars": 120676,
+          "tags": [
+            "ai-agents",
+            "anthropic",
+            "claude",
+            "claude-code"
+          ]
+        },
+        {
+          "full_name": "BloopAI/vibe-kanban",
+          "html_url": "https://github.com/BloopAI/vibe-kanban",
+          "category": "AI Coding Tools",
+          "description": "Get 10X more out of Claude Code, Codex or any coding agent",
+          "stars": 24096,
+          "tags": [
+            "agent",
+            "ai-agents",
+            "kanban",
+            "management"
+          ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "douyin",
+          "source_name": "Douyin",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "苹果客服回应撤回国行AI",
+          "context": "",
+          "info": "",
+          "url": "https://www.douyin.com/hot/2449610"
+        },
+        {
+          "source_id": "freebuf",
+          "source_name": "Freebuf",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
+          "context": "3 月 25 日晚，Gitee CodePecker 举办「AI 重塑代码安全」线上发布会，正式发布新一代混合智能体代码安全审计平台「图智 ...",
+          "info": "",
+          "url": "https://www.freebuf.com/articles/475221.html"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The pricing surface is visible from day one.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "fastest_mvp": "Ship only the first wedge: Connect agent tools.",
+        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "why_high": "The pricing surface is visible from day one. The score rises when it can ship, charge, and repeat without needing heavy scale.",
+        "why_low": "The niche carries trust, workflow, or compliance weight.",
+        "top_penalties": [],
+        "improve_next": [
+          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
+          "Sell the first version as a done-for-you service before broadening into product."
+        ]
+      },
+      "build_decision": {
+        "label": "Validate first",
+        "tone": "caution",
+        "summary": "The niche carries trust, workflow, or compliance weight."
+      }
+    }
+  ]
+}

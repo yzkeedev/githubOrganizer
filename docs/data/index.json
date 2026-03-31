@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-03-31T05:27:18+00:00",
+  "latest": "2026-03-31",
+  "reports": [
+    {
+      "date": "2026-03-31",
+      "generated_at": "2026-03-31T05:27:18+00:00",
+      "mode": "live-with-deterministic-ideas",
+      "idea_count": 4,
+      "trend_count": 18,
+      "path": "data/reports/2026-03-31.json",
+      "top_idea": "Trend-to-SEO Audit Bot",
+      "top_revenue_score": 92,
+      "top_founder_score": 81
+    }
+  ]
+}

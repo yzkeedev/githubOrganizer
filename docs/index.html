@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Opportunity Radar</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-copy">
+        <h1>Opportunity Radar</h1>
+        <p class="subtitle">A quiet daily pulse for trends worth building on.</p>
+      </div>
+      <div class="hero-meta">
+        <div class="meta-block">
+          <span class="meta-label">Mode</span>
+          <strong id="mode-pill">Loading</strong>
+        </div>
+        <div class="meta-block">
+          <span class="meta-label">Date</span>
+          <strong id="date-pill">--</strong>
+        </div>
+      </div>
+    </header>
+
+    <section class="toolbar">
+      <label class="control">
+        <span>Report Date</span>
+        <select id="report-select"></select>
+      </label>
+      <label class="control">
+        <span>Category</span>
+        <select id="category-filter"></select>
+      </label>
+      <label class="control">
+        <span>Sort By</span>
+        <select id="sort-select">
+          <option value="founder">Founder score</option>
+          <option value="opportunity">Overall signal</option>
+          <option value="revenue">Revenue potential</option>
+          <option value="match">Trend fit</option>
+        </select>
+      </label>
+      <a class="button" id="markdown-link" href="../opportunities/" target="_blank" rel="noreferrer">Open report</a>
+    </section>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="comparison panel">
+      <div class="panel-header">
+        <h2>Change Since Previous Day</h2>
+        <span id="comparison-label">Waiting for history</span>
+      </div>
+      <div id="comparison-grid" class="comparison-grid"></div>
+    </section>
+
+    <section class="layout">
+      <div class="panel ideas-panel">
+        <div class="panel-header">
+          <h2>Project Ideas</h2>
+          <span id="idea-count"></span>
+        </div>
+        <div id="ideas-list" class="stack"></div>
+      </div>
+
+      <aside class="rail">
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Best Founder Bets</h2>
+            <span id="ranking-label"></span>
+          </div>
+          <div id="ranking-list" class="stack"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Trend Snapshot</h2>
+            <span id="trend-count"></span>
+          </div>
+          <div id="trends-list" class="stack compact"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Source Health</h2>
+            <span id="source-count"></span>
+          </div>
+          <div id="source-health" class="source-grid"></div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="panel-header">
+        <h2>History</h2>
+        <span id="history-count"></span>
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </section>
+  </div>
+
+  <template id="empty-card-template">
+    <article class="empty-card">
+      <h3></h3>
+      <p class="copy"></p>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
