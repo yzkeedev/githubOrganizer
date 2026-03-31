@@ -115,7 +115,7 @@ h1 {
 }
 
 .toolbar {
-  grid-template-columns: repeat(3, minmax(0, 220px)) auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
   align-items: end;
   margin-bottom: 18px;
 }
@@ -140,10 +140,11 @@ select,
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .stats {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   margin-bottom: 18px;
 }
 
@@ -165,7 +166,8 @@ select,
 .panel-header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 16px;
 }
