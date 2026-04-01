@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Opportunity Radar</title>
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -43,62 +44,105 @@
           <option value="match">Trend fit</option>
         </select>
       </label>
-      <a class="button" id="markdown-link" href="../opportunities/" target="_blank" rel="noreferrer">Open report</a>
+      <a class="button button-quiet" id="markdown-link" href="../opportunities/" target="_blank" rel="noreferrer">Open report</a>
     </section>
 
     <section class="stats" id="stats"></section>
 
-    <section class="comparison panel">
-      <div class="panel-header">
-        <h2>Change Since Previous Day</h2>
-        <span id="comparison-label">Waiting for history</span>
-      </div>
-      <div id="comparison-grid" class="comparison-grid"></div>
-    </section>
-
     <section class="layout">
-      <div class="panel ideas-panel">
+      <aside class="panel collection-sidebar">
         <div class="panel-header">
-          <h2>Project Ideas</h2>
-          <span id="idea-count"></span>
+          <h2>Collection</h2>
+          <span id="collection-count">Loading collection</span>
         </div>
-        <div id="ideas-list" class="stack"></div>
+        <div class="collection-toolbar">
+          <label class="control control-search">
+            <span>Search</span>
+            <input id="collection-search" type="search" placeholder="Search titles, trends, repos">
+          </label>
+          <div class="collection-toolbar-row">
+            <label class="control">
+              <span>Date</span>
+              <select id="collection-date-filter"></select>
+            </label>
+            <label class="control">
+              <span>Sort</span>
+              <select id="collection-sort">
+                <option value="momentum">Momentum</option>
+                <option value="latest">Latest first</option>
+                <option value="founder">Founder score</option>
+                <option value="revenue">Revenue score</option>
+                <option value="name">Name</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <details class="sidebar-disclosure">
+          <summary>
+            <span>Collection stats</span>
+            <span class="disclosure-hint">Optional</span>
+          </summary>
+          <div class="collection-stats" id="collection-stats"></div>
+        </details>
+        <div id="collection-nav" class="collection-nav"></div>
+      </aside>
+
+      <div class="main-column">
+        <section class="panel collection-detail-panel">
+          <div class="panel-header">
+            <h2>Selected Collection</h2>
+            <span id="collection-selection-label">Choose a title</span>
+          </div>
+          <div id="collection-detail"></div>
+        </section>
+
+        <details class="panel disclosure-panel ideas-panel">
+          <summary>
+            <div class="panel-header">
+              <h2>Daily Ideas</h2>
+              <span id="idea-count"></span>
+            </div>
+          </summary>
+          <div id="ideas-list" class="stack"></div>
+        </details>
       </div>
 
       <aside class="rail">
-        <section class="panel">
+        <section class="panel rail-panel">
           <div class="panel-header">
-            <h2>Best Founder Bets</h2>
-            <span id="ranking-label"></span>
+            <h2>Signals</h2>
+            <span id="rail-label">Founder bets</span>
           </div>
-          <div id="ranking-list" class="stack"></div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-header">
-            <h2>Trend Snapshot</h2>
-            <span id="trend-count"></span>
+          <div class="tabs" id="rail-tabs">
+            <button class="tab-button is-active" type="button" data-tab="ranking">Bets</button>
+            <button class="tab-button" type="button" data-tab="trends">Trends</button>
+            <button class="tab-button" type="button" data-tab="sources">Sources</button>
           </div>
-          <div id="trends-list" class="stack compact"></div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-header">
-            <h2>Source Health</h2>
-            <span id="source-count"></span>
+          <div class="tab-panel is-active" data-panel="ranking">
+            <div class="subtle-meta" id="ranking-label"></div>
+            <div id="ranking-list" class="stack"></div>
           </div>
-          <div id="source-health" class="source-grid"></div>
+          <div class="tab-panel" data-panel="trends">
+            <div class="subtle-meta" id="trend-count"></div>
+            <div id="trends-list" class="stack compact"></div>
+          </div>
+          <div class="tab-panel" data-panel="sources">
+            <div class="subtle-meta" id="source-count"></div>
+            <div id="source-health" class="source-grid"></div>
+          </div>
         </section>
       </aside>
     </section>
 
-    <section class="panel history-panel">
-      <div class="panel-header">
-        <h2>History</h2>
-        <span id="history-count"></span>
-      </div>
+    <details class="panel disclosure-panel history-panel">
+      <summary class="disclosure-summary">
+        <div class="panel-header">
+          <h2>History</h2>
+          <span id="history-count"></span>
+        </div>
+      </summary>
       <div id="history-list" class="history-list"></div>
-    </section>
+    </details>
   </div>
 
   <template id="empty-card-template">

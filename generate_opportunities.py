@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
+from itertools import combinations
 from pathlib import Path
 from typing import Any
 
@@ -53,6 +55,62 @@ REPO_THEMES = [
     {"keywords": ["video", "voice", "audio", "image", "content", "logo"], "limit": 4},
     {"keywords": ["trading", "quant", "finance", "market", "stock", "polymarket"], "limit": 4},
 ]
+CREATIVE_ANGLES = [
+    {
+        "label": "Underserved workflow",
+        "directive": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed.",
+        "audiences": ["micro-agencies", "solo operators", "community managers", "vertical consultants"],
+        "formats": ["desk", "copilot", "radar", "inbox"],
+    },
+    {
+        "label": "Contrarian infrastructure",
+        "directive": "Ignore the obvious AI wrapper and build the picks-and-shovels workflow around a fast-moving trend.",
+        "audiences": ["ops teams", "analysts", "compliance leads", "market researchers"],
+        "formats": ["watchtower", "console", "ledger", "monitor"],
+    },
+    {
+        "label": "Trend-to-service",
+        "directive": "Turn public trend noise into a done-for-you or productized service that can sell quickly.",
+        "audiences": ["freelancers", "boutique studios", "niche agencies", "operators with outbound motion"],
+        "formats": ["studio", "briefing", "engine", "pipeline"],
+    },
+    {
+        "label": "Operational moat",
+        "directive": "Prefer sticky recurring workflows with proprietary data loops, alerts, or human-in-the-loop review.",
+        "audiences": ["research teams", "sales ops", "founder-led SaaS teams", "ecommerce operators"],
+        "formats": ["command", "ops", "hub", "tracker"],
+    },
+    {
+        "label": "Cross-category remix",
+        "directive": "Combine distant repository categories so the idea feels novel instead of incremental.",
+        "audiences": ["indie hackers", "spec builders", "small software studios", "technical operators"],
+        "formats": ["lab", "forge", "switchboard", "navigator"],
+    },
+    {
+        "label": "Short-window demand",
+        "directive": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP.",
+        "audiences": ["publishers", "growth teams", "traders", "trend chasers"],
+        "formats": ["alert", "pulse", "sprint", "scanner"],
+    },
+]
+FALLBACK_PREFIXES = ["Signal", "Quiet", "Vector", "Backchannel", "Niche", "Drift", "Atlas", "Pulse", "Relay", "Frontier"]
+FALLBACK_SUFFIXES = ["Desk", "Radar", "Forge", "Watch", "Studio", "Console", "Pilot", "Inbox", "Engine", "Atlas"]
+CATEGORY_ALIASES = {
+    "SEO & Marketing": "SEO",
+    "Web Scraping & Browser Automation": "Crawler",
+    "AI Agents & Automation": "Agent",
+    "AI Coding Tools": "Code",
+    "AI Content & Media": "Media",
+    "Developer Tools": "Dev",
+    "Data & Analytics": "Data",
+    "Finance & Trading": "Market",
+    "Web Development": "Web",
+    "Security & Privacy": "Trust",
+    "Infrastructure & DevOps": "Infra",
+    "Design & UI": "Design",
+    "Productivity": "Ops",
+    "Mobile & Desktop": "Mobile",
+}
 OPPORTUNITY_SYSTEM_PROMPT = """You turn current trend/news signals and a user's starred GitHub repositories into concrete small product opportunities.
 Return strict JSON only with this shape:
 {
@@ -71,12 +129,18 @@ Return strict JSON only with this shape:
   ]
 }
 Rules:
-- Return 4 ideas.
+- Return 6 ideas.
 - Each idea must use at least 2 repositories and at least 1 trend.
+- Treat the NewsNow trend list as today's ground truth. The ideas should feel triggered by today's news cycle, not generic evergreen SaaS prompts.
+- At least 4 of the 6 ideas must be explicitly anchored to the top/headline NewsNow trends provided in the prompt.
+- Every why_now must explain what changed in today's NewsNow signals and why that creates a timely wedge right now.
 - Optimize for fast launch, leverage, and practical passive or semi-passive revenue.
 - Prefer products, data services, workflow tools, audits, monitoring, marketplaces, or niche B2B utilities.
 - Use only repository names and trend titles that appear in the provided input.
-- Keep language concrete and non-hype."""
+- Keep language concrete and non-hype.
+- Avoid repeating or lightly rewording recent idea names, audiences, and value propositions from the supplied recent-history block.
+- Make at least 2 ideas noticeably contrarian or unexpected versus the obvious use case.
+- Prefer ideas that convert breaking topics into monitoring, verification, lead-gen, compliance, research, workflow, alerting, or internal tooling products for a narrow user."""
 
 
 def parse_args() -> argparse.Namespace:
@@ -128,6 +192,448 @@ def slugify(value: str) -> str:
     return value.strip("-") or "trend"
 
 
+def stable_hash_int(*parts: str) -> int:
+    joined = "||".join(parts)
+    return int(hashlib.sha256(joined.encode("utf-8")).hexdigest(), 16)
+
+
+def normalize_idea_name(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", str(value).lower()).strip()
+
+
+def idea_text_tokens(*parts: str) -> set[str]:
+    tokens = re.findall(r"[a-z0-9][a-z0-9\-\+]{2,}", " ".join(parts).lower())
+    stop_words = {
+        "and",
+        "are",
+        "but",
+        "can",
+        "for",
+        "with",
+        "from",
+        "help",
+        "into",
+        "that",
+        "this",
+        "your",
+        "their",
+        "about",
+        "there",
+        "which",
+        "while",
+        "where",
+        "daily",
+        "today",
+        "turn",
+        "using",
+        "build",
+        "launch",
+        "trend",
+        "trends",
+        "ideas",
+        "idea",
+        "project",
+        "projects",
+        "repo",
+        "repos",
+    }
+    return {token for token in tokens if token not in stop_words}
+
+
+def canonical_semantic_token(token: str) -> str:
+    normalized = str(token).lower().strip()
+    if normalized.endswith("ies") and len(normalized) > 4:
+        normalized = f"{normalized[:-3]}y"
+    elif normalized.endswith("s") and len(normalized) > 4 and not normalized.endswith("ss"):
+        normalized = normalized[:-1]
+    aliases = {
+        "ops": "operator",
+        "operator": "operator",
+        "team": "team",
+        "lead": "lead",
+        "agency": "agency",
+        "founder": "founder",
+        "builder": "founder",
+        "creator": "creator",
+        "researcher": "research",
+        "research": "research",
+        "marketer": "marketing",
+        "marketing": "marketing",
+        "seller": "sales",
+        "sale": "sales",
+        "developer": "developer",
+        "dev": "developer",
+        "engineer": "developer",
+        "operators": "operator",
+        "founders": "founder",
+        "builders": "founder",
+        "developers": "developer",
+        "engineers": "developer",
+        "workflows": "workflow",
+        "pipeline": "workflow",
+        "pipelines": "workflow",
+        "engine": "workflow",
+        "automation": "workflow",
+        "orchestration": "workflow",
+        "monitoring": "monitor",
+        "watch": "monitor",
+        "watchtower": "monitor",
+        "radar": "monitor",
+        "tracker": "monitor",
+        "tracking": "monitor",
+        "monitor": "monitor",
+        "alerts": "alert",
+        "desk": "workspace",
+        "console": "workspace",
+        "studio": "workspace",
+        "cockpit": "workspace",
+        "portal": "workspace",
+        "dashboard": "workspace",
+        "hub": "workspace",
+        "pilot": "workspace",
+        "briefing": "brief",
+        "brief": "brief",
+        "report": "brief",
+        "digest": "brief",
+        "memo": "brief",
+        "ledger": "review",
+        "audit": "review",
+        "review": "review",
+        "validation": "review",
+        "validator": "review",
+        "signal": "signal",
+        "signals": "signal",
+        "infra": "infrastructure",
+        "devops": "infrastructure",
+        "mobiles": "mobile",
+        "desktops": "desktop",
+        "agentic": "agent",
+        "analytics": "analytics",
+    }
+    return aliases.get(normalized, normalized)
+
+
+def overlap_score(left: set[str], right: set[str]) -> float:
+    if not left or not right:
+        return 0.0
+    return len(left & right) / max(len(left | right), 1)
+
+
+def audience_tokens_for_idea(idea: dict[str, Any]) -> set[str]:
+    summary = str(idea.get("summary") or "")
+    revenue_model = str(idea.get("revenue_model") or "")
+    matches: list[str] = []
+    for text, pattern in [
+        (summary, r"help\s+(.+?)\s+turn\s"),
+        (revenue_model, r"for\s+(.+?)(?:[.,;]|$)"),
+    ]:
+        result = re.search(pattern, text, re.IGNORECASE)
+        if result:
+            matches.append(result.group(1))
+    allowed_tokens = {
+        "agency",
+        "analyst",
+        "builder",
+        "compliance",
+        "content",
+        "creator",
+        "customer",
+        "developer",
+        "engineer",
+        "finance",
+        "founder",
+        "freelancer",
+        "growth",
+        "lead",
+        "market",
+        "marketing",
+        "motion",
+        "niche",
+        "operator",
+        "outbound",
+        "product",
+        "research",
+        "sales",
+        "security",
+        "team",
+        "trader",
+    }
+    tokens = {
+        canonical_semantic_token(token)
+        for token in idea_text_tokens(*matches)
+        if canonical_semantic_token(token) in allowed_tokens
+    }
+    return {token for token in tokens if token}
+
+
+def workflow_tokens_for_idea(idea: dict[str, Any]) -> set[str]:
+    workflow_aliases = {
+        "workflow",
+        "monitor",
+        "alert",
+        "workspace",
+        "brief",
+        "review",
+        "signal",
+        "agent",
+        "automation",
+    }
+    text = " ".join(
+        [
+            str(idea.get("name") or ""),
+            str(idea.get("summary") or ""),
+            str(idea.get("why_now") or ""),
+            str(idea.get("revenue_model") or ""),
+            " ".join(str(step) for step in idea.get("build_plan", [])),
+        ]
+    )
+    tokens = {
+        canonical_semantic_token(token)
+        for token in keyword_tokens(text)
+        if canonical_semantic_token(token) in workflow_aliases
+    }
+    if "workflow" in tokens and "automation" not in tokens:
+        tokens.add("automation")
+    return tokens
+
+
+def category_tokens_for_idea(idea: dict[str, Any]) -> set[str]:
+    tokens: set[str] = set()
+    for category in idea.get("category_focus", []) if isinstance(idea.get("category_focus"), list) else []:
+        label = str(category).strip()
+        if not label:
+            continue
+        tokens.add(f"cat:{slugify(label)}")
+        tokens.update(f"cat:{canonical_semantic_token(token)}" for token in keyword_tokens(label))
+    return tokens
+
+
+def repo_tokens_for_idea(idea: dict[str, Any]) -> set[str]:
+    tokens: set[str] = set()
+    for repo_name in idea.get("repos", []) if isinstance(idea.get("repos"), list) else []:
+        normalized = str(repo_name).strip().lower()
+        if not normalized:
+            continue
+        tokens.add(f"repo:{normalized}")
+        if "/" in normalized:
+            _, short_name = normalized.split("/", 1)
+            tokens.add(f"repo:{short_name}")
+    return tokens
+
+
+def semantic_text_tokens_for_idea(idea: dict[str, Any]) -> set[str]:
+    trend_tokens = idea_text_tokens(" ".join(str(item) for item in idea.get("trends", []) if isinstance(item, str)))
+    tokens = {
+        canonical_semantic_token(token)
+        for token in keyword_tokens(
+            " ".join(
+                [
+                    str(idea.get("name") or ""),
+                    str(idea.get("summary") or ""),
+                    str(idea.get("why_now") or ""),
+                    str(idea.get("revenue_model") or ""),
+                    " ".join(str(step) for step in idea.get("build_plan", [])),
+                ]
+            )
+        )
+        if canonical_semantic_token(token)
+        not in {
+            "and",
+            "repeatable",
+            "narrow",
+            "focus",
+            "broad",
+            "can",
+            "charge",
+            "connect",
+            "create",
+            "creates",
+            "customer",
+            "easier",
+            "help",
+            "price",
+            "pricing",
+            "market",
+            "trend",
+            "window",
+            "demand",
+            "monthly",
+            "subscription",
+            "setup",
+            "ship",
+            "tool",
+            "tooling",
+            "turn",
+            "review",
+            "service",
+            "operator",
+            "team",
+            "lead",
+            "agency",
+            "founder",
+            "research",
+        }
+        and token not in trend_tokens
+    }
+    return {token for token in tokens if token}
+
+
+def build_semantic_profile(idea: dict[str, Any]) -> dict[str, set[str]]:
+    return {
+        "categories": category_tokens_for_idea(idea),
+        "audience": audience_tokens_for_idea(idea),
+        "workflows": workflow_tokens_for_idea(idea),
+        "repos": repo_tokens_for_idea(idea),
+        "tokens": semantic_text_tokens_for_idea(idea),
+    }
+
+
+def semantic_signature(idea: dict[str, Any]) -> str:
+    profile = build_semantic_profile(idea)
+    parts = [
+        "c:" + ",".join(sorted(profile["categories"])),
+        "a:" + ",".join(sorted(profile["audience"])),
+        "w:" + ",".join(sorted(profile["workflows"])),
+        "t:" + ",".join(sorted(profile["tokens"])[:6]),
+    ]
+    return " | ".join(part for part in parts if not part.endswith(":"))
+
+
+def idea_similarity_score(left: dict[str, Any], right: dict[str, Any]) -> float:
+    left_name = normalize_idea_name(left.get("name", ""))
+    right_name = normalize_idea_name(right.get("name", ""))
+    if left_name and left_name == right_name:
+        return 1.0
+    left_profile = build_semantic_profile(left)
+    right_profile = build_semantic_profile(right)
+    category_score = overlap_score(left_profile["categories"], right_profile["categories"])
+    audience_score = overlap_score(left_profile["audience"], right_profile["audience"])
+    workflow_score = overlap_score(left_profile["workflows"], right_profile["workflows"])
+    repo_score = overlap_score(left_profile["repos"], right_profile["repos"])
+    token_score = overlap_score(left_profile["tokens"], right_profile["tokens"])
+    score = (
+        category_score * 0.34
+        + audience_score * 0.22
+        + workflow_score * 0.18
+        + repo_score * 0.12
+        + token_score * 0.14
+    )
+    if category_score >= 1.0 and audience_score >= 0.5 and workflow_score >= 0.5:
+        score = max(score, 0.82)
+    if category_score >= 1.0 and workflow_score >= 1.0 and token_score >= 0.25:
+        score = max(score, 0.76)
+    if repo_score >= 1.0 and workflow_score >= 0.5:
+        score = max(score, 0.72)
+    return score
+
+
+def load_recent_idea_snapshots(reports_dir: Path, limit: int = 18) -> list[dict[str, Any]]:
+    if not reports_dir.exists():
+        return []
+    snapshots: list[dict[str, Any]] = []
+    for file_path in sorted(reports_dir.glob("*.json"), reverse=True):
+        report_payload = load_json_file(file_path, {})
+        if not isinstance(report_payload, dict):
+            continue
+        for idea in report_payload.get("ideas", []) if isinstance(report_payload.get("ideas"), list) else []:
+            if not isinstance(idea, dict):
+                continue
+            snapshots.append(
+                {
+                    "date": str(report_payload.get("date") or file_path.stem),
+                    "name": str(idea.get("name") or "").strip(),
+                    "summary": str(idea.get("summary") or "").strip(),
+                            "why_now": str(idea.get("why_now") or "").strip(),
+                            "revenue_model": str(idea.get("revenue_model") or "").strip(),
+                            "build_plan": [str(step) for step in idea.get("build_plan", []) if isinstance(step, str)],
+                    "repos": [str(name) for name in idea.get("repos", []) if isinstance(name, str)],
+                    "trends": [str(title) for title in idea.get("trends", []) if isinstance(title, str)],
+                    "category_focus": [str(label) for label in idea.get("category_focus", []) if isinstance(label, str)],
+                            "semantic_signature": str(idea.get("semantic_signature") or "").strip(),
+                            "recurrence_group_id": str(idea.get("recurrence_group_id") or "").strip(),
+                }
+            )
+            if len(snapshots) >= limit:
+                return snapshots
+    return snapshots
+
+
+def choose_creative_angle(report_date: str, trends: list[dict[str, Any]], repos: list[dict[str, Any]], recent_ideas: list[dict[str, Any]]) -> dict[str, Any]:
+    trend_titles = "|".join(trend.get("title", "") for trend in trends[:5])
+    repo_names = "|".join(repo.get("full_name", "") for repo in repos[:5])
+    seed = stable_hash_int(report_date, trend_titles, repo_names, str(len(recent_ideas)))
+    return CREATIVE_ANGLES[seed % len(CREATIVE_ANGLES)]
+
+
+def pick_surprise_trends(trends: list[dict[str, Any]], report_date: str, count: int = 4) -> list[dict[str, Any]]:
+    if not trends:
+        return []
+    start_index = max(1, len(trends) // 3)
+    pool = trends[start_index:] or trends
+    ordered = sorted(pool, key=lambda trend: stable_hash_int(report_date, str(trend.get("title") or ""), str(trend.get("source_id") or "")))
+    return ordered[: min(count, len(ordered))]
+
+
+def build_repo_combo_candidates(repos: list[dict[str, Any]], report_date: str, limit: int = 10) -> list[dict[str, Any]]:
+    by_category: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for repo in repos:
+        category = str(repo.get("category") or "Other")
+        by_category[category].append(repo)
+    for category in by_category:
+        by_category[category].sort(key=lambda item: int(item.get("stargazers_count") or 0), reverse=True)
+    combos: list[dict[str, Any]] = []
+    for left_category, right_category in combinations(sorted(by_category), 2):
+        left_options = by_category[left_category][:3]
+        right_options = by_category[right_category][:3]
+        if not left_options or not right_options:
+            continue
+        seed = stable_hash_int(report_date, left_category, right_category)
+        left_repo = left_options[seed % len(left_options)]
+        right_repo = right_options[(seed // 7) % len(right_options)]
+        combos.append(
+            {
+                "categories": [left_category, right_category],
+                "repos": [left_repo["full_name"], right_repo["full_name"]],
+                "score": int(left_repo.get("stargazers_count") or 0) + int(right_repo.get("stargazers_count") or 0),
+            }
+        )
+    combos.sort(key=lambda combo: (combo["score"], stable_hash_int(report_date, *combo["categories"])), reverse=True)
+    selected: list[dict[str, Any]] = []
+    category_usage: Counter[str] = Counter()
+    for combo in combos:
+        categories = combo["categories"]
+        if any(category_usage[category] >= 2 for category in categories):
+            continue
+        selected.append(combo)
+        for category in categories:
+            category_usage[category] += 1
+        if len(selected) >= limit:
+            return selected
+    for combo in combos:
+        if combo in selected:
+            continue
+        selected.append(combo)
+        if len(selected) >= limit:
+            break
+    return selected
+
+
+def build_generation_context(
+    report_date: str,
+    trends: list[dict[str, Any]],
+    repos: list[dict[str, Any]],
+    reports_dir: Path,
+) -> dict[str, Any]:
+    recent_ideas = load_recent_idea_snapshots(reports_dir)
+    return {
+        "angle": choose_creative_angle(report_date, trends, repos, recent_ideas),
+        "recent_ideas": recent_ideas,
+        "headline_trends": trends[:6],
+        "surprise_trends": pick_surprise_trends(trends, report_date),
+        "repo_combos": build_repo_combo_candidates(repos, report_date),
+    }
+
+
 def load_starred_repos(cache_path: Path) -> list[dict[str, Any]]:
     cache = load_json_file(cache_path, {"repos": {}})
     repos = cache.get("repos", {}) if isinstance(cache, dict) else {}
@@ -153,6 +659,74 @@ def fetch_newsnow_payload() -> list[dict[str, Any]]:
 def format_source_name(source_id: str) -> str:
     parts = [part for part in source_id.replace("_", "-").split("-") if part]
     return " ".join(part.upper() if len(part) <= 3 else part.capitalize() for part in parts)
+
+
+def trend_relevance_score(item: dict[str, Any]) -> int:
+    source_id = str(item.get("source_id") or "")
+    text = f"{item.get('title', '')} {item.get('context', '')} {item.get('info', '')}".lower()
+    source_bonus = {
+        "github-trending-today": 30,
+        "producthunt": 28,
+        "hackernews": 28,
+        "juejin": 24,
+        "freebuf": 24,
+        "sspai": 18,
+        "wallstreetcn-hot": 18,
+        "xueqiu-hotstock": 18,
+        "cls-hot": 16,
+        "36kr-renqi": 16,
+        "nowcoder": 14,
+    }.get(source_id, 0)
+    positive_keywords = [
+        "ai",
+        "agent",
+        "automation",
+        "code",
+        "developer",
+        "github",
+        "open source",
+        "startup",
+        "saas",
+        "security",
+        "search",
+        "seo",
+        "workflow",
+        "data",
+        "finance",
+        "trading",
+        "growth",
+        "robot",
+        "app",
+        "模型",
+        "代码",
+        "安全",
+        "开发",
+        "产品",
+        "创业",
+        "增长",
+        "数据",
+        "金融",
+    ]
+    negative_keywords = [
+        "电视剧",
+        "电影",
+        "综艺",
+        "球员",
+        "比赛",
+        "演唱会",
+        "票房",
+        "恋爱",
+        "明星",
+        "动画",
+        "idol",
+        "celebrity",
+        "football",
+        "basketball",
+        "anime",
+        "movie",
+        "show",
+    ]
+    return source_bonus + sum(8 for keyword in positive_keywords if keyword in text) - sum(10 for keyword in negative_keywords if keyword in text)
 
 
 def dedupe_trends(payload: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -196,7 +770,14 @@ def dedupe_trends(payload: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], 
                     "url": str(item.get("url") or ""),
                 }
             )
-    flattened.sort(key=lambda item: (item["source_rank"], item["source_name"].lower(), item["title"].lower()))
+    flattened.sort(
+        key=lambda item: (
+            trend_relevance_score(item),
+            -int(item["source_rank"]),
+            stable_hash_int(str(item.get("title") or ""), str(item.get("source_id") or "")),
+        ),
+        reverse=True,
+    )
     return flattened[:MAX_TRENDS], source_statuses
 
 
@@ -298,7 +879,12 @@ def build_repo_shortlist(repos: list[dict[str, Any]]) -> list[dict[str, Any]]:
     ]
 
 
-def build_llm_prompt(trends: list[dict[str, Any]], repos: list[dict[str, Any]]) -> str:
+def build_llm_prompt(
+    report_date: str,
+    trends: list[dict[str, Any]],
+    repos: list[dict[str, Any]],
+    generation_context: dict[str, Any],
+) -> str:
     trend_payload = [
         {
             "title": trend["title"],
@@ -319,7 +905,49 @@ def build_llm_prompt(trends: list[dict[str, Any]], repos: list[dict[str, Any]]) 
         }
         for repo in repos
     ]
+    recent_payload = [
+        {
+            "date": idea["date"],
+            "name": idea["name"],
+            "summary": idea["summary"],
+            "categories": idea.get("category_focus", []),
+        }
+        for idea in generation_context.get("recent_ideas", [])[:10]
+        if idea.get("name")
+    ]
+    angle = generation_context.get("angle", {})
+    combo_payload = generation_context.get("repo_combos", [])[:8]
+    headline_trends = [
+        {
+            "title": trend["title"],
+            "source": trend["source_name"],
+            "context": trend["context"],
+        }
+        for trend in generation_context.get("headline_trends", [])
+    ]
+    surprise_trends = [
+        {
+            "title": trend["title"],
+            "source": trend["source_name"],
+        }
+        for trend in generation_context.get("surprise_trends", [])
+    ]
     return (
+        f"Report date: {report_date}\n"
+        f"Creative angle: {angle.get('label', 'Fresh opportunity search')}\n"
+        f"Angle directive: {angle.get('directive', '')}\n"
+        f"Preferred audiences: {json.dumps(angle.get('audiences', []), ensure_ascii=False)}\n"
+        f"Preferred product formats: {json.dumps(angle.get('formats', []), ensure_ascii=False)}\n\n"
+        "Priority: build ideas that react to today's NewsNow headlines first, then use surprise signals for edge cases.\n"
+        "At least 4 of the 6 ideas should map directly to the top headline trends below.\n\n"
+        "Top headline NewsNow trends to prioritize:\n"
+        f"{json.dumps(headline_trends, ensure_ascii=False, indent=2)}\n\n"
+        "Avoid repeating or lightly remixing these recent ideas:\n"
+        f"{json.dumps(recent_payload, ensure_ascii=False, indent=2)}\n\n"
+        "Use at least two of these surprise trend signals across the set:\n"
+        f"{json.dumps(surprise_trends, ensure_ascii=False, indent=2)}\n\n"
+        "Explore unfamiliar repo category pairings like these:\n"
+        f"{json.dumps(combo_payload, ensure_ascii=False, indent=2)}\n\n"
         "Current trends:\n"
         f"{json.dumps(trend_payload, ensure_ascii=False, indent=2)}\n\n"
         "Available starred repos to combine:\n"
@@ -327,18 +955,24 @@ def build_llm_prompt(trends: list[dict[str, Any]], repos: list[dict[str, Any]]) 
     )
 
 
-def generate_ideas_with_llm(trends: list[dict[str, Any]], repos: list[dict[str, Any]], env: dict[str, str]) -> list[dict[str, Any]]:
+def generate_ideas_with_llm(
+    report_date: str,
+    trends: list[dict[str, Any]],
+    repos: list[dict[str, Any]],
+    env: dict[str, str],
+    generation_context: dict[str, Any],
+) -> list[dict[str, Any]]:
     base_url = env["ANTHROPIC_BASE_URL"].rstrip("/")
     endpoint = f"{base_url}/v1/messages"
     payload = {
         "model": env.get("ANTHROPIC_MODEL") or env.get("ANTHROPIC_DEFAULT_SONNET_MODEL") or "MiniMax-M2.7",
         "max_tokens": 2200,
-        "temperature": 0.2,
+        "temperature": 0.78,
         "system": OPPORTUNITY_SYSTEM_PROMPT,
         "messages": [
             {
                 "role": "user",
-                "content": [{"type": "text", "text": build_llm_prompt(trends, repos)}],
+                "content": [{"type": "text", "text": build_llm_prompt(report_date, trends, repos, generation_context)}],
             }
         ],
     }
@@ -399,54 +1033,96 @@ def pick_repos_by_keywords(repos: list[dict[str, Any]], keywords: list[str], lim
     return [repo for repo in ranked if any(keyword in f"{repo['full_name']} {repo['category']} {repo['description']} {' '.join(repo['tags'])}".lower() for keyword in keywords)][:limit]
 
 
-def fallback_ideas(trends: list[dict[str, Any]], repos: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    blueprints = [
-        {
-            "name": "Trend-to-SEO Audit Bot",
-            "summary": "Turn hot topics into landing-page audits and quick-win content briefs for indie brands.",
-            "why_now": "Search visibility keeps shifting toward AI-assisted discovery, and live trend changes create short windows for ranking and distribution.",
-            "revenue_model": "Monthly subscription for audit credits plus white-label agency reports.",
-            "build_plan": ["Watch trend feeds", "Crawl target sites", "Generate audit briefs and outreach lists"],
-            "trends": [trend["title"] for trend in first_matching_trends(trends, ["seo", "ai", "search", "agent", "brand"])],
-            "repos": [repo["full_name"] for repo in pick_repos_by_keywords(repos, ["seo", "geo", "crawl", "scrap", "audit", "ranking"])],
-            "category_focus": ["SEO & Marketing", "Web Scraping & Browser Automation"],
-            "confidence": "medium",
-        },
-        {
-            "name": "AI Coding Ops Inbox",
-            "summary": "Bundle coding-agent workflows, remote alerts, and code intelligence into a lightweight team command center.",
-            "why_now": "Coding agents are spreading quickly, but teams still lack simple visibility and control over parallel AI work.",
-            "revenue_model": "Per-seat SaaS for agencies and small dev teams.",
-            "build_plan": ["Connect agent tools", "Track tasks and alerts", "Sell team dashboards and automations"],
-            "trends": [trend["title"] for trend in first_matching_trends(trends, ["github", "agent", "ai", "developer", "hackernews"])],
-            "repos": [repo["full_name"] for repo in pick_repos_by_keywords(repos, ["claude code", "codex", "cursor", "coding agent", "developer", "agent"])],
-            "category_focus": ["AI Coding Tools", "Developer Tools"],
-            "confidence": "medium",
-        },
-        {
-            "name": "Viral Content Repurposer",
-            "summary": "Convert live hot topics into social assets, explainers, and landing pages for creators or micro-brands.",
-            "why_now": "Trend windows are short, and creators need fast production pipelines that package text, images, and pages together.",
-            "revenue_model": "Subscription for content packs or done-for-you service retainers.",
-            "build_plan": ["Ingest trends", "Generate media assets", "Publish channel-ready packages"],
-            "trends": [trend["title"] for trend in first_matching_trends(trends, ["video", "iphone", "douyin", "weibo", "bilibili"])],
-            "repos": [repo["full_name"] for repo in pick_repos_by_keywords(repos, ["video", "voice", "audio", "image", "content", "landing"])],
-            "category_focus": ["AI Content & Media", "Web Development"],
-            "confidence": "medium",
-        },
-        {
-            "name": "Market Pulse Research Terminal",
-            "summary": "Track retail market narratives and turn them into niche trading or business-intelligence alerts.",
-            "why_now": "Finance chatter and macro headlines move fast, and solo operators need opinionated tools instead of generic news dashboards.",
-            "revenue_model": "Paid newsletter, premium alerts, or analyst dashboards.",
-            "build_plan": ["Monitor hot finance topics", "Score market signals", "Ship alerts and research summaries"],
-            "trends": [trend["title"] for trend in first_matching_trends(trends, ["stock", "finance", "market", "wallstreet", "xueqiu"])],
-            "repos": [repo["full_name"] for repo in pick_repos_by_keywords(repos, ["trading", "finance", "quant", "market", "research", "stock"])],
-            "category_focus": ["Finance & Trading", "Data & Analytics"],
-            "confidence": "medium",
-        },
+def build_dynamic_fallback_ideas(
+    report_date: str,
+    trends: list[dict[str, Any]],
+    repos: list[dict[str, Any]],
+    generation_context: dict[str, Any],
+) -> list[dict[str, Any]]:
+    ideas: list[dict[str, Any]] = []
+    headline_trends = generation_context.get("headline_trends", []) or trends[:6]
+    surprise_trends = generation_context.get("surprise_trends", []) or trends[:4]
+    prioritized_trends = headline_trends + [
+        trend for trend in surprise_trends if str(trend.get("title") or "") not in {str(item.get("title") or "") for item in headline_trends}
     ]
-    return blueprints
+    combos = generation_context.get("repo_combos", []) or build_repo_combo_candidates(repos, report_date, limit=8)
+    angle = generation_context.get("angle", CREATIVE_ANGLES[0])
+    audiences = angle.get("audiences", ["operators"])
+    formats = angle.get("formats", ["desk"])
+    for index, combo in enumerate(combos[:8]):
+        categories = combo.get("categories", [])
+        if len(categories) < 2:
+            continue
+        repos_for_idea = [name for name in combo.get("repos", []) if isinstance(name, str)]
+        if len(repos_for_idea) < 2:
+            continue
+        seed = stable_hash_int(report_date, str(index), *categories, *repos_for_idea)
+        trend = prioritized_trends[index % len(prioritized_trends)] if prioritized_trends else (trends[index % len(trends)] if trends else {})
+        audience = audiences[seed % len(audiences)]
+        format_name = formats[(seed // 5) % len(formats)]
+        left_alias = CATEGORY_ALIASES.get(categories[0], categories[0].split()[0])
+        right_alias = CATEGORY_ALIASES.get(categories[1], categories[1].split()[0])
+        prefix = FALLBACK_PREFIXES[seed % len(FALLBACK_PREFIXES)]
+        suffix = FALLBACK_SUFFIXES[(seed // 11) % len(FALLBACK_SUFFIXES)]
+        idea_name = f"{prefix} {left_alias}-{right_alias} {suffix}"
+        trend_title = str(trend.get("title") or "a volatile trend window")
+        ideas.append(
+            {
+                "name": idea_name,
+                "summary": f"Help {audience} turn {trend_title} into a repeatable {format_name} workflow using {left_alias.lower()} and {right_alias.lower()} tooling.",
+                "why_now": f"{angle.get('directive', 'Market windows are moving quickly.')} Today's NewsNow signal around {trend_title} creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+                "revenue_model": f"Charge a monthly subscription plus premium setup or review services for {audience}.",
+                "build_plan": [
+                    f"Track {trend_title}",
+                    f"Connect {categories[0]} and {categories[1]} repo workflows",
+                    f"Ship a narrow {format_name} for {audience}",
+                ],
+                "trends": [trend_title],
+                "repos": repos_for_idea,
+                "category_focus": categories[:3],
+                "confidence": "medium" if index % 3 else "high",
+            }
+        )
+    return ideas
+
+
+def ideas_are_similar(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    similarity = idea_similarity_score(left, right)
+    if similarity >= 0.63:
+        return True
+    left_repos = set(left.get("repos", []))
+    right_repos = set(right.get("repos", []))
+    return bool(left_repos and right_repos and len(left_repos & right_repos) >= 2)
+
+
+def select_fresh_ideas(
+    candidates: list[dict[str, Any]],
+    repo_lookup: dict[str, dict[str, Any]],
+    repo_shortlist: list[dict[str, Any]],
+    trend_titles: set[str],
+    available_trends: list[dict[str, Any]],
+    recent_ideas: list[dict[str, Any]],
+    limit: int = 4,
+) -> list[dict[str, Any]]:
+    selected: list[dict[str, Any]] = []
+    comparison_pool = list(recent_ideas)
+    sanitized_candidates = [sanitize_idea(candidate, repo_lookup, repo_shortlist, trend_titles, available_trends) for candidate in candidates]
+    for idea in sanitized_candidates:
+        if not idea.get("name"):
+            continue
+        if any(ideas_are_similar(idea, seen) for seen in comparison_pool):
+            continue
+        selected.append(idea)
+        comparison_pool.append(idea)
+        if len(selected) >= limit:
+            return selected
+    for idea in sanitized_candidates:
+        if any(ideas_are_similar(idea, chosen) for chosen in selected):
+            continue
+        selected.append(idea)
+        if len(selected) >= limit:
+            return selected
+    return selected[:limit]
 
 
 def sanitize_idea(
@@ -486,8 +1162,14 @@ def sanitize_idea(
 def keyword_tokens(text: str) -> set[str]:
     raw_tokens = re.findall(r"[a-z0-9][a-z0-9\-\+]{2,}", text.lower())
     stop_words = {
+        "and",
+        "are",
+        "but",
+        "can",
+        "for",
         "with",
         "from",
+        "help",
         "into",
         "that",
         "this",
@@ -500,6 +1182,7 @@ def keyword_tokens(text: str) -> set[str]:
         "where",
         "daily",
         "today",
+        "turn",
         "using",
         "build",
         "launch",
@@ -885,6 +1568,7 @@ def enrich_ideas(
         enriched.append(
             {
                 **idea_metrics,
+                "semantic_signature": semantic_signature(idea_metrics),
                 "repo_details": repo_details,
                 "trend_details": trend_details,
                 "founder_memo": memo,
@@ -1008,7 +1692,291 @@ def build_site_payload(
     }
 
 
-def write_site_data(site_dir: Path, payload: dict[str, Any], markdown_report: str) -> tuple[Path, Path]:
+def lifecycle_momentum_label(score: int) -> str:
+    if score >= 72:
+        return "Accelerating"
+    if score >= 58:
+        return "Steady"
+    if score >= 44:
+        return "Watching"
+    return "Cooling"
+
+
+def build_lifecycle_momentum(members: list[dict[str, Any]], latest_collection_date: str) -> dict[str, Any]:
+    ordered_members = sorted(
+        members,
+        key=lambda item: (item["date"], item["opportunity_score"], item["founder_score"], item["name"]),
+    )
+    latest_item = ordered_members[-1]
+    previous_item = ordered_members[-2] if len(ordered_members) > 1 else None
+    avg_founder = round(sum(item["founder_score"] for item in ordered_members) / len(ordered_members), 1)
+    avg_opportunity = round(sum(item["opportunity_score"] for item in ordered_members) / len(ordered_members), 1)
+    avg_revenue = round(sum(item["revenue_score"] for item in ordered_members) / len(ordered_members), 1)
+    unique_dates = sorted({item["date"] for item in ordered_members})
+    appearance_bonus = min(max(len(unique_dates) - 1, 0) * 6 + max(len(ordered_members) - 1, 0) * 2, 18)
+    freshness_bonus = 8 if latest_item["date"] == latest_collection_date else 0
+    delta_opportunity = latest_item["opportunity_score"] - (previous_item["opportunity_score"] if previous_item else avg_opportunity)
+    delta_founder = latest_item["founder_score"] - (previous_item["founder_score"] if previous_item else avg_founder)
+    delta_revenue = latest_item["revenue_score"] - (previous_item["revenue_score"] if previous_item else avg_revenue)
+    score = clamp_score(
+        round(
+            latest_item["opportunity_score"] * 0.42
+            + latest_item["founder_score"] * 0.18
+            + avg_opportunity * 0.18
+            + avg_founder * 0.1
+            + avg_revenue * 0.06
+            + appearance_bonus
+            + freshness_bonus
+            + max(delta_opportunity, 0) * 1.1
+            + max(delta_founder, 0) * 0.6
+            + max(delta_revenue, 0) * 0.45
+            - max(-delta_opportunity, 0) * 0.9
+            - max(-delta_founder, 0) * 0.4
+        )
+    )
+    return {
+        "momentum_score": score,
+        "momentum_label": lifecycle_momentum_label(score),
+        "avg_founder_score": avg_founder,
+        "avg_opportunity_score": avg_opportunity,
+        "avg_revenue_score": avg_revenue,
+        "delta_founder_score": round(delta_founder, 1),
+        "delta_opportunity_score": round(delta_opportunity, 1),
+        "delta_revenue_score": round(delta_revenue, 1),
+        "active_dates": len(unique_dates),
+        "score_history": [
+            {
+                "date": item["date"],
+                "name": item["name"],
+                "founder_score": item["founder_score"],
+                "revenue_score": item["revenue_score"],
+                "opportunity_score": item["opportunity_score"],
+                "report_path": item["report_path"],
+            }
+            for item in ordered_members
+        ],
+    }
+
+
+def build_collection_payload(report_files: list[Path]) -> dict[str, Any]:
+    raw_items: list[dict[str, Any]] = []
+    categories: Counter[str] = Counter()
+    trends: Counter[str] = Counter()
+    exact_names: Counter[str] = Counter()
+    reports_by_date: dict[str, int] = {}
+    founder_scores: list[int] = []
+    for file_path in report_files:
+        report_payload = load_json_file(file_path, {})
+        if not isinstance(report_payload, dict):
+            continue
+        report_date = str(report_payload.get("date") or file_path.stem)
+        report_items = report_payload.get("ideas", []) if isinstance(report_payload.get("ideas"), list) else []
+        reports_by_date[report_date] = len(report_items)
+        for position, idea in enumerate(report_items):
+            if not isinstance(idea, dict):
+                continue
+            name = str(idea.get("name") or "").strip()
+            normalized_name = normalize_idea_name(name)
+            if normalized_name:
+                exact_names[normalized_name] += 1
+            founder_score = int(idea.get("founder_score") or 0)
+            founder_scores.append(founder_score)
+            for category in idea.get("category_focus", []) if isinstance(idea.get("category_focus"), list) else []:
+                categories[str(category)] += 1
+            for trend in idea.get("trends", []) if isinstance(idea.get("trends"), list) else []:
+                trends[str(trend)] += 1
+            item_id = hashlib.sha256(f"{report_date}::{position}::{name}".encode("utf-8")).hexdigest()[:16]
+            raw_items.append(
+                {
+                    "id": item_id,
+                    "date": report_date,
+                    "report_path": f"data/reports/{file_path.name}",
+                    "name": name,
+                    "summary": str(idea.get("summary") or "").strip(),
+                    "founder_score": founder_score,
+                    "revenue_score": int(idea.get("revenue_score") or 0),
+                    "opportunity_score": int(idea.get("opportunity_score") or 0),
+                    "trend_repo_match_score": int(idea.get("trend_repo_match_score") or 0),
+                    "confidence": str(idea.get("confidence") or ""),
+                    "category_focus": [str(label) for label in idea.get("category_focus", []) if isinstance(label, str)],
+                    "trends": [str(label) for label in idea.get("trends", []) if isinstance(label, str)],
+                    "repos": [str(label) for label in idea.get("repos", []) if isinstance(label, str)],
+                    "build_decision": idea.get("build_decision") if isinstance(idea.get("build_decision"), dict) else {},
+                    "why_now": str(idea.get("why_now") or "").strip(),
+                    "revenue_model": str(idea.get("revenue_model") or "").strip(),
+                    "build_plan": [str(step) for step in idea.get("build_plan", []) if isinstance(step, str)],
+                    "semantic_signature": str(idea.get("semantic_signature") or "").strip(),
+                }
+            )
+    latest_date = max(reports_by_date) if reports_by_date else ""
+    raw_items.sort(key=lambda item: (item["date"], item["founder_score"], item["revenue_score"], item["name"]))
+    recurrence_groups: list[dict[str, Any]] = []
+    grouped_items: list[dict[str, Any]] = []
+    for item in raw_items:
+        best_group: dict[str, Any] | None = None
+        best_score = 0.0
+        for group in recurrence_groups:
+            score = max(idea_similarity_score(item, member) for member in group["members"])
+            if score > best_score:
+                best_score = score
+                best_group = group
+        if best_group is None or best_score < 0.63:
+            seed_signature = item.get("semantic_signature") or semantic_signature(item)
+            group_id = hashlib.sha256(f"{seed_signature}::{item['date']}".encode("utf-8")).hexdigest()[:12]
+            best_group = {
+                "group_id": group_id,
+                "members": [],
+                "first_seen": item["date"],
+                "last_seen": item["date"],
+                "label": item["name"],
+            }
+            recurrence_groups.append(best_group)
+        best_group["members"].append(item)
+        best_group["first_seen"] = min(best_group["first_seen"], item["date"])
+        best_group["last_seen"] = max(best_group["last_seen"], item["date"])
+        grouped_items.append(
+            {
+                **item,
+                "recurrence_group_id": best_group["group_id"],
+                "recurrence_group_label": best_group["label"],
+                "semantic_similarity": round(best_score, 2),
+            }
+        )
+    group_counts = {group["group_id"]: len(group["members"]) for group in recurrence_groups}
+    group_summaries: dict[str, dict[str, Any]] = {}
+    recurrence_group_payloads: list[dict[str, Any]] = []
+    for group in recurrence_groups:
+        members = sorted(
+            group["members"],
+            key=lambda item: (item["date"], item["opportunity_score"], item["founder_score"], item["name"]),
+        )
+        latest_item = members[-1]
+        momentum = build_lifecycle_momentum(members, latest_date)
+        category_counter = Counter(
+            label
+            for member in members
+            for label in member.get("category_focus", [])
+            if isinstance(label, str) and label
+        )
+        trend_counter = Counter(
+            label
+            for member in members
+            for label in member.get("trends", [])
+            if isinstance(label, str) and label
+        )
+        repo_counter = Counter(
+            label
+            for member in members
+            for label in member.get("repos", [])
+            if isinstance(label, str) and label
+        )
+        summary = {
+            "group_id": group["group_id"],
+            "label": latest_item["name"],
+            "semantic_signature": latest_item.get("semantic_signature") or semantic_signature(latest_item),
+            "first_seen": group["first_seen"],
+            "last_seen": group["last_seen"],
+            "appearance_count": len(members),
+            "is_recurring": len(members) > 1,
+            "category_focus": [name for name, _ in category_counter.most_common(6)],
+            "trends": [name for name, _ in trend_counter.most_common(6)],
+            "repos": [name for name, _ in repo_counter.most_common(6)],
+            "latest_item": {
+                "id": latest_item["id"],
+                "date": latest_item["date"],
+                "report_path": latest_item["report_path"],
+                "name": latest_item["name"],
+                "summary": latest_item["summary"],
+                "founder_score": latest_item["founder_score"],
+                "revenue_score": latest_item["revenue_score"],
+                "opportunity_score": latest_item["opportunity_score"],
+                "trend_repo_match_score": latest_item["trend_repo_match_score"],
+                "confidence": latest_item["confidence"],
+                "build_decision": latest_item["build_decision"],
+                "why_now": latest_item["why_now"],
+                "revenue_model": latest_item["revenue_model"],
+                "build_plan": latest_item["build_plan"],
+            },
+            "items": [
+                {
+                    "id": member["id"],
+                    "date": member["date"],
+                    "report_path": member["report_path"],
+                    "name": member["name"],
+                    "summary": member["summary"],
+                    "founder_score": member["founder_score"],
+                    "revenue_score": member["revenue_score"],
+                    "opportunity_score": member["opportunity_score"],
+                }
+                for member in reversed(members)
+            ],
+            **momentum,
+        }
+        group_summaries[group["group_id"]] = summary
+        recurrence_group_payloads.append(summary)
+    all_ideas: list[dict[str, Any]] = []
+    for item in grouped_items:
+        normalized_name = normalize_idea_name(item["name"])
+        group_id = item["recurrence_group_id"]
+        appearance_count = group_counts.get(group_id, 1)
+        group_summary = group_summaries[group_id]
+        all_ideas.append(
+            {
+                "id": item["id"],
+                "date": item["date"],
+                "report_path": item["report_path"],
+                "name": item["name"],
+                "summary": item["summary"],
+                "founder_score": item["founder_score"],
+                "revenue_score": item["revenue_score"],
+                "opportunity_score": item["opportunity_score"],
+                "trend_repo_match_score": item["trend_repo_match_score"],
+                "confidence": item["confidence"],
+                "category_focus": item["category_focus"],
+                "trends": item["trends"],
+                "repos": item["repos"],
+                "build_decision": item["build_decision"],
+                "semantic_signature": item["semantic_signature"] or semantic_signature(item),
+                "recurrence_group_id": group_id,
+                "recurrence_group_label": item["recurrence_group_label"],
+                "group_momentum_score": group_summary["momentum_score"],
+                "group_momentum_label": group_summary["momentum_label"],
+                "is_latest": item["date"] == latest_date,
+                "is_recurring": appearance_count > 1,
+                "appearance_count": appearance_count,
+                "exact_appearance_count": exact_names[normalized_name] if normalized_name else 1,
+                "first_seen": group_summary["first_seen"],
+                "last_seen": group_summary["last_seen"],
+            }
+        )
+    all_ideas.sort(key=lambda item: (item["date"], item["founder_score"], item["revenue_score"]), reverse=True)
+    recurrence_group_payloads.sort(
+        key=lambda item: (item["momentum_score"], item["last_seen"], item["latest_item"]["founder_score"]),
+        reverse=True,
+    )
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "latest_date": latest_date,
+        "all_ideas": all_ideas,
+        "recurrence_groups": recurrence_group_payloads,
+        "unique_categories": sorted([category for category in categories if category]),
+        "unique_trends": sorted([trend for trend in trends if trend]),
+        "stats": {
+            "total_ideas": len(all_ideas),
+            "total_dates": len(reports_by_date),
+            "total_groups": len(recurrence_group_payloads),
+            "avg_founder_score": round(sum(founder_scores) / len(founder_scores), 1) if founder_scores else 0,
+            "top_categories": [{"name": name, "count": count} for name, count in categories.most_common(6)],
+            "top_trends": [{"name": name, "count": count} for name, count in trends.most_common(6)],
+            "ideas_by_date": reports_by_date,
+            "recurring_ideas": sum(1 for count in group_counts.values() if count > 1),
+            "exact_recurring_ideas": sum(1 for count in exact_names.values() if count > 1),
+            "top_momentum_group": recurrence_group_payloads[0]["label"] if recurrence_group_payloads else "",
+        },
+    }
+
+
+def write_site_data(site_dir: Path, payload: dict[str, Any], markdown_report: str) -> tuple[Path, Path, Path]:
     data_dir = site_dir / "data"
     reports_dir = data_dir / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
@@ -1057,9 +2025,11 @@ def write_site_data(site_dir: Path, payload: dict[str, Any], markdown_report: st
     }
     index_path = data_dir / "index.json"
     save_json_file(index_path, index_payload)
+    collection_path = data_dir / "collection.json"
+    save_json_file(collection_path, build_collection_payload(report_files))
     latest_path = data_dir / "latest.json"
     save_json_file(latest_path, payload)
-    return report_path, index_path
+    return report_path, index_path, collection_path
 
 
 def main() -> int:
@@ -1070,6 +2040,7 @@ def main() -> int:
     output_dir = resolve_path(root, args.output_dir)
     site_dir = resolve_path(root, args.site_dir)
     report_date = args.date or utc_today()
+    reports_dir = site_dir / "data" / "reports"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     repos = load_starred_repos(cache_path)
@@ -1077,6 +2048,7 @@ def main() -> int:
     repo_lookup = {repo["full_name"]: repo for repo in repo_shortlist}
     trends_payload = fetch_newsnow_payload()
     trends, source_statuses = dedupe_trends(trends_payload)
+    generation_context = build_generation_context(report_date, trends, repo_shortlist, reports_dir)
     generation_mode = "live-with-llm"
 
     try:
@@ -1088,15 +2060,31 @@ def main() -> int:
     try:
         if not env:
             raise ValueError("Missing LLM configuration.")
-        idea_candidates = generate_ideas_with_llm(trends, repo_shortlist, env)
+        idea_candidates = generate_ideas_with_llm(report_date, trends, repo_shortlist, env, generation_context)
     except Exception:
-        idea_candidates = fallback_ideas(trends, repo_shortlist)
+        idea_candidates = build_dynamic_fallback_ideas(report_date, trends, repo_shortlist, generation_context)
         generation_mode = "live-with-deterministic-ideas"
 
     trend_titles = {trend["title"] for trend in trends}
-    ideas = [sanitize_idea(idea, repo_lookup, repo_shortlist, trend_titles, trends) for idea in idea_candidates][:4]
+    ideas = select_fresh_ideas(
+        idea_candidates,
+        repo_lookup,
+        repo_shortlist,
+        trend_titles,
+        trends,
+        generation_context.get("recent_ideas", []),
+        limit=4,
+    )
     if not ideas:
-        ideas = [sanitize_idea(idea, repo_lookup, repo_shortlist, trend_titles, trends) for idea in fallback_ideas(trends, repo_shortlist)]
+        ideas = select_fresh_ideas(
+            build_dynamic_fallback_ideas(report_date, trends, repo_shortlist, generation_context),
+            repo_lookup,
+            repo_shortlist,
+            trend_titles,
+            trends,
+            generation_context.get("recent_ideas", []),
+            limit=4,
+        )
         generation_mode = "live-with-deterministic-ideas"
     ideas = enrich_ideas(ideas, repo_lookup, trends)
 
@@ -1105,11 +2093,12 @@ def main() -> int:
     output_path = output_dir / f"{report_date}.md"
     output_path.write_text(report, encoding="utf-8")
     site_payload = build_site_payload(report_date, generated_at, source_statuses, trends, ideas, generation_mode)
-    site_report_path, site_index_path = write_site_data(site_dir, site_payload, report)
+    site_report_path, site_index_path, site_collection_path = write_site_data(site_dir, site_payload, report)
 
     print(f"Generated {output_path}")
     print(f"Generated {site_report_path}")
     print(f"Updated {site_index_path}")
+    print(f"Updated {site_collection_path}")
     print(f"Trends analyzed: {len(trends)}")
     print(f"Starred repos considered: {len(repo_shortlist)}")
     print(f"Ideas generated: {len(ideas)}")

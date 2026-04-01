@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-04-01T08:55:47+00:00",
+  "generated_at": "2026-04-01T11:39:54+00:00",
   "latest": "2026-04-01",
   "reports": [
     {
       "date": "2026-04-01",
-      "generated_at": "2026-04-01T08:55:47+00:00",
+      "generated_at": "2026-04-01T11:39:54+00:00",
       "mode": "live-with-deterministic-ideas",
       "idea_count": 4,
       "trend_count": 18,
       "path": "data/reports/2026-04-01.json",
-      "top_idea": "Trend-to-SEO Audit Bot",
-      "top_revenue_score": 92,
-      "top_founder_score": 82
+      "top_idea": "Niche Code-Media Watch",
+      "top_revenue_score": 66,
+      "top_founder_score": 56
     },
     {
       "date": "2026-03-31",

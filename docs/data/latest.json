@@ -1,6 +1,6 @@
 {
   "date": "2026-04-01",
-  "generated_at": "2026-04-01T08:55:47+00:00",
+  "generated_at": "2026-04-01T11:39:54+00:00",
   "trend_source": "https://newsnow.busiyi.world/api/s/entire",
   "star_repo_source": "stars_cache.json",
   "mode": "live-with-deterministic-ideas",
@@ -8,11 +8,9 @@
     "AI Coding Tools",
     "AI Content & Media",
     "Data & Analytics",
-    "Developer Tools",
-    "Finance & Trading",
-    "SEO & Marketing",
-    "Web Development",
-    "Web Scraping & Browser Automation"
+    "Infrastructure & DevOps",
+    "Mobile & Desktop",
+    "Security & Privacy"
   ],
   "source_health": [
     {
@@ -49,7 +47,7 @@
       "id": "coolapk",
       "name": "Coolapk",
       "status": "cache",
-      "item_count": 19
+      "item_count": 18
     },
     {
       "id": "douban",
@@ -73,7 +71,7 @@
       "id": "github-trending-today",
       "name": "Github Trending Today",
       "status": "cache",
-      "item_count": 14
+      "item_count": 8
     },
     {
       "id": "hackernews",
@@ -85,7 +83,7 @@
       "id": "hupu",
       "name": "Hupu",
       "status": "cache",
-      "item_count": 19
+      "item_count": 30
     },
     {
       "id": "ifeng",
@@ -186,456 +184,225 @@
   ],
   "trends": [
     {
-      "source_id": "36kr-renqi",
-      "source_name": "36kr Renqi",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "Claude Code源码泄露，下一个王牌提前曝光",
-      "context": "Claude Code将变成《钢铁侠》里的贾维斯？",
-      "info": "字母AI  |  335.49热度",
-      "url": "https://36kr.com/p/3746770616627968"
-    },
-    {
-      "source_id": "baidu",
-      "source_name": "Baidu",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "中国最强“东西大动脉”要来了",
-      "context": "长江入海口崇太长江隧道14公里江底段施工完成，标志着沿江高铁（沪渝蓉高铁）建设取得关键进展。这条5000亿的东西大动脉，将带动1.5万亿经济增长，重塑长江经济带格局。",
-      "info": "",
-      "url": "https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%BC%BA%E2%80%9C%E4%B8%9C%E8%A5%BF%E5%A4%A7%E5%8A%A8%E8%84%89%E2%80%9D%E8%A6%81%E6%9D%A5%E4%BA%86"
-    },
-    {
-      "source_id": "bilibili-hot-search",
-      "source_name": "Bilibili HOT Search",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "美加墨世界杯48支参赛球队确定",
-      "context": "",
-      "info": "",
-      "url": "https://search.bilibili.com/all?keyword=%E7%BE%8E%E5%8A%A0%E5%A2%A8%E4%B8%96%E7%95%8C%E6%9D%AF48%E6%94%AF%E5%8F%82%E8%B5%9B%E7%90%83%E9%98%9F%E7%A1%AE%E5%AE%9A"
-    },
-    {
-      "source_id": "chongbuluo-hot",
-      "source_name": "Chongbuluo HOT",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "张雪峰因心源性猝死去世，大家有什么要说的吗？",
-      "context": "张雪峰因心源性猝死去世，大家有什么要说的吗？",
-      "info": "",
-      "url": "https://www.chongbuluo.com/thread-24288-1-1.html"
-    },
-    {
-      "source_id": "cls-hot",
-      "source_name": "CLS HOT",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "明早9点！白宫重磅预告：特朗普将就伊朗问题发表全国讲话",
-      "context": "",
-      "info": "",
-      "url": "https://www.cls.cn/detail/2331621"
-    },
-    {
-      "source_id": "coolapk",
-      "source_name": "Coolapk",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "小艺Claw上线：体验包49元起",
-      "context": "",
-      "info": "211.8万热度 3.3万讨论",
-      "url": "https://www.coolapk.com/feed/70982377"
-    },
-    {
-      "source_id": "douban",
-      "source_name": "Douban",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "浴血黑帮：不朽传奇",
-      "context": "2026 / 英国 法国 美国 / 剧情 历史 犯罪 / 汤姆·哈伯 / 基里安·墨菲 丽贝卡·弗格森",
-      "info": "2026 / 英国 法国 美国 / 剧情 历史 犯罪",
-      "url": "https://movie.douban.com/subject/30382501"
-    },
-    {
-      "source_id": "douyin",
-      "source_name": "Douyin",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "东鹏饮料怎么了",
-      "context": "",
-      "info": "",
-      "url": "https://www.douyin.com/hot/2451067"
-    },
-    {
-      "source_id": "freebuf",
-      "source_name": "Freebuf",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
-      "context": "3 月 25 日晚，Gitee CodePecker 举办「AI 重塑代码安全」线上发布会，正式发布新一代混合智能体代码安全审计平台「图智 ...",
-      "info": "",
-      "url": "https://www.freebuf.com/articles/475221.html"
-    },
-    {
       "source_id": "github-trending-today",
       "source_name": "Github Trending Today",
       "source_rank": 1,
       "status": "cache",
-      "title": "luongnv89 /      claude-howto",
-      "context": "A visual, example-driven guide to Claude Code — from basic concepts to advanced agents, with copy-paste templates that bring immediate value.",
-      "info": "✰ 14,288",
-      "url": "https://github.com/luongnv89/claude-howto"
+      "title": "anthropics /      claude-code",
+      "context": "Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows - all through natural language commands.",
+      "info": "✰ 96,086",
+      "url": "https://github.com/anthropics/claude-code"
     },
     {
-      "source_id": "hackernews",
-      "source_name": "Hackernews",
-      "source_rank": 1,
+      "source_id": "github-trending-today",
+      "source_name": "Github Trending Today",
+      "source_rank": 7,
       "status": "cache",
-      "title": "Claude Code Unpacked : A visual guide",
-      "context": "",
-      "info": "284 points",
-      "url": "https://news.ycombinator.com/item?id=47597085"
-    },
-    {
-      "source_id": "hupu",
-      "source_name": "Hupu",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "当代人猝死很正常，抽烟喝酒高强度的加班、不规律的饮食和没节制的运动，这些都是索命的恶鬼无常，屡见不鲜的是牛马们深夜加班加着加着就猝了，老板们清晨跑着跑着就没了。难道要多学学乌龟长寿法？",
-      "context": "",
-      "info": "",
-      "url": "https://bbs.hupu.com/638170881.html"
-    },
-    {
-      "source_id": "ifeng",
-      "source_name": "Ifeng",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "美以伊战争丨伊朗：霍尔木兹海峡不会开放",
-      "context": "",
-      "info": "",
-      "url": "https://news.ifeng.com/loc/timeline/event/8r727OWpK5W"
-    },
-    {
-      "source_id": "iqiyi-hot-ranklist",
-      "source_name": "Iqiyi HOT Ranklist",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "逐玉",
-      "context": "本剧讲述了屠户女樊长玉与落难侯爷谢征于风雪中宿命相逢，一个父母双亡要做女户主，一个隐姓埋名报十七年前血仇，二人“各有目的”地演出了一场假婚真爱！利用变成真爱，真爱却带来了血腥战事，相爱之人被迫分离。樊长玉拿着杀猪刀上战场，寻亲寻夫寻正义；谢征恢复铁血侯爷，护国护爱护真相！两人终于战场重逢，并肩搏杀，不畏生死；揭破真相，不惧威权；回归家园，不忘初心！",
-      "info": "先婚后爱烽火炼真情",
-      "url": "https://www.iqiyi.com/v_170ouizih30.html"
-    },
-    {
-      "source_id": "juejin",
-      "source_name": "Juejin",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "JetBrains又一知名软件宣布倒下，五味杂陈",
-      "context": "",
-      "info": "",
-      "url": "https://juejin.cn/post/7622177349912952878"
-    },
-    {
-      "source_id": "nowcoder",
-      "source_name": "Nowcoder",
-      "source_rank": 1,
-      "status": "cache",
-      "title": "被笔试耽误了一天day16（为什么携程第三题始终是0呢",
-      "context": "",
-      "info": "",
-      "url": "https://www.nowcoder.com/feed/main/detail/4e32e59cee3c4c1f8e3f8807cfe3f455"
+      "title": "openai /      codex",
+      "context": "Lightweight coding agent that runs in your terminal",
+      "info": "✰ 70,947",
+      "url": "https://github.com/openai/codex"
     },
     {
       "source_id": "producthunt",
       "source_name": "Producthunt",
-      "source_rank": 1,
+      "source_rank": 5,
       "status": "cache",
-      "title": "Stitch 2.0 by Google",
-      "context": "Vibe design beautiful production-ready UI in seconds",
-      "info": " △︎ 829",
-      "url": "https://www.producthunt.com/products/stitch-2-0-by-google-2?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+      "title": "Agentplace AI Agents",
+      "context": "Create specialized AI agents for real tasks and workflows",
+      "info": " △︎ 705",
+      "url": "https://www.producthunt.com/products/agentplace?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
     },
     {
-      "source_id": "qqvideo-tv-hotsearch",
-      "source_name": "Qqvideo TV Hotsearch",
-      "source_rank": 1,
+      "source_id": "producthunt",
+      "source_name": "Producthunt",
+      "source_rank": 11,
       "status": "cache",
-      "title": "白日提灯",
-      "context": "万灵之主 vs 少年将军",
+      "title": "Naoma AI Demo Agent",
+      "context": "The video AI demo agent for B2B SaaS for immediate demos",
+      "info": " △︎ 664",
+      "url": "https://www.producthunt.com/products/naoma/launches/naoma-ai-demo-agent?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+    },
+    {
+      "source_id": "producthunt",
+      "source_name": "Producthunt",
+      "source_rank": 19,
+      "status": "cache",
+      "title": "Claude Code Review",
+      "context": "Multi-agent review catching bugs early in AI-generated code",
+      "info": " △︎ 573",
+      "url": "https://www.producthunt.com/products/claude/launches/claude-code-review?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+    },
+    {
+      "source_id": "juejin",
+      "source_name": "Juejin",
+      "source_rank": 3,
+      "status": "cache",
+      "title": "Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的",
+      "context": "",
       "info": "",
-      "url": "https://v.qq.com/x/cover/mzc00200wm1zlyh.html"
+      "url": "https://juejin.cn/post/7623066322222153728"
+    },
+    {
+      "source_id": "36kr-renqi",
+      "source_name": "36kr Renqi",
+      "source_rank": 4,
+      "status": "cache",
+      "title": "炸裂：疑似Claude Code原生源码被扒光泄露？连开发手写注释都有",
+      "context": "Claude Code源码被逆向还原，揭示顶级AI工程架构。",
+      "info": "亲爱的数据  |  206.36热度",
+      "url": "https://36kr.com/p/3746797496877829"
+    },
+    {
+      "source_id": "juejin",
+      "source_name": "Juejin",
+      "source_rank": 4,
+      "status": "cache",
+      "title": "💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了",
+      "context": "",
+      "info": "",
+      "url": "https://juejin.cn/post/7623242804392902665"
+    },
+    {
+      "source_id": "github-trending-today",
+      "source_name": "Github Trending Today",
+      "source_rank": 3,
+      "status": "cache",
+      "title": "shanraisshan /      claude-code-best-practice",
+      "context": "practice made claude perfect",
+      "info": "✰ 29,774",
+      "url": "https://github.com/shanraisshan/claude-code-best-practice"
+    },
+    {
+      "source_id": "github-trending-today",
+      "source_name": "Github Trending Today",
+      "source_rank": 4,
+      "status": "cache",
+      "title": "google-research /      timesfm",
+      "context": "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
+      "info": "✰ 11,608",
+      "url": "https://github.com/google-research/timesfm"
+    },
+    {
+      "source_id": "github-trending-today",
+      "source_name": "Github Trending Today",
+      "source_rank": 5,
+      "status": "cache",
+      "title": "luongnv89 /      claude-howto",
+      "context": "A visual, example-driven guide to Claude Code — from basic concepts to advanced agents, with copy-paste templates that bring immediate value.",
+      "info": "✰ 14,579",
+      "url": "https://github.com/luongnv89/claude-howto"
+    },
+    {
+      "source_id": "producthunt",
+      "source_name": "Producthunt",
+      "source_rank": 4,
+      "status": "cache",
+      "title": "Tobira.ai",
+      "context": "A network where AI agents find deals for their humans",
+      "info": " △︎ 710",
+      "url": "https://www.producthunt.com/products/tobira-ai?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+    },
+    {
+      "source_id": "producthunt",
+      "source_name": "Producthunt",
+      "source_rank": 12,
+      "status": "cache",
+      "title": "InsForge",
+      "context": "Give agents everything they need to ship fullstack apps",
+      "info": " △︎ 651",
+      "url": "https://www.producthunt.com/products/insforge-alpha/launches/insforge-3?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+    },
+    {
+      "source_id": "36kr-renqi",
+      "source_name": "36kr Renqi",
+      "source_rank": 20,
+      "status": "cache",
+      "title": "不开玩笑，Claude Code源码泄露，50万行代码被扒光",
+      "context": "开发者不语，只是一味地 fork",
+      "info": "爱范儿  |  45.51热度",
+      "url": "https://36kr.com/p/3747435652596484"
+    },
+    {
+      "source_id": "juejin",
+      "source_name": "Juejin",
+      "source_rank": 23,
+      "status": "cache",
+      "title": "Claude Code Buddy 系统深度解析：一只会陪你写代码的像素宠物",
+      "context": "",
+      "info": "",
+      "url": "https://juejin.cn/post/7623311563769708582"
+    },
+    {
+      "source_id": "juejin",
+      "source_name": "Juejin",
+      "source_rank": 27,
+      "status": "cache",
+      "title": "AI 写的代码，你敢上线吗？",
+      "context": "",
+      "info": "",
+      "url": "https://juejin.cn/post/7622650862809792566"
+    },
+    {
+      "source_id": "juejin",
+      "source_name": "Juejin",
+      "source_rank": 30,
+      "status": "cache",
+      "title": "2026年AI大模型选择指南：8大主流模型深度对比，小白秒懂如何选！",
+      "context": "",
+      "info": "",
+      "url": "https://juejin.cn/post/7622069365056798762"
+    },
+    {
+      "source_id": "github-trending-today",
+      "source_name": "Github Trending Today",
+      "source_rank": 2,
+      "status": "cache",
+      "title": "microsoft /      VibeVoice",
+      "context": "Open-Source Frontier Voice AI",
+      "info": "✰ 33,852",
+      "url": "https://github.com/microsoft/VibeVoice"
     }
   ],
   "ideas": [
     {
-      "name": "Trend-to-SEO Audit Bot",
-      "summary": "Turn hot topics into landing-page audits and quick-win content briefs for indie brands.",
-      "why_now": "Search visibility keeps shifting toward AI-assisted discovery, and live trend changes create short windows for ranking and distribution.",
-      "revenue_model": "Monthly subscription for audit credits plus white-label agency reports.",
+      "name": "Niche Code-Media Watch",
+      "summary": "Help niche agencies turn Agentplace AI Agents into a repeatable engine workflow using code and media tooling.",
+      "why_now": "Turn public trend noise into a done-for-you or productized service that can sell quickly. Today's NewsNow signal around Agentplace AI Agents creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for niche agencies.",
       "build_plan": [
-        "Watch trend feeds",
-        "Crawl target sites",
-        "Generate audit briefs and outreach lists"
+        "Track Agentplace AI Agents",
+        "Connect AI Coding Tools and AI Content & Media repo workflows",
+        "Ship a narrow engine for niche agencies"
       ],
       "trends": [
-        "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
-        "luongnv89 /      claude-howto"
+        "Agentplace AI Agents"
       ],
       "repos": [
-        "brightdata/geo-ai-agent",
-        "zubair-trabzada/geo-seo-claude",
-        "GEO-SEO/seo-geo-audit"
-      ],
-      "category_focus": [
-        "SEO & Marketing",
-        "Web Scraping & Browser Automation"
-      ],
-      "confidence": "medium",
-      "trend_repo_match_score": 100,
-      "revenue_score": 92,
-      "niche_difficulty_score": 16,
-      "build_speed_score": 87,
-      "monetization_latency_score": 90,
-      "recurring_revenue_score": 54,
-      "founder_score": 82,
-      "opportunity_score": 90,
-      "repo_details": [
-        {
-          "full_name": "brightdata/geo-ai-agent",
-          "html_url": "https://github.com/brightdata/geo-ai-agent",
-          "category": "SEO & Marketing",
-          "description": "AI-powered tool to audit and optimize website content by crawling URLs, analyzing H1s, and generating actionable GEO recommendations with CrewAI.",
-          "stars": 149,
-          "tags": [
-            "agent",
-            "ai",
-            "brightdata",
-            "crewai"
-          ]
-        },
-        {
-          "full_name": "zubair-trabzada/geo-seo-claude",
-          "html_url": "https://github.com/zubair-trabzada/geo-seo-claude",
-          "category": "SEO & Marketing",
-          "description": "GEO-first SEO skill for Claude Code. Comprehensive AI search optimization for any website — citability scoring, AI crawler analysis, brand authority, schema markup, platform-specific optimization, and PDF reports.  If you want learn how to sell this to real businesses, check out the skool community",
-          "stars": 4637,
-          "tags": []
-        },
-        {
-          "full_name": "GEO-SEO/seo-geo-audit",
-          "html_url": "https://github.com/GEO-SEO/seo-geo-audit",
-          "category": "SEO & Marketing",
-          "description": "Professional SEO and GEO audit workflows for brands, SaaS teams, SEO operators, agencies, and AI-search growth teams.",
-          "stars": 130,
-          "tags": []
-        }
-      ],
-      "trend_details": [
-        {
-          "source_id": "freebuf",
-          "source_name": "Freebuf",
-          "source_rank": 1,
-          "status": "cache",
-          "title": "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
-          "context": "3 月 25 日晚，Gitee CodePecker 举办「AI 重塑代码安全」线上发布会，正式发布新一代混合智能体代码安全审计平台「图智 ...",
-          "info": "",
-          "url": "https://www.freebuf.com/articles/475221.html"
-        },
-        {
-          "source_id": "github-trending-today",
-          "source_name": "Github Trending Today",
-          "source_rank": 1,
-          "status": "cache",
-          "title": "luongnv89 /      claude-howto",
-          "context": "A visual, example-driven guide to Claude Code — from basic concepts to advanced agents, with copy-paste templates that bring immediate value.",
-          "info": "✰ 14,288",
-          "url": "https://github.com/luongnv89/claude-howto"
-        }
-      ],
-      "founder_memo": {
-        "best_part": "The trend signal and repo stack already line up.",
-        "biggest_risk": "The business model risks looking one-off instead of compounding.",
-        "fastest_mvp": "Ship only the first wedge: Watch trend feeds.",
-        "first_customer": "Content platforms with moderation and rights risk",
-        "why_high": "The trend signal and repo stack already line up. The score rises when it can ship, charge, and repeat without needing heavy scale.",
-        "why_low": "The business model risks looking one-off instead of compounding. Retention loop is weak, so monthly revenue is less certain.",
-        "top_penalties": [
-          "Retention loop is weak, so monthly revenue is less certain."
-        ],
-        "improve_next": [
-          "Add a recurring alert, report, or compliance loop so usage repeats monthly.",
-          "Narrow the buyer to one painful workflow and one high-urgency trigger."
-        ]
-      },
-      "build_decision": {
-        "label": "Build now",
-        "tone": "good",
-        "summary": "The trend signal and repo stack already line up."
-      }
-    },
-    {
-      "name": "Market Pulse Research Terminal",
-      "summary": "Track retail market narratives and turn them into niche trading or business-intelligence alerts.",
-      "why_now": "Finance chatter and macro headlines move fast, and solo operators need opinionated tools instead of generic news dashboards.",
-      "revenue_model": "Paid newsletter, premium alerts, or analyst dashboards.",
-      "build_plan": [
-        "Monitor hot finance topics",
-        "Score market signals",
-        "Ship alerts and research summaries"
-      ],
-      "trends": [
-        "Claude Code源码泄露，下一个王牌提前曝光",
-        "中国最强“东西大动脉”要来了"
-      ],
-      "repos": [
-        "StockSharp/StockSharp",
-        "mvanhorn/last30days-skill",
-        "Jon-Becker/prediction-market-analysis"
-      ],
-      "category_focus": [
-        "Finance & Trading",
-        "Data & Analytics"
-      ],
-      "confidence": "medium",
-      "trend_repo_match_score": 80,
-      "revenue_score": 78,
-      "niche_difficulty_score": 52,
-      "build_speed_score": 74,
-      "monetization_latency_score": 66,
-      "recurring_revenue_score": 55,
-      "founder_score": 64,
-      "opportunity_score": 73,
-      "repo_details": [
-        {
-          "full_name": "StockSharp/StockSharp",
-          "html_url": "https://github.com/StockSharp/StockSharp",
-          "category": "Finance & Trading",
-          "description": "Algorithmic trading and quantitative trading open source platform to develop trading robots (stock markets, forex, crypto, bitcoins, and options).",
-          "stars": 9508,
-          "tags": [
-            "algorithmic-trading",
-            "algorithmic-trading-engine",
-            "backtesting",
-            "bitcoins"
-          ]
-        },
-        {
-          "full_name": "mvanhorn/last30days-skill",
-          "html_url": "https://github.com/mvanhorn/last30days-skill",
-          "category": "Finance & Trading",
-          "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
-          "stars": 17070,
-          "tags": [
-            "ai-prompts",
-            "ai-skill",
-            "bluesky",
-            "claude"
-          ]
-        },
-        {
-          "full_name": "Jon-Becker/prediction-market-analysis",
-          "html_url": "https://github.com/Jon-Becker/prediction-market-analysis",
-          "category": "Finance & Trading",
-          "description": "A framework for collecting and analyzing prediction market data, including the largest publicly available dataset of Polymarket and Kalshi market and trade data.",
-          "stars": 2583,
-          "tags": [
-            "data",
-            "data-science",
-            "datasets",
-            "kalshi"
-          ]
-        }
-      ],
-      "trend_details": [
-        {
-          "source_id": "36kr-renqi",
-          "source_name": "36kr Renqi",
-          "source_rank": 1,
-          "status": "cache",
-          "title": "Claude Code源码泄露，下一个王牌提前曝光",
-          "context": "Claude Code将变成《钢铁侠》里的贾维斯？",
-          "info": "字母AI  |  335.49热度",
-          "url": "https://36kr.com/p/3746770616627968"
-        },
-        {
-          "source_id": "baidu",
-          "source_name": "Baidu",
-          "source_rank": 1,
-          "status": "cache",
-          "title": "中国最强“东西大动脉”要来了",
-          "context": "长江入海口崇太长江隧道14公里江底段施工完成，标志着沿江高铁（沪渝蓉高铁）建设取得关键进展。这条5000亿的东西大动脉，将带动1.5万亿经济增长，重塑长江经济带格局。",
-          "info": "",
-          "url": "https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%BC%BA%E2%80%9C%E4%B8%9C%E8%A5%BF%E5%A4%A7%E5%8A%A8%E8%84%89%E2%80%9D%E8%A6%81%E6%9D%A5%E4%BA%86"
-        }
-      ],
-      "founder_memo": {
-        "best_part": "The trend signal and repo stack already line up.",
-        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
-        "fastest_mvp": "Ship only the first wedge: Monitor hot finance topics.",
-        "first_customer": "Operators who react to live market or risk data",
-        "why_high": "The trend signal and repo stack already line up. The score rises when it can ship, charge, and repeat without needing heavy scale.",
-        "why_low": "The niche carries trust, workflow, or compliance weight. Retention loop is weak, so monthly revenue is less certain.",
-        "top_penalties": [
-          "Retention loop is weak, so monthly revenue is less certain."
-        ],
-        "improve_next": [
-          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
-          "Add a recurring alert, report, or compliance loop so usage repeats monthly."
-        ]
-      },
-      "build_decision": {
-        "label": "Build now",
-        "tone": "good",
-        "summary": "The trend signal and repo stack already line up."
-      }
-    },
-    {
-      "name": "AI Coding Ops Inbox",
-      "summary": "Bundle coding-agent workflows, remote alerts, and code intelligence into a lightweight team command center.",
-      "why_now": "Coding agents are spreading quickly, but teams still lack simple visibility and control over parallel AI work.",
-      "revenue_model": "Per-seat SaaS for agencies and small dev teams.",
-      "build_plan": [
-        "Connect agent tools",
-        "Track tasks and alerts",
-        "Sell team dashboards and automations"
-      ],
-      "trends": [
-        "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
-        "luongnv89 /      claude-howto"
-      ],
-      "repos": [
-        "chenhg5/cc-connect",
         "affaan-m/everything-claude-code",
-        "BloopAI/vibe-kanban"
+        "hacksider/Deep-Live-Cam"
       ],
       "category_focus": [
         "AI Coding Tools",
-        "Developer Tools"
+        "AI Content & Media"
       ],
       "confidence": "medium",
-      "trend_repo_match_score": 100,
-      "revenue_score": 82,
+      "trend_repo_match_score": 69,
+      "revenue_score": 66,
       "niche_difficulty_score": 50,
-      "build_speed_score": 60,
-      "monetization_latency_score": 58,
-      "recurring_revenue_score": 62,
-      "founder_score": 63,
-      "opportunity_score": 79,
+      "build_speed_score": 51,
+      "monetization_latency_score": 59,
+      "recurring_revenue_score": 54,
+      "founder_score": 56,
+      "opportunity_score": 63,
+      "semantic_signature": "c:cat:ai-coding-tools,cat:ai-content-media,cat:coding,cat:content,cat:media,cat:tool | a:agency,niche | w:agent,automation,monitor,review,signal,workflow | t:around,code,code-media,coding,content,done-for-you",
       "repo_details": [
-        {
-          "full_name": "chenhg5/cc-connect",
-          "html_url": "https://github.com/chenhg5/cc-connect",
-          "category": "AI Coding Tools",
-          "description": "Bridge local AI coding agents (Claude Code, Cursor, Gemini CLI, Codex) to messaging platforms (Feishu/Lark, DingTalk, Slack, Telegram, Discord, LINE, WeChat Work). Chat with your AI dev assistant from anywhere — no public IP required for most platforms.",
-          "stars": 3891,
-          "tags": []
-        },
         {
           "full_name": "affaan-m/everything-claude-code",
           "html_url": "https://github.com/affaan-m/everything-claude-code",
           "category": "AI Coding Tools",
           "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-          "stars": 128926,
+          "stars": 120676,
           "tags": [
             "ai-agents",
             "anthropic",
@@ -644,175 +411,330 @@
           ]
         },
         {
-          "full_name": "BloopAI/vibe-kanban",
-          "html_url": "https://github.com/BloopAI/vibe-kanban",
-          "category": "AI Coding Tools",
-          "description": "Get 10X more out of Claude Code, Codex or any coding agent",
-          "stars": 24173,
-          "tags": [
-            "agent",
-            "ai-agents",
-            "kanban",
-            "management"
-          ]
-        }
-      ],
-      "trend_details": [
-        {
-          "source_id": "freebuf",
-          "source_name": "Freebuf",
-          "source_rank": 1,
-          "status": "cache",
-          "title": "当SAST遇上AI Agent：Gitee CodePecker发布「图智 GraphAgent」",
-          "context": "3 月 25 日晚，Gitee CodePecker 举办「AI 重塑代码安全」线上发布会，正式发布新一代混合智能体代码安全审计平台「图智 ...",
-          "info": "",
-          "url": "https://www.freebuf.com/articles/475221.html"
-        },
-        {
-          "source_id": "github-trending-today",
-          "source_name": "Github Trending Today",
-          "source_rank": 1,
-          "status": "cache",
-          "title": "luongnv89 /      claude-howto",
-          "context": "A visual, example-driven guide to Claude Code — from basic concepts to advanced agents, with copy-paste templates that bring immediate value.",
-          "info": "✰ 14,288",
-          "url": "https://github.com/luongnv89/claude-howto"
-        }
-      ],
-      "founder_memo": {
-        "best_part": "The trend signal and repo stack already line up.",
-        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
-        "fastest_mvp": "Ship only the first wedge: Connect agent tools.",
-        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
-        "why_high": "The trend signal and repo stack already line up. The score rises when it can ship, charge, and repeat without needing heavy scale.",
-        "why_low": "The niche carries trust, workflow, or compliance weight.",
-        "top_penalties": [],
-        "improve_next": [
-          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
-          "Sell the first version as a done-for-you service before broadening into product."
-        ]
-      },
-      "build_decision": {
-        "label": "Build now",
-        "tone": "good",
-        "summary": "The trend signal and repo stack already line up."
-      }
-    },
-    {
-      "name": "Viral Content Repurposer",
-      "summary": "Convert live hot topics into social assets, explainers, and landing pages for creators or micro-brands.",
-      "why_now": "Trend windows are short, and creators need fast production pipelines that package text, images, and pages together.",
-      "revenue_model": "Subscription for content packs or done-for-you service retainers.",
-      "build_plan": [
-        "Ingest trends",
-        "Generate media assets",
-        "Publish channel-ready packages"
-      ],
-      "trends": [
-        "Claude Code源码泄露，下一个王牌提前曝光",
-        "中国最强“东西大动脉”要来了"
-      ],
-      "repos": [
-        "hacksider/Deep-Live-Cam",
-        "Finrandojin/alexandria-audiobook",
-        "ruvnet/RuView"
-      ],
-      "category_focus": [
-        "AI Content & Media",
-        "Web Development"
-      ],
-      "confidence": "medium",
-      "trend_repo_match_score": 70,
-      "revenue_score": 60,
-      "niche_difficulty_score": 34,
-      "build_speed_score": 66,
-      "monetization_latency_score": 52,
-      "recurring_revenue_score": 62,
-      "founder_score": 62,
-      "opportunity_score": 63,
-      "repo_details": [
-        {
           "full_name": "hacksider/Deep-Live-Cam",
           "html_url": "https://github.com/hacksider/Deep-Live-Cam",
           "category": "AI Content & Media",
           "description": "real time face swap and one-click video deepfake with only a single image",
-          "stars": 87166,
+          "stars": 86509,
           "tags": [
             "ai",
             "ai-deep-fake",
             "ai-face",
             "ai-webcam"
           ]
-        },
-        {
-          "full_name": "Finrandojin/alexandria-audiobook",
-          "html_url": "https://github.com/Finrandojin/alexandria-audiobook",
-          "category": "AI Content & Media",
-          "description": "AI-powered multi-voice audiobook generator — LLM script annotation, voice cloning, voice design, LoRA training, per-line style control, and export to MP3, chaptered M4B, or Audacity multi-track. Built on Qwen3-TTS.",
-          "stars": 477,
-          "tags": [
-            "ai",
-            "audiobook",
-            "audiobook-generator",
-            "audiobookshelf"
-          ]
-        },
-        {
-          "full_name": "ruvnet/RuView",
-          "html_url": "https://github.com/ruvnet/RuView",
-          "category": "AI Content & Media",
-          "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
-          "stars": 45029,
-          "tags": [
-            "agentic-ai",
-            "densepose",
-            "esp32",
-            "firmware"
-          ]
         }
       ],
       "trend_details": [
         {
-          "source_id": "36kr-renqi",
-          "source_name": "36kr Renqi",
-          "source_rank": 1,
+          "source_id": "producthunt",
+          "source_name": "Producthunt",
+          "source_rank": 5,
           "status": "cache",
-          "title": "Claude Code源码泄露，下一个王牌提前曝光",
-          "context": "Claude Code将变成《钢铁侠》里的贾维斯？",
-          "info": "字母AI  |  335.49热度",
-          "url": "https://36kr.com/p/3746770616627968"
-        },
-        {
-          "source_id": "baidu",
-          "source_name": "Baidu",
-          "source_rank": 1,
-          "status": "cache",
-          "title": "中国最强“东西大动脉”要来了",
-          "context": "长江入海口崇太长江隧道14公里江底段施工完成，标志着沿江高铁（沪渝蓉高铁）建设取得关键进展。这条5000亿的东西大动脉，将带动1.5万亿经济增长，重塑长江经济带格局。",
-          "info": "",
-          "url": "https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%BC%BA%E2%80%9C%E4%B8%9C%E8%A5%BF%E5%A4%A7%E5%8A%A8%E8%84%89%E2%80%9D%E8%A6%81%E6%9D%A5%E4%BA%86"
+          "title": "Agentplace AI Agents",
+          "context": "Create specialized AI agents for real tasks and workflows",
+          "info": " △︎ 705",
+          "url": "https://www.producthunt.com/products/agentplace?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
         }
       ],
       "founder_memo": {
         "best_part": "The trend signal and repo stack already line up.",
-        "biggest_risk": "Value may be obvious before willingness to pay is.",
-        "fastest_mvp": "Ship only the first wedge: Ingest trends.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "fastest_mvp": "Ship only the first wedge: Track Agentplace AI Agents.",
         "first_customer": "Content platforms with moderation and rights risk",
-        "why_high": "The trend signal and repo stack already line up. The score rises when it can ship, charge, and repeat without needing heavy scale.",
-        "why_low": "Value may be obvious before willingness to pay is. Revenue likely arrives after proof, not at first contact.",
+        "why_high": "The trend signal and repo stack already line up.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
         "top_penalties": [
-          "Revenue likely arrives after proof, not at first contact.",
-          "Packaging still needs a sharper buyer and price point."
+          "Current MVP shape is too broad for a fast solo launch.",
+          "Retention loop is weak, so monthly revenue is less certain."
         ],
         "improve_next": [
-          "Sell the first version as a done-for-you service before broadening into product.",
-          "Add a recurring alert, report, or compliance loop so usage repeats monthly."
+          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
+          "Ship only the first wedge: Track Agentplace AI Agents."
         ]
       },
       "build_decision": {
         "label": "Validate first",
         "tone": "caution",
-        "summary": "Value may be obvious before willingness to pay is."
+        "summary": "The niche carries trust, workflow, or compliance weight."
+      }
+    },
+    {
+      "name": "Signal Code-Infra Forge",
+      "summary": "Help freelancers turn Naoma AI Demo Agent into a repeatable studio workflow using code and infra tooling.",
+      "why_now": "Turn public trend noise into a done-for-you or productized service that can sell quickly. Today's NewsNow signal around Naoma AI Demo Agent creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for freelancers.",
+      "build_plan": [
+        "Track Naoma AI Demo Agent",
+        "Connect AI Coding Tools and Infrastructure & DevOps repo workflows",
+        "Ship a narrow studio for freelancers"
+      ],
+      "trends": [
+        "Naoma AI Demo Agent"
+      ],
+      "repos": [
+        "affaan-m/everything-claude-code",
+        "aquasecurity/trivy"
+      ],
+      "category_focus": [
+        "AI Coding Tools",
+        "Infrastructure & DevOps"
+      ],
+      "confidence": "high",
+      "trend_repo_match_score": 85,
+      "revenue_score": 72,
+      "niche_difficulty_score": 56,
+      "build_speed_score": 38,
+      "monetization_latency_score": 66,
+      "recurring_revenue_score": 54,
+      "founder_score": 55,
+      "opportunity_score": 68,
+      "semantic_signature": "c:cat:ai-coding-tools,cat:coding,cat:devop,cat:infrastructure,cat:infrastructure-devops,cat:tool | a:freelancer | w:agent,automation,review,signal,workflow,workspace | t:around,code,code-infra,coding,devop,done-for-you",
+      "repo_details": [
+        {
+          "full_name": "affaan-m/everything-claude-code",
+          "html_url": "https://github.com/affaan-m/everything-claude-code",
+          "category": "AI Coding Tools",
+          "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+          "stars": 120676,
+          "tags": [
+            "ai-agents",
+            "anthropic",
+            "claude",
+            "claude-code"
+          ]
+        },
+        {
+          "full_name": "aquasecurity/trivy",
+          "html_url": "https://github.com/aquasecurity/trivy",
+          "category": "Infrastructure & DevOps",
+          "description": "Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more",
+          "stars": 34241,
+          "tags": [
+            "containers",
+            "devsecops",
+            "docker",
+            "go"
+          ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "producthunt",
+          "source_name": "Producthunt",
+          "source_rank": 11,
+          "status": "cache",
+          "title": "Naoma AI Demo Agent",
+          "context": "The video AI demo agent for B2B SaaS for immediate demos",
+          "info": " △︎ 664",
+          "url": "https://www.producthunt.com/products/naoma/launches/naoma-ai-demo-agent?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The trend signal and repo stack already line up.",
+        "biggest_risk": "The MVP scope is still heavier than a fast founder build.",
+        "fastest_mvp": "Ship only the first wedge: Track Naoma AI Demo Agent.",
+        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "why_high": "The trend signal and repo stack already line up.",
+        "why_low": "The MVP scope is still heavier than a fast founder build. Current MVP shape is too broad for a fast solo launch.",
+        "top_penalties": [
+          "Current MVP shape is too broad for a fast solo launch.",
+          "Retention loop is weak, so monthly revenue is less certain."
+        ],
+        "improve_next": [
+          "Ship only the first wedge: Track Naoma AI Demo Agent.",
+          "Narrow the buyer to one painful workflow and one high-urgency trigger."
+        ]
+      },
+      "build_decision": {
+        "label": "Validate first",
+        "tone": "caution",
+        "summary": "The MVP scope is still heavier than a fast founder build."
+      }
+    },
+    {
+      "name": "Relay Infra-Mobile Radar",
+      "summary": "Help niche agencies turn Claude Code Review into a repeatable pipeline workflow using infra and mobile tooling.",
+      "why_now": "Turn public trend noise into a done-for-you or productized service that can sell quickly. Today's NewsNow signal around Claude Code Review creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for niche agencies.",
+      "build_plan": [
+        "Track Claude Code Review",
+        "Connect Infrastructure & DevOps and Mobile & Desktop repo workflows",
+        "Ship a narrow pipeline for niche agencies"
+      ],
+      "trends": [
+        "Claude Code Review"
+      ],
+      "repos": [
+        "aquasecurity/trivy",
+        "rustdesk/rustdesk"
+      ],
+      "category_focus": [
+        "Infrastructure & DevOps",
+        "Mobile & Desktop"
+      ],
+      "confidence": "medium",
+      "trend_repo_match_score": 69,
+      "revenue_score": 66,
+      "niche_difficulty_score": 56,
+      "build_speed_score": 44,
+      "monetization_latency_score": 66,
+      "recurring_revenue_score": 54,
+      "founder_score": 54,
+      "opportunity_score": 62,
+      "semantic_signature": "c:cat:desktop,cat:devop,cat:infrastructure,cat:infrastructure-devops,cat:mobile,cat:mobile-desktop | a:agency,niche | w:automation,monitor,review,signal,workflow | t:around,desktop,devop,done-for-you,focused,infra-mobile",
+      "repo_details": [
+        {
+          "full_name": "aquasecurity/trivy",
+          "html_url": "https://github.com/aquasecurity/trivy",
+          "category": "Infrastructure & DevOps",
+          "description": "Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more",
+          "stars": 34241,
+          "tags": [
+            "containers",
+            "devsecops",
+            "docker",
+            "go"
+          ]
+        },
+        {
+          "full_name": "rustdesk/rustdesk",
+          "html_url": "https://github.com/rustdesk/rustdesk",
+          "category": "Mobile & Desktop",
+          "description": "An open-source remote desktop application designed for self-hosting, as an alternative to TeamViewer.",
+          "stars": 110276,
+          "tags": [
+            "android",
+            "anydesk",
+            "dart",
+            "flatpak"
+          ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "producthunt",
+          "source_name": "Producthunt",
+          "source_rank": 19,
+          "status": "cache",
+          "title": "Claude Code Review",
+          "context": "Multi-agent review catching bugs early in AI-generated code",
+          "info": " △︎ 573",
+          "url": "https://www.producthunt.com/products/claude/launches/claude-code-review?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The trend signal and repo stack already line up.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "fastest_mvp": "Ship only the first wedge: Track Claude Code Review.",
+        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "why_high": "The trend signal and repo stack already line up.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
+        "top_penalties": [
+          "Current MVP shape is too broad for a fast solo launch.",
+          "Retention loop is weak, so monthly revenue is less certain."
+        ],
+        "improve_next": [
+          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
+          "Ship only the first wedge: Track Claude Code Review."
+        ]
+      },
+      "build_decision": {
+        "label": "Validate first",
+        "tone": "caution",
+        "summary": "The niche carries trust, workflow, or compliance weight."
+      }
+    },
+    {
+      "name": "Quiet Data-Trust Studio",
+      "summary": "Help operators with outbound motion turn Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的 into a repeatable engine workflow using data and trust tooling.",
+      "why_now": "Turn public trend noise into a done-for-you or productized service that can sell quickly. Today's NewsNow signal around Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的 creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for operators with outbound motion.",
+      "build_plan": [
+        "Track Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的",
+        "Connect Data & Analytics and Security & Privacy repo workflows",
+        "Ship a narrow engine for operators with outbound motion"
+      ],
+      "trends": [
+        "Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的"
+      ],
+      "repos": [
+        "clockworklabs/SpacetimeDB",
+        "Lissy93/web-check"
+      ],
+      "category_focus": [
+        "Data & Analytics",
+        "Security & Privacy"
+      ],
+      "confidence": "medium",
+      "trend_repo_match_score": 59,
+      "revenue_score": 72,
+      "niche_difficulty_score": 75,
+      "build_speed_score": 38,
+      "monetization_latency_score": 66,
+      "recurring_revenue_score": 62,
+      "founder_score": 50,
+      "opportunity_score": 60,
+      "semantic_signature": "c:cat:analytic,cat:data,cat:data-analytics,cat:privacy,cat:security,cat:security-privacy | a:motion,operator,outbound | w:agent,automation,review,signal,workflow,workspace | t:analytic,around,data,data-trust,done-for-you,focused",
+      "repo_details": [
+        {
+          "full_name": "clockworklabs/SpacetimeDB",
+          "html_url": "https://github.com/clockworklabs/SpacetimeDB",
+          "category": "Data & Analytics",
+          "description": "Development at the speed of light",
+          "stars": 24291,
+          "tags": [
+            "database",
+            "dataoriented",
+            "game-development",
+            "mmorpg-server"
+          ]
+        },
+        {
+          "full_name": "Lissy93/web-check",
+          "html_url": "https://github.com/Lissy93/web-check",
+          "category": "Security & Privacy",
+          "description": "🕵️‍♂️ All-in-one OSINT tool for analysing any website",
+          "stars": 32533,
+          "tags": [
+            "osint",
+            "privacy",
+            "security",
+            "security-tools"
+          ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "juejin",
+          "source_name": "Juejin",
+          "source_rank": 3,
+          "status": "cache",
+          "title": "Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的",
+          "context": "",
+          "info": "",
+          "url": "https://juejin.cn/post/7623066322222153728"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The pricing surface is visible from day one.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "fastest_mvp": "Ship only the first wedge: Track Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的.",
+        "first_customer": "Security teams at software companies",
+        "why_high": "The pricing surface is visible from day one.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. High-trust niche increases validation and delivery burden.",
+        "top_penalties": [
+          "High-trust niche increases validation and delivery burden.",
+          "Current MVP shape is too broad for a fast solo launch."
+        ],
+        "improve_next": [
+          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
+          "Ship only the first wedge: Track Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的."
+        ]
+      },
+      "build_decision": {
+        "label": "Validate first",
+        "tone": "caution",
+        "summary": "The niche carries trust, workflow, or compliance weight."
       }
     }
   ]

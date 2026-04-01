@@ -14,17 +14,29 @@ const ideaCount = document.getElementById("idea-count");
 const trendCount = document.getElementById("trend-count");
 const sourceCount = document.getElementById("source-count");
 const rankingLabel = document.getElementById("ranking-label");
+const railLabel = document.getElementById("rail-label");
+const railTabs = document.getElementById("rail-tabs");
 const historyCount = document.getElementById("history-count");
-const comparisonLabel = document.getElementById("comparison-label");
-const comparisonGrid = document.getElementById("comparison-grid");
+const collectionSearch = document.getElementById("collection-search");
+const collectionDateFilter = document.getElementById("collection-date-filter");
+const collectionSort = document.getElementById("collection-sort");
+const collectionCount = document.getElementById("collection-count");
+const collectionStats = document.getElementById("collection-stats");
+const collectionNav = document.getElementById("collection-nav");
+const collectionDetail = document.getElementById("collection-detail");
+const collectionSelectionLabel = document.getElementById("collection-selection-label");
 const emptyCardTemplate = document.getElementById("empty-card-template");
 
 const state = {
   index: null,
+  collection: null,
   reports: new Map(),
   currentPath: "",
   currentReport: null,
   previousReport: null,
+  currentCollectionGroupId: "",
+  currentCollectionDetailTab: "overview",
+  currentRailTab: "ranking",
 };
 
 async function fetchJson(path) {
@@ -55,6 +67,10 @@ function tag(label) {
   return `<span class="tag">${escapeHtml(label)}</span>`;
 }
 
+function sectionPill(label) {
+  return `<span class="section-pill">${escapeHtml(label)}</span>`;
+}
+
 function scoreBadge(label, value) {
   return `
     <div class="score">
@@ -78,6 +94,16 @@ function decisionBadge(decision) {
       <span class="decision-copy">${escapeHtml(summary)}</span>
     </div>
   `;
+}
+
+function setActiveTab(container, selector, activeValue, attribute = "data-tab") {
+  if (!container) {
+    return;
+  }
+  for (const node of container.querySelectorAll(selector)) {
+    const isActive = node.getAttribute(attribute) === activeValue;
+    node.classList.toggle("is-active", isActive);
+  }
 }
 
 function emptyCard(title, copy) {
@@ -108,6 +134,18 @@ function getSelectedCategory() {
 
 function getSelectedSort() {
   return sortSelect.value || "founder";
+}
+
+function getCollectionDate() {
+  return collectionDateFilter.value || "All dates";
+}
+
+function getCollectionSort() {
+  return collectionSort.value || "latest";
+}
+
+function getCollectionQuery() {
+  return (collectionSearch.value || "").trim().toLowerCase();
 }
 
 function getCurrentIdeas() {
@@ -154,6 +192,267 @@ function renderStats(report, ideas) {
   );
 }
 
+function getCollectionGroups() {
+  if (!state.collection?.recurrence_groups) {
+    return [];
+  }
+  const selectedDate = getCollectionDate();
+  const query = getCollectionQuery();
+  const currentCategory = getSelectedCategory();
+  const filtered = state.collection.recurrence_groups.filter((group) => {
+    const latestItem = group.latest_item || {};
+    if (selectedDate !== "All dates" && latestItem.date !== selectedDate) {
+      return false;
+    }
+    if (currentCategory !== "All categories" && !(group.category_focus || []).includes(currentCategory)) {
+      return false;
+    }
+    if (!query) {
+      return true;
+    }
+    const searchText = [
+      group.label,
+      latestItem.name,
+      latestItem.summary,
+      latestItem.why_now,
+      ...(group.category_focus || []),
+      ...(group.trends || []),
+      ...(group.repos || []),
+    ]
+      .join(" ")
+      .toLowerCase();
+    return searchText.includes(query);
+  });
+  const sortMode = getCollectionSort();
+  return [...filtered].sort((left, right) => {
+    if (sortMode === "momentum") {
+      return right.momentum_score - left.momentum_score || right.last_seen.localeCompare(left.last_seen);
+    }
+    if (sortMode === "name") {
+      return left.label.localeCompare(right.label) || right.last_seen.localeCompare(left.last_seen);
+    }
+    if (sortMode === "founder") {
+      return right.latest_item.founder_score - left.latest_item.founder_score || right.last_seen.localeCompare(left.last_seen);
+    }
+    if (sortMode === "revenue") {
+      return right.latest_item.revenue_score - left.latest_item.revenue_score || right.last_seen.localeCompare(left.last_seen);
+    }
+    return right.last_seen.localeCompare(left.last_seen) || right.momentum_score - left.momentum_score;
+  });
+}
+
+function renderCollectionStats() {
+  collectionStats.innerHTML = "";
+  if (!state.collection?.stats) {
+    return;
+  }
+  const topCategory = state.collection.stats.top_categories?.[0]?.name || "—";
+  collectionStats.append(
+    statCard("Groups", state.collection.stats.total_groups || 0),
+    statCard("Dates", state.collection.stats.total_dates || 0),
+    statCard("Avg founder", state.collection.stats.avg_founder_score || 0),
+    statCard("Recurring groups", state.collection.stats.recurring_ideas || 0),
+    statCard("Top category", topCategory)
+  );
+}
+
+function openReportFromCollection(path) {
+  if (!path) {
+    return;
+  }
+  reportSelect.value = path;
+  loadReport(path);
+}
+
+function ensureSelectedCollectionGroup(groups) {
+  if (!groups.length) {
+    state.currentCollectionGroupId = "";
+    return null;
+  }
+  if (!groups.some((group) => group.group_id === state.currentCollectionGroupId)) {
+    state.currentCollectionGroupId = groups[0].group_id;
+  }
+  return groups.find((group) => group.group_id === state.currentCollectionGroupId) || groups[0];
+}
+
+async function selectCollectionGroup(groupId) {
+  state.currentCollectionGroupId = groupId;
+  const group = state.collection?.recurrence_groups?.find((item) => item.group_id === groupId);
+  const targetPath = group?.latest_item?.report_path || "";
+  if (targetPath && targetPath !== state.currentPath) {
+    await loadReport(targetPath, true);
+    return;
+  }
+  renderCollection();
+}
+
+function renderCollectionNav(groups, selectedGroup) {
+  collectionNav.innerHTML = "";
+  const totalGroups = state.collection?.stats?.total_groups || 0;
+  collectionCount.textContent = `${groups.length}/${totalGroups} groups`;
+  if (!groups.length) {
+    collectionNav.appendChild(emptyCard("No collection matches", "Try another search term, date, or category."));
+    return;
+  }
+  for (const group of groups.slice(0, 48)) {
+    const latestItem = group.latest_item || {};
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `collection-link${group.group_id === selectedGroup?.group_id ? " is-active" : ""}`;
+    button.dataset.groupId = group.group_id;
+    button.innerHTML = `
+      <span class="collection-link-top">
+        <span class="collection-link-title">${escapeHtml(group.label)}</span>
+        <span class="collection-link-badge">${escapeHtml(group.momentum_label)}</span>
+      </span>
+      <span class="collection-link-meta">
+        ${escapeHtml(latestItem.date || "—")} · ${escapeHtml(group.appearance_count || 1)}x · Founder ${escapeHtml(latestItem.founder_score || 0)}
+      </span>
+    `;
+    collectionNav.appendChild(button);
+  }
+  for (const button of collectionNav.querySelectorAll(".collection-link")) {
+    button.addEventListener("click", () => {
+      selectCollectionGroup(button.dataset.groupId);
+    });
+  }
+}
+
+function renderCollectionDetail(group) {
+  collectionDetail.innerHTML = "";
+  if (!group) {
+    collectionSelectionLabel.textContent = "Choose a title";
+    collectionDetail.appendChild(emptyCard("No selection", "Pick a collection title from the side menu."));
+    return;
+  }
+  const latestItem = group.latest_item || {};
+  const recurringTag = group.is_recurring ? tag(`Recurring ${group.appearance_count || 2}x`) : tag("Fresh");
+  const categoryTags = (group.category_focus || []).slice(0, 4).map(tag).join("");
+  const trendTags = (group.trends || []).slice(0, 3).map(tag).join("");
+  const repoTags = (group.repos || []).slice(0, 4).map(tag).join("");
+  const historyRows = (group.score_history || [])
+    .slice()
+    .reverse()
+    .map(
+      (entry) => `
+        <button class="collection-history-item" data-path="${escapeHtml(entry.report_path)}" type="button">
+          <span class="collection-history-date">${escapeHtml(entry.date)}</span>
+          <span class="collection-history-name">${escapeHtml(entry.name)}</span>
+          <span class="collection-history-scores">Founder ${escapeHtml(entry.founder_score)} · Revenue ${escapeHtml(entry.revenue_score)} · Radar ${escapeHtml(entry.opportunity_score)}</span>
+        </button>
+      `
+    )
+    .join("");
+  const detailTabs = [
+    { id: "overview", label: "Overview" },
+    { id: "signals", label: "Signals" },
+    { id: "history", label: "History" },
+  ];
+  const detailPanels = {
+    overview: `
+      <div class="detail-section-label">${sectionPill("Collection brief")}</div>
+      ${decisionBadge(latestItem.build_decision || {})}
+      <div class="mini-grid">
+        <div class="mini-block">
+          <span class="label">Lifecycle</span>
+          <p class="copy">First seen ${escapeHtml(group.first_seen || "—")} · Last seen ${escapeHtml(group.last_seen || "—")} · ${escapeHtml(group.active_dates || 1)} active dates</p>
+        </div>
+        <div class="mini-block">
+          <span class="label">Momentum read</span>
+          <p class="copy">Founder ${escapeHtml(group.delta_founder_score || 0)} · Revenue ${escapeHtml(group.delta_revenue_score || 0)} · Radar ${escapeHtml(group.delta_opportunity_score || 0)} versus the previous appearance.</p>
+        </div>
+        <div class="mini-block">
+          <span class="label">Why now</span>
+          <p class="copy">${escapeHtml(latestItem.why_now || "")}</p>
+        </div>
+        <div class="mini-block">
+          <span class="label">Revenue path</span>
+          <p class="copy">${escapeHtml(latestItem.revenue_model || "")}</p>
+        </div>
+      </div>
+    `,
+    signals: `
+      <div class="detail-section-label">${sectionPill("Signal mix")}</div>
+      <div class="mini-grid">
+        <div class="mini-block">
+          <span class="label">Current scores</span>
+          <p class="copy">Founder ${escapeHtml(latestItem.founder_score || 0)} · Revenue ${escapeHtml(latestItem.revenue_score || 0)} · Radar ${escapeHtml(latestItem.opportunity_score || 0)} · Fit ${escapeHtml(latestItem.trend_repo_match_score || 0)}</p>
+        </div>
+        <div class="mini-block">
+          <span class="label">Group averages</span>
+          <p class="copy">Founder ${escapeHtml(group.avg_founder_score || 0)} · Revenue ${escapeHtml(group.avg_revenue_score || 0)} · Radar ${escapeHtml(group.avg_opportunity_score || 0)}</p>
+        </div>
+      </div>
+      <div class="meta-line">${categoryTags}</div>
+      <div class="meta-line">${trendTags}</div>
+      <div class="meta-line">${repoTags}</div>
+    `,
+    history: `
+      <section class="collection-history">
+        <div class="panel-header">
+          <h3>Lifecycle History</h3>
+          <span>${escapeHtml((group.score_history || []).length)} entries</span>
+        </div>
+        <div class="stack">${historyRows}</div>
+      </section>
+    `,
+  };
+  if (!detailTabs.some((tab) => tab.id === state.currentCollectionDetailTab)) {
+    state.currentCollectionDetailTab = "overview";
+  }
+  collectionSelectionLabel.textContent = `${group.momentum_label} · ${group.appearance_count || 1} appearances`;
+  collectionDetail.innerHTML = `
+    <div class="collection-detail-head">
+      <div class="stack">
+        ${sectionPill("Collection")}
+        <div class="meta-line">
+          ${tag(latestItem.date || "—")}
+          ${recurringTag}
+          ${tag(`Momentum ${group.momentum_score || 0}`)}
+          ${tag(group.momentum_label || "Watching")}
+        </div>
+        <h3>${escapeHtml(group.label || latestItem.name || "Collection item")}</h3>
+        <p class="copy">${escapeHtml(latestItem.summary || "")}</p>
+      </div>
+      <div class="collection-actions">
+        ${scoreBadge("Momentum", group.momentum_score || 0)}
+        ${scoreBadge("Founder", latestItem.founder_score || 0)}
+        ${scoreBadge("Revenue", latestItem.revenue_score || 0)}
+        <button class="button button-quiet collection-open" data-path="${escapeHtml(latestItem.report_path || "")}" type="button">Open day</button>
+      </div>
+    </div>
+    <div class="tabs tabs-inline">
+      ${detailTabs
+        .map(
+          (tab) =>
+            `<button class="tab-button${tab.id === state.currentCollectionDetailTab ? " is-active" : ""}" type="button" data-detail-tab="${escapeHtml(tab.id)}">${escapeHtml(tab.label)}</button>`
+        )
+        .join("")}
+    </div>
+    <div class="tab-panel is-active collection-detail-body">${detailPanels[state.currentCollectionDetailTab]}</div>
+  `;
+  const openButton = collectionDetail.querySelector(".collection-open");
+  if (openButton) {
+    openButton.addEventListener("click", (event) => openReportFromCollection(event.currentTarget.dataset.path));
+  }
+  for (const button of collectionDetail.querySelectorAll("[data-detail-tab]")) {
+    button.addEventListener("click", () => {
+      state.currentCollectionDetailTab = button.dataset.detailTab;
+      renderCollectionDetail(group);
+    });
+  }
+  for (const button of collectionDetail.querySelectorAll(".collection-history-item")) {
+    button.addEventListener("click", (event) => openReportFromCollection(event.currentTarget.dataset.path));
+  }
+}
+
+function renderCollection() {
+  const groups = getCollectionGroups();
+  const selectedGroup = ensureSelectedCollectionGroup(groups);
+  renderCollectionNav(groups, selectedGroup);
+  renderCollectionDetail(selectedGroup);
+}
+
 function renderIdeas(ideas) {
   ideasList.innerHTML = "";
   ideaCount.textContent = `${ideas.length} visible`;
@@ -180,6 +479,7 @@ function renderIdeas(ideas) {
       ${decisionBadge(decision)}
       <div class="idea-topline">
         <div>
+          ${sectionPill("Daily idea")}
           <h3>${escapeHtml(idea.name)}</h3>
           <p class="copy">${escapeHtml(idea.summary || "")}</p>
         </div>
@@ -192,70 +492,82 @@ function renderIdeas(ideas) {
       </div>
       <div class="meta-line">${signalTags}</div>
       <div class="meta-line">${categoryTags}${confidence}</div>
-      <section class="memo-panel">
-        <div class="memo-header">
-          <span class="label">Founder memo</span>
-          <span class="micro">Why it scores this way</span>
-        </div>
-        <div class="memo-grid">
-          <div class="mini-block">
-            <span class="label">Best part</span>
-            <p class="copy">${escapeHtml(memo.best_part || "")}</p>
+      <details class="disclosure-panel idea-disclosure">
+        <summary class="disclosure-summary disclosure-inline">
+          <div class="memo-header">
+            <span class="label">Founder memo</span>
+            <span class="micro">Why it scores this way</span>
+          </div>
+        </summary>
+        <section class="memo-panel">
+          <div class="memo-grid">
+            <div class="mini-block">
+              <span class="label">Best part</span>
+              <p class="copy">${escapeHtml(memo.best_part || "")}</p>
+            </div>
+            <div class="mini-block">
+              <span class="label">Biggest risk</span>
+              <p class="copy">${escapeHtml(memo.biggest_risk || "")}</p>
+            </div>
+            <div class="mini-block">
+              <span class="label">Fastest MVP</span>
+              <p class="copy">${escapeHtml(memo.fastest_mvp || "")}</p>
+            </div>
+            <div class="mini-block">
+              <span class="label">First customer</span>
+              <p class="copy">${escapeHtml(memo.first_customer || "")}</p>
+            </div>
+          </div>
+          <div class="mini-grid memo-detail-grid">
+            <div class="mini-block">
+              <span class="label">Why high</span>
+              <p class="copy">${escapeHtml(memo.why_high || "")}</p>
+            </div>
+            <div class="mini-block">
+              <span class="label">Why low</span>
+              <p class="copy">${escapeHtml(memo.why_low || "")}</p>
+            </div>
           </div>
           <div class="mini-block">
-            <span class="label">Biggest risk</span>
-            <p class="copy">${escapeHtml(memo.biggest_risk || "")}</p>
+            <span class="label">Top penalties</span>
+            <div class="memo-chip-row">${renderMemoItems(memo.top_penalties)}</div>
           </div>
           <div class="mini-block">
-            <span class="label">Fastest MVP</span>
-            <p class="copy">${escapeHtml(memo.fastest_mvp || "")}</p>
+            <span class="label">Improve next</span>
+            <div class="memo-chip-row">${renderMemoItems(memo.improve_next)}</div>
+          </div>
+        </section>
+      </details>
+      <details class="disclosure-panel idea-disclosure">
+        <summary class="disclosure-summary disclosure-inline">
+          <div class="memo-header">
+            <span class="label">Build notes</span>
+            <span class="micro">Launch, monetization, and stack</span>
+          </div>
+        </summary>
+        <div class="mini-grid compact-grid">
+          <div class="mini-block">
+            <span class="label">Why now</span>
+            <p class="copy">${escapeHtml(idea.why_now || "")}</p>
           </div>
           <div class="mini-block">
-            <span class="label">First customer</span>
-            <p class="copy">${escapeHtml(memo.first_customer || "")}</p>
-          </div>
-        </div>
-        <div class="mini-grid memo-detail-grid">
-          <div class="mini-block">
-            <span class="label">Why high</span>
-            <p class="copy">${escapeHtml(memo.why_high || "")}</p>
+            <span class="label">Revenue path</span>
+            <p class="copy">${escapeHtml(idea.revenue_model || "")}</p>
           </div>
           <div class="mini-block">
-            <span class="label">Why low</span>
-            <p class="copy">${escapeHtml(memo.why_low || "")}</p>
+            <span class="label">Launch path</span>
+            <p class="copy">${launchPath}</p>
+          </div>
+          <div class="mini-block">
+            <span class="label">Founder lens</span>
+            <p class="copy">Difficulty ${escapeHtml(idea.niche_difficulty_score)} · Build ${escapeHtml(idea.build_speed_score)} · Monetization ${escapeHtml(idea.monetization_latency_score)} · Recurring ${escapeHtml(idea.recurring_revenue_score)}</p>
+          </div>
+          <div class="mini-block">
+            <span class="label">Repo stack</span>
+            <p class="copy repo-list">${repoLinks}</p>
           </div>
         </div>
-        <div class="mini-block">
-          <span class="label">Top penalties</span>
-          <div class="memo-chip-row">${renderMemoItems(memo.top_penalties)}</div>
-        </div>
-        <div class="mini-block">
-          <span class="label">Improve next</span>
-          <div class="memo-chip-row">${renderMemoItems(memo.improve_next)}</div>
-        </div>
-      </section>
-      <div class="mini-grid">
-        <div class="mini-block">
-          <span class="label">Why now</span>
-          <p class="copy">${escapeHtml(idea.why_now || "")}</p>
-        </div>
-        <div class="mini-block">
-          <span class="label">Revenue path</span>
-          <p class="copy">${escapeHtml(idea.revenue_model || "")}</p>
-        </div>
-        <div class="mini-block">
-          <span class="label">Launch path</span>
-          <p class="copy">${launchPath}</p>
-        </div>
-        <div class="mini-block">
-          <span class="label">Founder lens</span>
-          <p class="copy">Difficulty ${escapeHtml(idea.niche_difficulty_score)} · Build ${escapeHtml(idea.build_speed_score)} · Monetization ${escapeHtml(idea.monetization_latency_score)} · Recurring ${escapeHtml(idea.recurring_revenue_score)}</p>
-        </div>
-        <div class="mini-block">
-          <span class="label">Repo stack</span>
-          <p class="copy repo-list">${repoLinks}</p>
-        </div>
-      </div>
+      </details>
     `;
     ideasList.appendChild(card);
   }
@@ -275,6 +587,7 @@ function renderRanking(ideas) {
     const item = document.createElement("article");
     item.className = "ranking-item";
     item.innerHTML = `
+      ${sectionPill("Founder pick")}
       <div class="ranking-row">
         <strong>${escapeHtml(idea.name)}</strong>
         ${tag(`Founder ${idea.founder_score}`)}
@@ -310,6 +623,7 @@ function renderTrends(report, ideas) {
     const card = document.createElement("article");
     card.className = "trend-card";
     card.innerHTML = `
+      ${sectionPill("Trend signal")}
       <h3><a href="${escapeHtml(trend.url)}" target="_blank" rel="noreferrer">${escapeHtml(trend.title)}</a></h3>
       <p class="copy">${escapeHtml(trend.context || trend.info || "No extra context.")}</p>
       <div class="meta-line">
@@ -357,56 +671,6 @@ function renderHistory() {
   }
 }
 
-function comparisonCard(label, value, note) {
-  const card = document.createElement("article");
-  card.className = "comparison-card";
-  card.innerHTML = `
-    <div class="micro">${escapeHtml(label)}</div>
-    <div class="comparison-value">${escapeHtml(value)}</div>
-    <div class="comparison-note">${escapeHtml(note)}</div>
-  `;
-  return card;
-}
-
-function renderComparison(currentReport, previousReport) {
-  comparisonGrid.innerHTML = "";
-  if (!previousReport) {
-    comparisonLabel.textContent = "Available after the next daily run";
-    comparisonGrid.append(
-      comparisonCard("New ideas", "—", "Need one earlier report to measure movement."),
-      comparisonCard("Dropped ideas", "—", "Older ideas will appear here once history exists."),
-      comparisonCard("New trends", "—", "Trend turnover is calculated day over day."),
-      comparisonCard("Revenue leader", "—", "Leader shift appears after at least two days."),
-    );
-    return;
-  }
-
-  comparisonLabel.textContent = `${previousReport.date} → ${currentReport.date}`;
-  const currentIdeas = new Set(currentReport.ideas.map((idea) => idea.name));
-  const previousIdeas = new Set(previousReport.ideas.map((idea) => idea.name));
-  const currentTrends = new Set(currentReport.trends.map((trend) => trend.title));
-  const previousTrends = new Set(previousReport.trends.map((trend) => trend.title));
-  const newIdeas = [...currentIdeas].filter((name) => !previousIdeas.has(name));
-  const droppedIdeas = [...previousIdeas].filter((name) => !currentIdeas.has(name));
-  const newTrends = [...currentTrends].filter((title) => !previousTrends.has(title));
-  const currentLeader = [...currentReport.ideas].sort((a, b) => b.founder_score - a.founder_score)[0];
-  const previousLeader = [...previousReport.ideas].sort((a, b) => b.founder_score - a.founder_score)[0];
-  comparisonGrid.append(
-    comparisonCard("New ideas", newIdeas.length, newIdeas[0] || "No new ideas in the current run."),
-    comparisonCard("Dropped ideas", droppedIdeas.length, droppedIdeas[0] || "No idea fell out of the set."),
-    comparisonCard("New trends", newTrends.length, newTrends[0] || "Trend set stayed stable."),
-    comparisonCard(
-      "Founder leader",
-      currentLeader ? currentLeader.founder_score : "—",
-      currentLeader && previousLeader && currentLeader.name !== previousLeader.name
-        ? `${currentLeader.name} replaced ${previousLeader.name}`
-        : currentLeader
-          ? `${currentLeader.name} kept the top spot`
-          : "No ideas available."
-    )
-  );
-}
-
 function populateCategoryFilter(report) {
   const categories = ["All categories", ...(report.available_categories || [])];
   const previousValue = categoryFilter.value || "All categories";
@@ -431,7 +695,27 @@ function renderCurrentView() {
   renderTrends(report, ideas);
   renderSources(report);
   renderHistory();
-  renderComparison(report, state.previousReport);
+  renderCollection();
+  applyRailTabState();
+}
+
+function applyRailTabState() {
+  setActiveTab(railTabs, ".tab-button", state.currentRailTab);
+  const panelContainer = railTabs?.parentElement;
+  if (!panelContainer) {
+    return;
+  }
+  for (const panel of panelContainer.querySelectorAll(".tab-panel")) {
+    panel.classList.toggle("is-active", panel.dataset.panel === state.currentRailTab);
+  }
+  const labels = {
+    ranking: "Founder bets",
+    trends: "Trend snapshot",
+    sources: "Source health",
+  };
+  if (railLabel) {
+    railLabel.textContent = labels[state.currentRailTab] || "Signals";
+  }
 }
 
 async function getReport(path) {
@@ -441,7 +725,7 @@ async function getReport(path) {
   return state.reports.get(path);
 }
 
-async function loadReport(path) {
+async function loadReport(path, preserveCollectionSelection = false) {
   state.currentPath = path;
   state.currentReport = await getReport(path);
   const reports = state.index?.reports || [];
@@ -449,12 +733,23 @@ async function loadReport(path) {
   const previousPath = currentIndex >= 0 ? reports[currentIndex + 1]?.path : "";
   state.previousReport = previousPath ? await getReport(previousPath) : null;
   populateCategoryFilter(state.currentReport);
+  if (!preserveCollectionSelection && !state.currentCollectionGroupId) {
+    const groups = getCollectionGroups();
+    if (groups[0]) {
+      state.currentCollectionGroupId = groups[0].group_id;
+    }
+  }
   renderCurrentView();
 }
 
 async function init() {
   try {
-    state.index = await fetchJson("./data/index.json");
+    const [index, collection] = await Promise.all([
+      fetchJson("./data/index.json"),
+      fetchJson("./data/collection.json"),
+    ]);
+    state.index = index;
+    state.collection = collection;
     const reports = state.index.reports || [];
     reportSelect.innerHTML = reports
       .map(
@@ -462,10 +757,29 @@ async function init() {
           `<option value="${escapeHtml(report.path)}" ${report.date === state.index.latest ? "selected" : ""}>${escapeHtml(report.date)} · ${escapeHtml(report.top_idea || "Opportunity Radar")}</option>`
       )
       .join("");
+    const collectionDates = ["All dates", ...Object.keys(state.collection?.stats?.ideas_by_date || {}).sort().reverse()];
+    collectionDateFilter.innerHTML = collectionDates
+      .map((date) => `<option value="${escapeHtml(date)}">${escapeHtml(date)}</option>`)
+      .join("");
+    renderCollectionStats();
     reportSelect.addEventListener("change", (event) => loadReport(event.target.value));
     categoryFilter.addEventListener("change", renderCurrentView);
     sortSelect.addEventListener("change", renderCurrentView);
+    collectionSearch.addEventListener("input", renderCollection);
+    collectionDateFilter.addEventListener("change", renderCollection);
+    collectionSort.addEventListener("change", renderCollection);
+    for (const button of railTabs?.querySelectorAll(".tab-button") || []) {
+      button.addEventListener("click", () => {
+        state.currentRailTab = button.dataset.tab;
+        applyRailTabState();
+      });
+    }
     const initialPath = reports.find((report) => report.date === state.index.latest)?.path || reports[0]?.path;
+    const initialGroup = getCollectionGroups()[0];
+    if (initialGroup) {
+      state.currentCollectionGroupId = initialGroup.group_id;
+    }
+    applyRailTabState();
     if (initialPath) {
       await loadReport(initialPath);
     }
@@ -473,6 +787,10 @@ async function init() {
     modePill.textContent = "unavailable";
     ideasList.innerHTML = "";
     ideasList.appendChild(emptyCard("Data unavailable", error.message));
+    collectionNav.innerHTML = "";
+    collectionNav.appendChild(emptyCard("Collection unavailable", error.message));
+    collectionDetail.innerHTML = "";
+    collectionDetail.appendChild(emptyCard("Selection unavailable", error.message));
   }
 }
 
