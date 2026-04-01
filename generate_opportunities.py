@@ -30,7 +30,6 @@ DEFAULT_SOURCES = [
     "hackernews",
     "hupu",
     "ifeng",
-    "iqiyi-hot-ranklist",
     "juejin",
     "nowcoder",
     "producthunt",
@@ -95,6 +94,9 @@ CREATIVE_ANGLES = [
 ]
 FALLBACK_PREFIXES = ["Signal", "Quiet", "Vector", "Backchannel", "Niche", "Drift", "Atlas", "Pulse", "Relay", "Frontier"]
 FALLBACK_SUFFIXES = ["Desk", "Radar", "Forge", "Watch", "Studio", "Console", "Pilot", "Inbox", "Engine", "Atlas"]
+MAX_IDEA_COUNT = 10
+IDEA_CANDIDATE_COUNT = 14
+FALLBACK_IDEA_CANDIDATE_COUNT = 24
 CATEGORY_ALIASES = {
     "SEO & Marketing": "SEO",
     "Web Scraping & Browser Automation": "Crawler",
@@ -129,10 +131,10 @@ Return strict JSON only with this shape:
   ]
 }
 Rules:
-- Return 6 ideas.
+- Return 14 ideas.
 - Each idea must use at least 2 repositories and at least 1 trend.
 - Treat the NewsNow trend list as today's ground truth. The ideas should feel triggered by today's news cycle, not generic evergreen SaaS prompts.
-- At least 4 of the 6 ideas must be explicitly anchored to the top/headline NewsNow trends provided in the prompt.
+- At least 8 of the 14 ideas must be explicitly anchored to the top/headline NewsNow trends provided in the prompt.
 - Every why_now must explain what changed in today's NewsNow signals and why that creates a timely wedge right now.
 - Optimize for fast launch, leverage, and practical passive or semi-passive revenue.
 - Prefer products, data services, workflow tools, audits, monitoring, marketplaces, or niche B2B utilities.
@@ -630,7 +632,7 @@ def build_generation_context(
         "recent_ideas": recent_ideas,
         "headline_trends": trends[:6],
         "surprise_trends": pick_surprise_trends(trends, report_date),
-        "repo_combos": build_repo_combo_candidates(repos, report_date),
+        "repo_combos": build_repo_combo_candidates(repos, report_date, limit=FALLBACK_IDEA_CANDIDATE_COUNT),
     }
 
 
@@ -916,7 +918,7 @@ def build_llm_prompt(
         if idea.get("name")
     ]
     angle = generation_context.get("angle", {})
-    combo_payload = generation_context.get("repo_combos", [])[:8]
+    combo_payload = generation_context.get("repo_combos", [])[:12]
     headline_trends = [
         {
             "title": trend["title"],
@@ -939,7 +941,7 @@ def build_llm_prompt(
         f"Preferred audiences: {json.dumps(angle.get('audiences', []), ensure_ascii=False)}\n"
         f"Preferred product formats: {json.dumps(angle.get('formats', []), ensure_ascii=False)}\n\n"
         "Priority: build ideas that react to today's NewsNow headlines first, then use surprise signals for edge cases.\n"
-        "At least 4 of the 6 ideas should map directly to the top headline trends below.\n\n"
+        "At least 8 of the 14 ideas should map directly to the top headline trends below.\n\n"
         "Top headline NewsNow trends to prioritize:\n"
         f"{json.dumps(headline_trends, ensure_ascii=False, indent=2)}\n\n"
         "Avoid repeating or lightly remixing these recent ideas:\n"
@@ -966,7 +968,7 @@ def generate_ideas_with_llm(
     endpoint = f"{base_url}/v1/messages"
     payload = {
         "model": env.get("ANTHROPIC_MODEL") or env.get("ANTHROPIC_DEFAULT_SONNET_MODEL") or "MiniMax-M2.7",
-        "max_tokens": 2200,
+        "max_tokens": 4200,
         "temperature": 0.78,
         "system": OPPORTUNITY_SYSTEM_PROMPT,
         "messages": [
@@ -1045,11 +1047,15 @@ def build_dynamic_fallback_ideas(
     prioritized_trends = headline_trends + [
         trend for trend in surprise_trends if str(trend.get("title") or "") not in {str(item.get("title") or "") for item in headline_trends}
     ]
-    combos = generation_context.get("repo_combos", []) or build_repo_combo_candidates(repos, report_date, limit=8)
+    combos = generation_context.get("repo_combos", []) or build_repo_combo_candidates(
+        repos,
+        report_date,
+        limit=FALLBACK_IDEA_CANDIDATE_COUNT,
+    )
     angle = generation_context.get("angle", CREATIVE_ANGLES[0])
     audiences = angle.get("audiences", ["operators"])
     formats = angle.get("formats", ["desk"])
-    for index, combo in enumerate(combos[:8]):
+    for index, combo in enumerate(combos[:FALLBACK_IDEA_CANDIDATE_COUNT]):
         categories = combo.get("categories", [])
         if len(categories) < 2:
             continue
@@ -1102,7 +1108,7 @@ def select_fresh_ideas(
     trend_titles: set[str],
     available_trends: list[dict[str, Any]],
     recent_ideas: list[dict[str, Any]],
-    limit: int = 4,
+    limit: int = MAX_IDEA_COUNT,
 ) -> list[dict[str, Any]]:
     selected: list[dict[str, Any]] = []
     comparison_pool = list(recent_ideas)
@@ -1114,12 +1120,6 @@ def select_fresh_ideas(
             continue
         selected.append(idea)
         comparison_pool.append(idea)
-        if len(selected) >= limit:
-            return selected
-    for idea in sanitized_candidates:
-        if any(ideas_are_similar(idea, chosen) for chosen in selected):
-            continue
-        selected.append(idea)
         if len(selected) >= limit:
             return selected
     return selected[:limit]
@@ -1200,6 +1200,26 @@ def keyword_tokens(text: str) -> set[str]:
 
 def clamp_score(value: int) -> int:
     return max(0, min(100, value))
+
+
+def score_on_ten(value: int | float) -> int:
+    if value <= 0:
+        return 1
+    return max(1, min(10, int(round(float(value) / 10))))
+
+
+def attach_ten_point_scores(idea: dict[str, Any]) -> dict[str, Any]:
+    score_fields = [
+        "trend_repo_match_score",
+        "revenue_score",
+        "niche_difficulty_score",
+        "build_speed_score",
+        "monetization_latency_score",
+        "recurring_revenue_score",
+        "founder_score",
+        "opportunity_score",
+    ]
+    return {f"{field}_10": score_on_ten(float(idea.get(field) or 0)) for field in score_fields}
 
 
 def compute_trend_repo_match_score(
@@ -1562,6 +1582,18 @@ def enrich_ideas(
             "recurring_revenue_score": recurring_revenue_score,
             "founder_score": founder_score,
             "opportunity_score": opportunity_score,
+            **attach_ten_point_scores(
+                {
+                    "trend_repo_match_score": match_score,
+                    "revenue_score": revenue_score,
+                    "niche_difficulty_score": niche_difficulty_score,
+                    "build_speed_score": build_speed_score,
+                    "monetization_latency_score": monetization_latency_score,
+                    "recurring_revenue_score": recurring_revenue_score,
+                    "founder_score": founder_score,
+                    "opportunity_score": opportunity_score,
+                }
+            ),
         }
         memo = founder_memo(idea_metrics, repo_details)
         build_decision = classify_build_decision(idea_metrics, memo)
@@ -1628,15 +1660,17 @@ def render_report(
             lines.append(f"Launch path: {' -> '.join(idea['build_plan'])}")
         lines.append(
             "Founder score: "
-            f"{idea['founder_score']} | "
-            f"Difficulty {idea['niche_difficulty_score']} | "
-            f"Build speed {idea['build_speed_score']} | "
-            f"Monetization {idea['monetization_latency_score']} | "
-            f"Recurring {idea['recurring_revenue_score']}"
+            f"{idea.get('founder_score_10', score_on_ten(idea['founder_score']))}/10 | "
+            f"Difficulty {idea.get('niche_difficulty_score_10', score_on_ten(idea['niche_difficulty_score']))}/10 | "
+            f"Build speed {idea.get('build_speed_score_10', score_on_ten(idea['build_speed_score']))}/10 | "
+            f"Monetization {idea.get('monetization_latency_score_10', score_on_ten(idea['monetization_latency_score']))}/10 | "
+            f"Recurring {idea.get('recurring_revenue_score_10', score_on_ten(idea['recurring_revenue_score']))}/10"
         )
         lines.append(
             "Signal score: "
-            f"Radar {idea['opportunity_score']} | Revenue {idea['revenue_score']} | Fit {idea['trend_repo_match_score']}"
+            f"Radar {idea.get('opportunity_score_10', score_on_ten(idea['opportunity_score']))}/10 | "
+            f"Revenue {idea.get('revenue_score_10', score_on_ten(idea['revenue_score']))}/10 | "
+            f"Fit {idea.get('trend_repo_match_score_10', score_on_ten(idea['trend_repo_match_score']))}/10"
         )
         founder_memo_payload = idea.get("founder_memo", {})
         build_decision = idea.get("build_decision", {})
@@ -2073,7 +2107,7 @@ def main() -> int:
         trend_titles,
         trends,
         generation_context.get("recent_ideas", []),
-        limit=4,
+        limit=MAX_IDEA_COUNT,
     )
     if not ideas:
         ideas = select_fresh_ideas(
@@ -2083,9 +2117,23 @@ def main() -> int:
             trend_titles,
             trends,
             generation_context.get("recent_ideas", []),
-            limit=4,
+            limit=MAX_IDEA_COUNT,
         )
         generation_mode = "live-with-deterministic-ideas"
+    if len(ideas) < MAX_IDEA_COUNT:
+        top_up_ideas = select_fresh_ideas(
+            build_dynamic_fallback_ideas(report_date, trends, repo_shortlist, generation_context),
+            repo_lookup,
+            repo_shortlist,
+            trend_titles,
+            trends,
+            generation_context.get("recent_ideas", []) + ideas,
+            limit=MAX_IDEA_COUNT - len(ideas),
+        )
+        if top_up_ideas:
+            ideas.extend(top_up_ideas)
+            if generation_mode == "live-with-llm":
+                generation_mode = "live-with-llm-plus-deterministic-top-up"
     ideas = enrich_ideas(ideas, repo_lookup, trends)
 
     generated_at = utc_now()

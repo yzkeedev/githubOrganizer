@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Opportunity Radar</title>
-  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -44,7 +43,7 @@
           <option value="match">Trend fit</option>
         </select>
       </label>
-      <a class="button button-quiet" id="markdown-link" href="../opportunities/" target="_blank" rel="noreferrer">Open report</a>
+      <a class="button button-compact" id="markdown-link" href="../opportunities/" target="_blank" rel="noreferrer">Open report</a>
     </section>
 
     <section class="stats" id="stats"></section>
@@ -52,7 +51,10 @@
     <section class="layout">
       <aside class="panel collection-sidebar">
         <div class="panel-header">
-          <h2>Collection</h2>
+          <div class="panel-title">
+            <span class="section-badge">Archive</span>
+            <h2>Collection</h2>
+          </div>
           <span id="collection-count">Loading collection</span>
         </div>
         <div class="collection-toolbar">
@@ -88,61 +90,103 @@
       </aside>
 
       <div class="main-column">
-        <section class="panel collection-detail-panel">
+        <section class="panel workspace-panel">
           <div class="panel-header">
-            <h2>Selected Collection</h2>
-            <span id="collection-selection-label">Choose a title</span>
-          </div>
-          <div id="collection-detail"></div>
-        </section>
-
-        <details class="panel disclosure-panel ideas-panel">
-          <summary>
-            <div class="panel-header">
-              <h2>Daily Ideas</h2>
-              <span id="idea-count"></span>
+            <div class="panel-title">
+              <span class="section-badge">Briefing</span>
+              <h2>Daily Workspace</h2>
             </div>
-          </summary>
-          <div id="ideas-list" class="stack"></div>
-        </details>
-      </div>
+            <span id="workspace-label">Executive summary</span>
+          </div>
+          <div class="tabs workspace-tabs" id="workspace-tabs">
+            <button class="tab-button is-active" type="button" data-workspace-tab="executive">Executive Summary</button>
+            <button class="tab-button" type="button" data-workspace-tab="focus">Focus</button>
+            <button class="tab-button" type="button" data-workspace-tab="today">Today</button>
+            <button class="tab-button" type="button" data-workspace-tab="radar">Radar</button>
+            <button class="tab-button" type="button" data-workspace-tab="history">History</button>
+          </div>
 
-      <aside class="rail">
-        <section class="panel rail-panel">
-          <div class="panel-header">
-            <h2>Signals</h2>
-            <span id="rail-label">Founder bets</span>
+          <div class="tab-panel is-active workspace-tab-panel" data-workspace-panel="executive">
+            <section class="workspace-section executive-section">
+              <div class="panel-title">
+                <span class="section-badge">Executive</span>
+                <h2>Quick Daily Brief</h2>
+              </div>
+              <span id="executive-count"></span>
+            </section>
+            <div id="executive-summary" class="stack"></div>
           </div>
-          <div class="tabs" id="rail-tabs">
-            <button class="tab-button is-active" type="button" data-tab="ranking">Bets</button>
-            <button class="tab-button" type="button" data-tab="trends">Trends</button>
-            <button class="tab-button" type="button" data-tab="sources">Sources</button>
+
+          <div class="tab-panel workspace-tab-panel" data-workspace-panel="focus">
+            <section class="workspace-section collection-detail-panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <span class="section-badge">Focus</span>
+                  <h2>Selected Collection</h2>
+                </div>
+                <span id="collection-selection-label">Choose a title</span>
+              </div>
+              <div id="collection-detail"></div>
+            </section>
           </div>
-          <div class="tab-panel is-active" data-panel="ranking">
-            <div class="subtle-meta" id="ranking-label"></div>
-            <div id="ranking-list" class="stack"></div>
+
+          <div class="tab-panel workspace-tab-panel" data-workspace-panel="today">
+            <section class="workspace-section today-section">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <span class="section-badge">Today</span>
+                  <h2>Daily Ideas</h2>
+                </div>
+                <span id="idea-count"></span>
+              </div>
+              <div id="ideas-list" class="stack"></div>
+            </section>
           </div>
-          <div class="tab-panel" data-panel="trends">
-            <div class="subtle-meta" id="trend-count"></div>
-            <div id="trends-list" class="stack compact"></div>
+
+          <div class="tab-panel workspace-tab-panel" data-workspace-panel="radar">
+            <section class="workspace-section rail-panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <span class="section-badge">Radar</span>
+                  <h2>Signals</h2>
+                </div>
+                <span id="rail-label">Founder bets</span>
+              </div>
+              <div class="tabs" id="rail-tabs">
+                <button class="tab-button is-active" type="button" data-tab="ranking">Bets</button>
+                <button class="tab-button" type="button" data-tab="trends">Trends</button>
+                <button class="tab-button" type="button" data-tab="sources">Sources</button>
+              </div>
+              <div class="tab-panel is-active" data-panel="ranking">
+                <div class="subtle-meta" id="ranking-label"></div>
+                <div id="ranking-list" class="stack"></div>
+              </div>
+              <div class="tab-panel" data-panel="trends">
+                <div class="subtle-meta" id="trend-count"></div>
+                <div id="trends-list" class="stack compact"></div>
+              </div>
+              <div class="tab-panel" data-panel="sources">
+                <div class="subtle-meta" id="source-count"></div>
+                <div id="source-health" class="source-grid"></div>
+              </div>
+            </section>
           </div>
-          <div class="tab-panel" data-panel="sources">
-            <div class="subtle-meta" id="source-count"></div>
-            <div id="source-health" class="source-grid"></div>
+
+          <div class="tab-panel workspace-tab-panel" data-workspace-panel="history">
+            <section class="workspace-section history-section">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <span class="section-badge">Timeline</span>
+                  <h2>History</h2>
+                </div>
+                <span id="history-count"></span>
+              </div>
+              <div id="history-list" class="history-list"></div>
+            </section>
           </div>
         </section>
-      </aside>
+      </div>
     </section>
-
-    <details class="panel disclosure-panel history-panel">
-      <summary class="disclosure-summary">
-        <div class="panel-header">
-          <h2>History</h2>
-          <span id="history-count"></span>
-        </div>
-      </summary>
-      <div id="history-list" class="history-list"></div>
-    </details>
   </div>
 
   <template id="empty-card-template">

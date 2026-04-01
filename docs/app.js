@@ -5,6 +5,8 @@ const modePill = document.getElementById("mode-pill");
 const datePill = document.getElementById("date-pill");
 const markdownLink = document.getElementById("markdown-link");
 const stats = document.getElementById("stats");
+const executiveSummary = document.getElementById("executive-summary");
+const executiveCount = document.getElementById("executive-count");
 const ideasList = document.getElementById("ideas-list");
 const rankingList = document.getElementById("ranking-list");
 const trendsList = document.getElementById("trends-list");
@@ -25,7 +27,10 @@ const collectionStats = document.getElementById("collection-stats");
 const collectionNav = document.getElementById("collection-nav");
 const collectionDetail = document.getElementById("collection-detail");
 const collectionSelectionLabel = document.getElementById("collection-selection-label");
+const workspaceTabs = document.getElementById("workspace-tabs");
+const workspaceLabel = document.getElementById("workspace-label");
 const emptyCardTemplate = document.getElementById("empty-card-template");
+const COLLECTIONS_PER_PAGE = 8;
 
 const state = {
   index: null,
@@ -33,9 +38,10 @@ const state = {
   reports: new Map(),
   currentPath: "",
   currentReport: null,
-  previousReport: null,
   currentCollectionGroupId: "",
+  currentCollectionPage: 1,
   currentCollectionDetailTab: "overview",
+  currentWorkspaceTab: "executive",
   currentRailTab: "ranking",
 };
 
@@ -67,8 +73,40 @@ function tag(label) {
   return `<span class="tag">${escapeHtml(label)}</span>`;
 }
 
-function sectionPill(label) {
-  return `<span class="section-pill">${escapeHtml(label)}</span>`;
+function toTenPointScore(value) {
+  const numeric = Number(value ?? 0);
+  if (!Number.isFinite(numeric)) {
+    return 0;
+  }
+  if (numeric > 10) {
+    return Math.max(1, Math.min(10, Math.round(numeric / 10)));
+  }
+  return Math.max(0, Math.min(10, Math.round(numeric)));
+}
+
+function scoreValue(item, key) {
+  const tenPointValue = item?.[`${key}_10`];
+  if (tenPointValue !== undefined && tenPointValue !== null && tenPointValue !== "") {
+    return toTenPointScore(tenPointValue);
+  }
+  return toTenPointScore(item?.[key]);
+}
+
+function scoreText(item, key) {
+  return `${scoreValue(item, key)}/10`;
+}
+
+function numericScoreText(value) {
+  return `${toTenPointScore(value)}/10`;
+}
+
+function scoreDeltaText(value) {
+  const numeric = Number(value ?? 0);
+  if (!Number.isFinite(numeric)) {
+    return "0.0";
+  }
+  const normalized = Math.round(numeric) / 10;
+  return `${normalized > 0 ? "+" : ""}${normalized.toFixed(1)}`;
 }
 
 function scoreBadge(label, value) {
@@ -78,6 +116,10 @@ function scoreBadge(label, value) {
       <span class="score-value">${escapeHtml(value)}</span>
     </div>
   `;
+}
+
+function headerBadge(label) {
+  return `<span class="section-badge">${escapeHtml(label)}</span>`;
 }
 
 function renderMemoItems(items) {
@@ -128,6 +170,10 @@ function average(values) {
   return Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
 }
 
+function topItems(values, limit = 3) {
+  return values.filter(Boolean).slice(0, limit);
+}
+
 function getSelectedCategory() {
   return categoryFilter.value || "All categories";
 }
@@ -146,6 +192,21 @@ function getCollectionSort() {
 
 function getCollectionQuery() {
   return (collectionSearch.value || "").trim().toLowerCase();
+}
+
+function getCollectionPageCount(totalItems) {
+  return Math.max(1, Math.ceil(totalItems / COLLECTIONS_PER_PAGE));
+}
+
+function clampCollectionPage(totalItems) {
+  const pageCount = getCollectionPageCount(totalItems);
+  state.currentCollectionPage = Math.max(1, Math.min(state.currentCollectionPage, pageCount));
+  return pageCount;
+}
+
+function setWorkspaceTab(tabId) {
+  state.currentWorkspaceTab = tabId;
+  applyWorkspaceTabState();
 }
 
 function getCurrentIdeas() {
@@ -185,11 +246,109 @@ function renderStats(report, ideas) {
   stats.innerHTML = "";
   stats.append(
     statCard("Showing", `${ideas.length}/${report.ideas.length}`),
-    statCard("Avg founder", average(ideas.map((idea) => idea.founder_score))),
-    statCard("Avg revenue", average(ideas.map((idea) => idea.revenue_score))),
-    statCard("Avg build speed", average(ideas.map((idea) => idea.build_speed_score))),
+    statCard("Avg founder", numericScoreText(average(ideas.map((idea) => idea.founder_score)))),
+    statCard("Avg revenue", numericScoreText(average(ideas.map((idea) => idea.revenue_score)))),
+    statCard("Avg build speed", numericScoreText(average(ideas.map((idea) => idea.build_speed_score)))),
     statCard("Generated", formatDate(report.generated_at)),
   );
+}
+
+function getVisibleTrends(report, ideas) {
+  const trendTitles = new Set(ideas.flatMap((idea) => idea.trends || []));
+  const selectedCategory = getSelectedCategory();
+  return selectedCategory === "All categories"
+    ? report.trends
+    : report.trends.filter((trend) => trendTitles.has(trend.title));
+}
+
+function getTopIdea(ideas, primaryMetric, secondaryMetric = "revenue_score") {
+  return [...ideas].sort((left, right) => right[primaryMetric] - left[primaryMetric] || right[secondaryMetric] - left[secondaryMetric])[0] || null;
+}
+
+function getExecutiveBullets(report, ideas) {
+  const visibleTrends = getVisibleTrends(report, ideas);
+  const topFounderIdea = getTopIdea(ideas, "founder_score");
+  const topRevenueIdea = getTopIdea(ideas, "revenue_score", "founder_score");
+  const topFitIdea = getTopIdea(ideas, "trend_repo_match_score", "opportunity_score");
+  const topCollection = getCollectionGroups()[0] || null;
+  const categoryCounts = new Map();
+  for (const idea of ideas) {
+    for (const category of idea.category_focus || []) {
+      categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+    }
+  }
+  const leadingCategory =
+    [...categoryCounts.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))[0]?.[0] || "Mixed";
+  return [
+    {
+      title: "Pulse",
+      text: `${ideas.length} ideas are visible today across ${visibleTrends.length} active trends, with ${leadingCategory} showing the strongest build density.`,
+    },
+    {
+      title: "Headlines",
+      text: topItems(visibleTrends.map((trend) => `${trend.title} (${trend.source_name})`)).join(" · ") || "No major linked headlines surfaced in this slice.",
+    },
+    {
+      title: "Best bet",
+      text: topFounderIdea
+        ? `${topFounderIdea.name} leads on founder fit at ${scoreText(topFounderIdea, "founder_score")} with ${topFounderIdea.summary || "a clear build wedge."}`
+        : "No clear founder bet is available in this slice.",
+    },
+    {
+      title: "Fast money",
+      text: topRevenueIdea
+        ? `${topRevenueIdea.name} leads revenue at ${scoreText(topRevenueIdea, "revenue_score")} with ${topRevenueIdea.revenue_model || "a monetization path still forming."}`
+        : "No clear monetization leader is available in this slice.",
+    },
+    {
+      title: "Signal fit",
+      text: topFitIdea
+        ? `${topFitIdea.name} has the strongest trend fit at ${scoreText(topFitIdea, "trend_repo_match_score")} and ties the current repo stack most tightly to today's pulse.`
+        : "No strong trend-to-repo fit surfaced in this slice.",
+    },
+    {
+      title: "Archive watch",
+      text: topCollection
+        ? `${topCollection.label} is the archive leader with ${topCollection.appearance_count || 1} appearances and ${topCollection.momentum_label || "steady"} momentum.`
+        : "No collection signal is available yet.",
+    },
+  ];
+}
+
+function renderExecutiveSummary(report, ideas) {
+  executiveSummary.innerHTML = "";
+  const bullets = getExecutiveBullets(report, ideas);
+  executiveCount.textContent = `${bullets.length} bullets`;
+  const leadingIdea = getTopIdea(ideas, "founder_score");
+  const visibleTrends = getVisibleTrends(report, ideas);
+  const hero = document.createElement("article");
+  hero.className = "executive-hero";
+  hero.innerHTML = `
+    <div class="executive-hero-copy">
+      ${headerBadge("Busy-person read")}
+      <h3>${escapeHtml(leadingIdea?.name || "Daily pulse")}</h3>
+      <p class="copy">${escapeHtml(leadingIdea?.summary || "A compact read of today's most actionable signals and build wedges.")}</p>
+    </div>
+    <div class="score-group">
+      ${scoreBadge("Ideas", ideas.length)}
+      ${scoreBadge("Trends", visibleTrends.length)}
+      ${scoreBadge("Mode", report.mode || "live")}
+    </div>
+  `;
+  executiveSummary.appendChild(hero);
+  const list = document.createElement("article");
+  list.className = "executive-list";
+  list.innerHTML = bullets
+    .map(
+      (bullet) => `
+        <section class="executive-item">
+          <span class="label">${escapeHtml(bullet.title)}</span>
+          <p class="copy">• ${escapeHtml(bullet.text)}</p>
+        </section>
+      `
+    )
+    .join("");
+  executiveSummary.appendChild(list);
 }
 
 function getCollectionGroups() {
@@ -250,7 +409,7 @@ function renderCollectionStats() {
   collectionStats.append(
     statCard("Groups", state.collection.stats.total_groups || 0),
     statCard("Dates", state.collection.stats.total_dates || 0),
-    statCard("Avg founder", state.collection.stats.avg_founder_score || 0),
+    statCard("Avg founder", numericScoreText(state.collection.stats.avg_founder_score || 0)),
     statCard("Recurring groups", state.collection.stats.recurring_ideas || 0),
     statCard("Top category", topCategory)
   );
@@ -267,16 +426,25 @@ function openReportFromCollection(path) {
 function ensureSelectedCollectionGroup(groups) {
   if (!groups.length) {
     state.currentCollectionGroupId = "";
+    state.currentCollectionPage = 1;
     return null;
   }
   if (!groups.some((group) => group.group_id === state.currentCollectionGroupId)) {
     state.currentCollectionGroupId = groups[0].group_id;
+    state.currentCollectionPage = 1;
   }
+  clampCollectionPage(groups.length);
   return groups.find((group) => group.group_id === state.currentCollectionGroupId) || groups[0];
 }
 
 async function selectCollectionGroup(groupId) {
+  const groups = getCollectionGroups();
+  const selectedIndex = groups.findIndex((item) => item.group_id === groupId);
   state.currentCollectionGroupId = groupId;
+  if (selectedIndex >= 0) {
+    state.currentCollectionPage = Math.floor(selectedIndex / COLLECTIONS_PER_PAGE) + 1;
+  }
+  setWorkspaceTab("focus");
   const group = state.collection?.recurrence_groups?.find((item) => item.group_id === groupId);
   const targetPath = group?.latest_item?.report_path || "";
   if (targetPath && targetPath !== state.currentPath) {
@@ -289,12 +457,15 @@ async function selectCollectionGroup(groupId) {
 function renderCollectionNav(groups, selectedGroup) {
   collectionNav.innerHTML = "";
   const totalGroups = state.collection?.stats?.total_groups || 0;
-  collectionCount.textContent = `${groups.length}/${totalGroups} groups`;
+  const pageCount = clampCollectionPage(groups.length);
+  const pageStart = (state.currentCollectionPage - 1) * COLLECTIONS_PER_PAGE;
+  const pagedGroups = groups.slice(pageStart, pageStart + COLLECTIONS_PER_PAGE);
+  collectionCount.textContent = `${groups.length}/${totalGroups} groups · Page ${state.currentCollectionPage}/${pageCount}`;
   if (!groups.length) {
     collectionNav.appendChild(emptyCard("No collection matches", "Try another search term, date, or category."));
     return;
   }
-  for (const group of groups.slice(0, 48)) {
+  for (const group of pagedGroups) {
     const latestItem = group.latest_item || {};
     const button = document.createElement("button");
     button.type = "button";
@@ -306,7 +477,7 @@ function renderCollectionNav(groups, selectedGroup) {
         <span class="collection-link-badge">${escapeHtml(group.momentum_label)}</span>
       </span>
       <span class="collection-link-meta">
-        ${escapeHtml(latestItem.date || "—")} · ${escapeHtml(group.appearance_count || 1)}x · Founder ${escapeHtml(latestItem.founder_score || 0)}
+        ${escapeHtml(latestItem.date || "—")} · ${escapeHtml(group.appearance_count || 1)}x · Founder ${escapeHtml(scoreText(latestItem, "founder_score"))}
       </span>
     `;
     collectionNav.appendChild(button);
@@ -315,6 +486,22 @@ function renderCollectionNav(groups, selectedGroup) {
     button.addEventListener("click", () => {
       selectCollectionGroup(button.dataset.groupId);
     });
+  }
+  if (pageCount > 1) {
+    const pager = document.createElement("div");
+    pager.className = "collection-pagination";
+    pager.innerHTML = `
+      <button class="button button-compact" type="button" data-page-action="previous"${state.currentCollectionPage === 1 ? " disabled" : ""}>Previous</button>
+      <span class="collection-pagination-label">${escapeHtml(`${pageStart + 1}-${Math.min(pageStart + pagedGroups.length, groups.length)} of ${groups.length}`)}</span>
+      <button class="button button-compact" type="button" data-page-action="next"${state.currentCollectionPage === pageCount ? " disabled" : ""}>Next</button>
+    `;
+    collectionNav.appendChild(pager);
+    for (const button of pager.querySelectorAll("[data-page-action]")) {
+      button.addEventListener("click", () => {
+        state.currentCollectionPage += button.dataset.pageAction === "next" ? 1 : -1;
+        renderCollection();
+      });
+    }
   }
 }
 
@@ -338,7 +525,7 @@ function renderCollectionDetail(group) {
         <button class="collection-history-item" data-path="${escapeHtml(entry.report_path)}" type="button">
           <span class="collection-history-date">${escapeHtml(entry.date)}</span>
           <span class="collection-history-name">${escapeHtml(entry.name)}</span>
-          <span class="collection-history-scores">Founder ${escapeHtml(entry.founder_score)} · Revenue ${escapeHtml(entry.revenue_score)} · Radar ${escapeHtml(entry.opportunity_score)}</span>
+          <span class="collection-history-scores">Founder ${escapeHtml(scoreText(entry, "founder_score"))} · Revenue ${escapeHtml(scoreText(entry, "revenue_score"))} · Radar ${escapeHtml(scoreText(entry, "opportunity_score"))}</span>
         </button>
       `
     )
@@ -350,7 +537,6 @@ function renderCollectionDetail(group) {
   ];
   const detailPanels = {
     overview: `
-      <div class="detail-section-label">${sectionPill("Collection brief")}</div>
       ${decisionBadge(latestItem.build_decision || {})}
       <div class="mini-grid">
         <div class="mini-block">
@@ -359,7 +545,7 @@ function renderCollectionDetail(group) {
         </div>
         <div class="mini-block">
           <span class="label">Momentum read</span>
-          <p class="copy">Founder ${escapeHtml(group.delta_founder_score || 0)} · Revenue ${escapeHtml(group.delta_revenue_score || 0)} · Radar ${escapeHtml(group.delta_opportunity_score || 0)} versus the previous appearance.</p>
+          <p class="copy">Founder ${escapeHtml(scoreDeltaText(group.delta_founder_score || 0))} · Revenue ${escapeHtml(scoreDeltaText(group.delta_revenue_score || 0))} · Radar ${escapeHtml(scoreDeltaText(group.delta_opportunity_score || 0))} versus the previous appearance.</p>
         </div>
         <div class="mini-block">
           <span class="label">Why now</span>
@@ -372,15 +558,14 @@ function renderCollectionDetail(group) {
       </div>
     `,
     signals: `
-      <div class="detail-section-label">${sectionPill("Signal mix")}</div>
       <div class="mini-grid">
         <div class="mini-block">
           <span class="label">Current scores</span>
-          <p class="copy">Founder ${escapeHtml(latestItem.founder_score || 0)} · Revenue ${escapeHtml(latestItem.revenue_score || 0)} · Radar ${escapeHtml(latestItem.opportunity_score || 0)} · Fit ${escapeHtml(latestItem.trend_repo_match_score || 0)}</p>
+          <p class="copy">Founder ${escapeHtml(scoreText(latestItem, "founder_score"))} · Revenue ${escapeHtml(scoreText(latestItem, "revenue_score"))} · Radar ${escapeHtml(scoreText(latestItem, "opportunity_score"))} · Fit ${escapeHtml(scoreText(latestItem, "trend_repo_match_score"))}</p>
         </div>
         <div class="mini-block">
           <span class="label">Group averages</span>
-          <p class="copy">Founder ${escapeHtml(group.avg_founder_score || 0)} · Revenue ${escapeHtml(group.avg_revenue_score || 0)} · Radar ${escapeHtml(group.avg_opportunity_score || 0)}</p>
+          <p class="copy">Founder ${escapeHtml(numericScoreText(group.avg_founder_score || 0))} · Revenue ${escapeHtml(numericScoreText(group.avg_revenue_score || 0))} · Radar ${escapeHtml(numericScoreText(group.avg_opportunity_score || 0))}</p>
         </div>
       </div>
       <div class="meta-line">${categoryTags}</div>
@@ -390,7 +575,10 @@ function renderCollectionDetail(group) {
     history: `
       <section class="collection-history">
         <div class="panel-header">
-          <h3>Lifecycle History</h3>
+          <div class="panel-title">
+            ${headerBadge("Timeline")}
+            <h3>Lifecycle History</h3>
+          </div>
           <span>${escapeHtml((group.score_history || []).length)} entries</span>
         </div>
         <div class="stack">${historyRows}</div>
@@ -404,7 +592,7 @@ function renderCollectionDetail(group) {
   collectionDetail.innerHTML = `
     <div class="collection-detail-head">
       <div class="stack">
-        ${sectionPill("Collection")}
+        ${headerBadge("Collection brief")}
         <div class="meta-line">
           ${tag(latestItem.date || "—")}
           ${recurringTag}
@@ -416,9 +604,9 @@ function renderCollectionDetail(group) {
       </div>
       <div class="collection-actions">
         ${scoreBadge("Momentum", group.momentum_score || 0)}
-        ${scoreBadge("Founder", latestItem.founder_score || 0)}
-        ${scoreBadge("Revenue", latestItem.revenue_score || 0)}
-        <button class="button button-quiet collection-open" data-path="${escapeHtml(latestItem.report_path || "")}" type="button">Open day</button>
+        ${scoreBadge("Founder", scoreText(latestItem, "founder_score"))}
+        ${scoreBadge("Revenue", scoreText(latestItem, "revenue_score"))}
+        <button class="button collection-open" data-path="${escapeHtml(latestItem.report_path || "")}" type="button">Open day</button>
       </div>
     </div>
     <div class="tabs tabs-inline">
@@ -479,15 +667,14 @@ function renderIdeas(ideas) {
       ${decisionBadge(decision)}
       <div class="idea-topline">
         <div>
-          ${sectionPill("Daily idea")}
           <h3>${escapeHtml(idea.name)}</h3>
           <p class="copy">${escapeHtml(idea.summary || "")}</p>
         </div>
         <div class="score-group">
-          ${scoreBadge("Founder", idea.founder_score)}
-          ${scoreBadge("Radar", idea.opportunity_score)}
-          ${scoreBadge("Revenue", idea.revenue_score)}
-          ${scoreBadge("Fit", idea.trend_repo_match_score)}
+          ${scoreBadge("Founder", scoreText(idea, "founder_score"))}
+          ${scoreBadge("Radar", scoreText(idea, "opportunity_score"))}
+          ${scoreBadge("Revenue", scoreText(idea, "revenue_score"))}
+          ${scoreBadge("Fit", scoreText(idea, "trend_repo_match_score"))}
         </div>
       </div>
       <div class="meta-line">${signalTags}</div>
@@ -560,7 +747,7 @@ function renderIdeas(ideas) {
           </div>
           <div class="mini-block">
             <span class="label">Founder lens</span>
-            <p class="copy">Difficulty ${escapeHtml(idea.niche_difficulty_score)} · Build ${escapeHtml(idea.build_speed_score)} · Monetization ${escapeHtml(idea.monetization_latency_score)} · Recurring ${escapeHtml(idea.recurring_revenue_score)}</p>
+            <p class="copy">Difficulty ${escapeHtml(scoreText(idea, "niche_difficulty_score"))} · Build ${escapeHtml(scoreText(idea, "build_speed_score"))} · Monetization ${escapeHtml(scoreText(idea, "monetization_latency_score"))} · Recurring ${escapeHtml(scoreText(idea, "recurring_revenue_score"))}</p>
           </div>
           <div class="mini-block">
             <span class="label">Repo stack</span>
@@ -587,19 +774,18 @@ function renderRanking(ideas) {
     const item = document.createElement("article");
     item.className = "ranking-item";
     item.innerHTML = `
-      ${sectionPill("Founder pick")}
       <div class="ranking-row">
         <strong>${escapeHtml(idea.name)}</strong>
-        ${tag(`Founder ${idea.founder_score}`)}
+        ${tag(`Founder ${scoreText(idea, "founder_score")}`)}
       </div>
       ${decisionBadge(idea.build_decision)}
       <p class="copy">${escapeHtml(idea.summary || "")}</p>
       <p class="copy">${escapeHtml(idea.founder_memo?.best_part || "")}</p>
       <div class="meta-line">
-        ${tag(`Build ${idea.build_speed_score}`)}
-        ${tag(`Recurring ${idea.recurring_revenue_score}`)}
-        ${tag(`Fit ${idea.trend_repo_match_score}`)}
-        ${tag(`Revenue ${idea.revenue_score}`)}
+        ${tag(`Build ${scoreText(idea, "build_speed_score")}`)}
+        ${tag(`Recurring ${scoreText(idea, "recurring_revenue_score")}`)}
+        ${tag(`Fit ${scoreText(idea, "trend_repo_match_score")}`)}
+        ${tag(`Revenue ${scoreText(idea, "revenue_score")}`)}
       </div>
     `;
     rankingList.appendChild(item);
@@ -608,12 +794,7 @@ function renderRanking(ideas) {
 
 function renderTrends(report, ideas) {
   trendsList.innerHTML = "";
-  const trendTitles = new Set(ideas.flatMap((idea) => idea.trends || []));
-  const selectedCategory = getSelectedCategory();
-  const visibleTrends =
-    selectedCategory === "All categories"
-      ? report.trends
-      : report.trends.filter((trend) => trendTitles.has(trend.title));
+  const visibleTrends = getVisibleTrends(report, ideas);
   trendCount.textContent = `${visibleTrends.length} visible`;
   if (!visibleTrends.length) {
     trendsList.appendChild(emptyCard("No related trends", "This category currently has no directly linked trend snapshot."));
@@ -623,7 +804,6 @@ function renderTrends(report, ideas) {
     const card = document.createElement("article");
     card.className = "trend-card";
     card.innerHTML = `
-      ${sectionPill("Trend signal")}
       <h3><a href="${escapeHtml(trend.url)}" target="_blank" rel="noreferrer">${escapeHtml(trend.title)}</a></h3>
       <p class="copy">${escapeHtml(trend.context || trend.info || "No extra context.")}</p>
       <div class="meta-line">
@@ -650,9 +830,15 @@ function renderHistory() {
   historyList.innerHTML = "";
   const reports = state.index?.reports || [];
   historyCount.textContent = `${reports.length} days tracked`;
+  if (!reports.length) {
+    historyList.appendChild(emptyCard("No history yet", "Daily reports will appear here once they are generated."));
+    return;
+  }
   for (const report of reports) {
-    const item = document.createElement("article");
-    item.className = "history-item";
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = `history-item${report.path === state.currentPath ? " is-active" : ""}`;
+    item.dataset.path = report.path;
     const activeTag = report.path === state.currentPath ? tag("Open") : "";
     item.innerHTML = `
       <div class="history-row">
@@ -662,12 +848,15 @@ function renderHistory() {
         </div>
         <div class="meta-line">
           ${tag(`${report.idea_count} ideas`)}
-          ${tag(`Founder ${report.top_founder_score || 0}`)}
+          ${tag(`Founder ${numericScoreText(report.top_founder_score || 0)}`)}
           ${activeTag}
         </div>
       </div>
     `;
     historyList.appendChild(item);
+  }
+  for (const button of historyList.querySelectorAll(".history-item")) {
+    button.addEventListener("click", () => loadReport(button.dataset.path, true));
   }
 }
 
@@ -690,13 +879,36 @@ function renderCurrentView() {
   markdownLink.href = `./reports/${report.date}.md`;
   const ideas = getCurrentIdeas();
   renderStats(report, ideas);
+  renderExecutiveSummary(report, ideas);
   renderIdeas(ideas);
   renderRanking(ideas);
   renderTrends(report, ideas);
   renderSources(report);
   renderHistory();
   renderCollection();
+  applyWorkspaceTabState();
   applyRailTabState();
+}
+
+function applyWorkspaceTabState() {
+  setActiveTab(workspaceTabs, ".tab-button", state.currentWorkspaceTab, "data-workspace-tab");
+  const panelContainer = workspaceTabs?.parentElement;
+  if (!panelContainer) {
+    return;
+  }
+  for (const panel of panelContainer.querySelectorAll("[data-workspace-panel]")) {
+    panel.classList.toggle("is-active", panel.dataset.workspacePanel === state.currentWorkspaceTab);
+  }
+  const labels = {
+    executive: "Executive summary",
+    focus: "Selected collection",
+    today: "Daily ideas",
+    radar: "Signals",
+    history: "Report history",
+  };
+  if (workspaceLabel) {
+    workspaceLabel.textContent = labels[state.currentWorkspaceTab] || "Daily workspace";
+  }
 }
 
 function applyRailTabState() {
@@ -729,9 +941,6 @@ async function loadReport(path, preserveCollectionSelection = false) {
   state.currentPath = path;
   state.currentReport = await getReport(path);
   const reports = state.index?.reports || [];
-  const currentIndex = reports.findIndex((report) => report.path === path);
-  const previousPath = currentIndex >= 0 ? reports[currentIndex + 1]?.path : "";
-  state.previousReport = previousPath ? await getReport(previousPath) : null;
   populateCategoryFilter(state.currentReport);
   if (!preserveCollectionSelection && !state.currentCollectionGroupId) {
     const groups = getCollectionGroups();
@@ -765,9 +974,23 @@ async function init() {
     reportSelect.addEventListener("change", (event) => loadReport(event.target.value));
     categoryFilter.addEventListener("change", renderCurrentView);
     sortSelect.addEventListener("change", renderCurrentView);
-    collectionSearch.addEventListener("input", renderCollection);
-    collectionDateFilter.addEventListener("change", renderCollection);
-    collectionSort.addEventListener("change", renderCollection);
+    collectionSearch.addEventListener("input", () => {
+      state.currentCollectionPage = 1;
+      renderCollection();
+    });
+    collectionDateFilter.addEventListener("change", () => {
+      state.currentCollectionPage = 1;
+      renderCollection();
+    });
+    collectionSort.addEventListener("change", () => {
+      state.currentCollectionPage = 1;
+      renderCollection();
+    });
+    for (const button of workspaceTabs?.querySelectorAll(".tab-button") || []) {
+      button.addEventListener("click", () => {
+        setWorkspaceTab(button.dataset.workspaceTab);
+      });
+    }
     for (const button of railTabs?.querySelectorAll(".tab-button") || []) {
       button.addEventListener("click", () => {
         state.currentRailTab = button.dataset.tab;
@@ -779,6 +1002,7 @@ async function init() {
     if (initialGroup) {
       state.currentCollectionGroupId = initialGroup.group_id;
     }
+    applyWorkspaceTabState();
     applyRailTabState();
     if (initialPath) {
       await loadReport(initialPath);
