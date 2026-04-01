@@ -3,6 +3,7 @@ html {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #f5f1e8;
   color: #171717;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -296,16 +297,41 @@ input[type="search"] {
 .workspace-tab-panel {
   display: grid;
   gap: 16px;
+  align-content: start;
 }
 
 .workspace-panel {
   min-height: 640px;
 }
 
+.workspace-panel > .panel-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  min-height: 52px;
+}
+
+#workspace-label {
+  justify-self: end;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .workspace-tabs {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   width: 100%;
+}
+
+.workspace-tabs .tab-button {
+  width: 100%;
+  min-width: 0;
+  padding-inline: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tabs {
@@ -368,6 +394,20 @@ input[type="search"] {
 .today-section .panel-title,
 .history-section .panel-title {
   gap: 6px;
+}
+
+.today-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1.16fr) minmax(320px, 0.84fr);
+  align-items: start;
+}
+
+.today-rail {
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid rgba(23, 23, 23, 0.06);
 }
 
 .executive-hero,
@@ -463,13 +503,18 @@ input[type="search"] {
 }
 
 .collection-link,
-.collection-history-item {
+.collection-history-item,
+.history-item {
   width: 100%;
   border: 1px solid rgba(23, 23, 23, 0.08);
   background: rgba(255, 255, 255, 0.74);
   border-radius: 14px;
   text-align: left;
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  color: inherit;
 }
 
 .collection-link {
@@ -482,7 +527,8 @@ input[type="search"] {
 }
 
 .collection-link:hover,
-.collection-history-item:hover {
+.collection-history-item:hover,
+.history-item:hover {
   background: rgba(255, 255, 255, 0.72);
   border-color: rgba(23, 23, 23, 0.12);
 }
@@ -613,21 +659,10 @@ input[type="search"] {
 }
 
 .history-item {
-  width: 100%;
   display: grid;
   gap: 10px;
   padding: 16px;
-  border: 1px solid rgba(23, 23, 23, 0.08);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.74);
-  text-align: left;
-  cursor: pointer;
   transition: background 160ms ease, border-color 160ms ease;
-}
-
-.history-item:hover {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(23, 23, 23, 0.12);
 }
 
 .idea-card {
@@ -918,7 +953,8 @@ input[type="search"] {
   }
 
   .executive-hero,
-  .executive-list {
+  .executive-list,
+  .today-grid {
     grid-template-columns: 1fr;
   }
 
@@ -938,6 +974,16 @@ input[type="search"] {
 @media (max-width: 640px) {
   .page {
     padding-inline: 14px;
+  }
+
+  .workspace-panel > .panel-header {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  #workspace-label {
+    justify-self: start;
+    max-width: none;
   }
 
   .hero-meta {

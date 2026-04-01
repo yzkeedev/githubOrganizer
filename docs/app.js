@@ -205,7 +205,7 @@ function clampCollectionPage(totalItems) {
 }
 
 function setWorkspaceTab(tabId) {
-  state.currentWorkspaceTab = tabId;
+  state.currentWorkspaceTab = tabId === "radar" ? "today" : tabId;
   applyWorkspaceTabState();
 }
 
@@ -891,6 +891,9 @@ function renderCurrentView() {
 }
 
 function applyWorkspaceTabState() {
+  if (state.currentWorkspaceTab === "radar") {
+    state.currentWorkspaceTab = "today";
+  }
   setActiveTab(workspaceTabs, ".tab-button", state.currentWorkspaceTab, "data-workspace-tab");
   const panelContainer = workspaceTabs?.parentElement;
   if (!panelContainer) {
@@ -902,9 +905,8 @@ function applyWorkspaceTabState() {
   const labels = {
     executive: "Executive summary",
     focus: "Selected collection",
-    today: "Daily ideas",
-    radar: "Signals",
-    history: "Report history",
+    today: "Ideas and signals",
+    history: "History",
   };
   if (workspaceLabel) {
     workspaceLabel.textContent = labels[state.currentWorkspaceTab] || "Daily workspace";

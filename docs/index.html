@@ -102,7 +102,6 @@
             <button class="tab-button is-active" type="button" data-workspace-tab="executive">Executive Summary</button>
             <button class="tab-button" type="button" data-workspace-tab="focus">Focus</button>
             <button class="tab-button" type="button" data-workspace-tab="today">Today</button>
-            <button class="tab-button" type="button" data-workspace-tab="radar">Radar</button>
             <button class="tab-button" type="button" data-workspace-tab="history">History</button>
           </div>
 
@@ -131,44 +130,43 @@
           </div>
 
           <div class="tab-panel workspace-tab-panel" data-workspace-panel="today">
-            <section class="workspace-section today-section">
-              <div class="panel-header">
-                <div class="panel-title">
-                  <span class="section-badge">Today</span>
-                  <h2>Daily Ideas</h2>
+            <section class="workspace-section today-grid">
+              <section class="today-section">
+                <div class="panel-header">
+                  <div class="panel-title">
+                    <span class="section-badge">Today</span>
+                    <h2>Daily Ideas</h2>
+                  </div>
+                  <span id="idea-count"></span>
                 </div>
-                <span id="idea-count"></span>
-              </div>
-              <div id="ideas-list" class="stack"></div>
-            </section>
-          </div>
-
-          <div class="tab-panel workspace-tab-panel" data-workspace-panel="radar">
-            <section class="workspace-section rail-panel">
-              <div class="panel-header">
-                <div class="panel-title">
-                  <span class="section-badge">Radar</span>
-                  <h2>Signals</h2>
+                <div id="ideas-list" class="stack"></div>
+              </section>
+              <section class="rail-panel today-rail">
+                <div class="panel-header">
+                  <div class="panel-title">
+                    <span class="section-badge">Signals</span>
+                    <h2>Radar</h2>
+                  </div>
+                  <span id="rail-label">Founder bets</span>
                 </div>
-                <span id="rail-label">Founder bets</span>
-              </div>
-              <div class="tabs" id="rail-tabs">
-                <button class="tab-button is-active" type="button" data-tab="ranking">Bets</button>
-                <button class="tab-button" type="button" data-tab="trends">Trends</button>
-                <button class="tab-button" type="button" data-tab="sources">Sources</button>
-              </div>
-              <div class="tab-panel is-active" data-panel="ranking">
-                <div class="subtle-meta" id="ranking-label"></div>
-                <div id="ranking-list" class="stack"></div>
-              </div>
-              <div class="tab-panel" data-panel="trends">
-                <div class="subtle-meta" id="trend-count"></div>
-                <div id="trends-list" class="stack compact"></div>
-              </div>
-              <div class="tab-panel" data-panel="sources">
-                <div class="subtle-meta" id="source-count"></div>
-                <div id="source-health" class="source-grid"></div>
-              </div>
+                <div class="tabs" id="rail-tabs">
+                  <button class="tab-button is-active" type="button" data-tab="ranking">Bets</button>
+                  <button class="tab-button" type="button" data-tab="trends">Trends</button>
+                  <button class="tab-button" type="button" data-tab="sources">Sources</button>
+                </div>
+                <div class="tab-panel is-active" data-panel="ranking">
+                  <div class="subtle-meta" id="ranking-label"></div>
+                  <div id="ranking-list" class="stack"></div>
+                </div>
+                <div class="tab-panel" data-panel="trends">
+                  <div class="subtle-meta" id="trend-count"></div>
+                  <div id="trends-list" class="stack compact"></div>
+                </div>
+                <div class="tab-panel" data-panel="sources">
+                  <div class="subtle-meta" id="source-count"></div>
+                  <div id="source-health" class="source-grid"></div>
+                </div>
+              </section>
             </section>
           </div>
 
