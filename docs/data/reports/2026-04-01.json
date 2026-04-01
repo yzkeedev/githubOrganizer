@@ -1,6 +1,6 @@
 {
   "date": "2026-04-01",
-  "generated_at": "2026-04-01T03:38:29+00:00",
+  "generated_at": "2026-04-01T08:55:47+00:00",
   "trend_source": "https://newsnow.busiyi.world/api/s/entire",
   "star_repo_source": "stars_cache.json",
   "mode": "live-with-deterministic-ideas",
@@ -85,7 +85,7 @@
       "id": "hupu",
       "name": "Hupu",
       "status": "cache",
-      "item_count": 30
+      "item_count": 19
     },
     {
       "id": "ifeng",
@@ -200,40 +200,40 @@
       "source_name": "Baidu",
       "source_rank": 1,
       "status": "cache",
-      "title": "军事机密泄露竟是因为运动手表",
-      "context": "近日，某国一起军事机密泄露事件，引发全球关注。当时该国某重要军事装备正在执行任务，一名军官跑步时佩戴的智能运动手表持续记录并公开了高精度GPS数据，致使该装备的重要敏感信息泄露，给该国国防安全造成难以弥补的重大损失。",
+      "title": "中国最强“东西大动脉”要来了",
+      "context": "长江入海口崇太长江隧道14公里江底段施工完成，标志着沿江高铁（沪渝蓉高铁）建设取得关键进展。这条5000亿的东西大动脉，将带动1.5万亿经济增长，重塑长江经济带格局。",
       "info": "",
-      "url": "https://www.baidu.com/s?wd=%E5%86%9B%E4%BA%8B%E6%9C%BA%E5%AF%86%E6%B3%84%E9%9C%B2%E7%AB%9F%E6%98%AF%E5%9B%A0%E4%B8%BA%E8%BF%90%E5%8A%A8%E6%89%8B%E8%A1%A8"
+      "url": "https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%BC%BA%E2%80%9C%E4%B8%9C%E8%A5%BF%E5%A4%A7%E5%8A%A8%E8%84%89%E2%80%9D%E8%A6%81%E6%9D%A5%E4%BA%86"
     },
     {
       "source_id": "bilibili-hot-search",
       "source_name": "Bilibili HOT Search",
       "source_rank": 1,
       "status": "cache",
-      "title": "意大利连续三届无缘世界杯决赛圈",
+      "title": "美加墨世界杯48支参赛球队确定",
       "context": "",
       "info": "",
-      "url": "https://search.bilibili.com/all?keyword=%E6%84%8F%E5%A4%A7%E5%88%A9%E8%BF%9E%E7%BB%AD%E4%B8%89%E5%B1%8A%E6%97%A0%E7%BC%98%E4%B8%96%E7%95%8C%E6%9D%AF%E5%86%B3%E8%B5%9B%E5%9C%88"
+      "url": "https://search.bilibili.com/all?keyword=%E7%BE%8E%E5%8A%A0%E5%A2%A8%E4%B8%96%E7%95%8C%E6%9D%AF48%E6%94%AF%E5%8F%82%E8%B5%9B%E7%90%83%E9%98%9F%E7%A1%AE%E5%AE%9A"
     },
     {
       "source_id": "chongbuluo-hot",
       "source_name": "Chongbuluo HOT",
       "source_rank": 1,
       "status": "cache",
-      "title": "最近逛论坛逛上瘾了，有没有推荐的论坛",
-      "context": "最近逛论坛逛上瘾了，有没有推荐的论坛",
+      "title": "张雪峰因心源性猝死去世，大家有什么要说的吗？",
+      "context": "张雪峰因心源性猝死去世，大家有什么要说的吗？",
       "info": "",
-      "url": "https://www.chongbuluo.com/thread-24194-1-1.html"
+      "url": "https://www.chongbuluo.com/thread-24288-1-1.html"
     },
     {
       "source_id": "cls-hot",
       "source_name": "CLS HOT",
       "source_rank": 1,
       "status": "cache",
-      "title": "【早报】伊朗总统：愿在诉求满足前提下结束战争；美股大涨，科技股、中概股大幅走强",
+      "title": "明早9点！白宫重磅预告：特朗普将就伊朗问题发表全国讲话",
       "context": "",
       "info": "",
-      "url": "https://www.cls.cn/detail/2331350"
+      "url": "https://www.cls.cn/detail/2331621"
     },
     {
       "source_id": "coolapk",
@@ -242,7 +242,7 @@
       "status": "cache",
       "title": "小艺Claw上线：体验包49元起",
       "context": "",
-      "info": "204.1万热度 3.3万讨论",
+      "info": "211.8万热度 3.3万讨论",
       "url": "https://www.coolapk.com/feed/70982377"
     },
     {
@@ -260,10 +260,10 @@
       "source_name": "Douyin",
       "source_rank": 1,
       "status": "cache",
-      "title": "意大利连续3届无缘世界杯",
+      "title": "东鹏饮料怎么了",
       "context": "",
       "info": "",
-      "url": "https://www.douyin.com/hot/2450637"
+      "url": "https://www.douyin.com/hot/2451067"
     },
     {
       "source_id": "freebuf",
@@ -282,7 +282,7 @@
       "status": "cache",
       "title": "luongnv89 /      claude-howto",
       "context": "A visual, example-driven guide to Claude Code — from basic concepts to advanced agents, with copy-paste templates that bring immediate value.",
-      "info": "✰ 13,497",
+      "info": "✰ 14,288",
       "url": "https://github.com/luongnv89/claude-howto"
     },
     {
@@ -290,10 +290,10 @@
       "source_name": "Hackernews",
       "source_rank": 1,
       "status": "cache",
-      "title": "We intercepted the White House app's traffic. 77% of requests go to 3rd parties",
+      "title": "Claude Code Unpacked : A visual guide",
       "context": "",
-      "info": "102 points",
-      "url": "https://news.ycombinator.com/item?id=47595865"
+      "info": "284 points",
+      "url": "https://news.ycombinator.com/item?id=47597085"
     },
     {
       "source_id": "hupu",
@@ -310,7 +310,7 @@
       "source_name": "Ifeng",
       "source_rank": 1,
       "status": "cache",
-      "title": "美以伊战争丨美媒：阿联酋愿协助美打通霍尔木兹",
+      "title": "美以伊战争丨伊朗：霍尔木兹海峡不会开放",
       "context": "",
       "info": "",
       "url": "https://news.ifeng.com/loc/timeline/event/8r727OWpK5W"
@@ -340,10 +340,10 @@
       "source_name": "Nowcoder",
       "source_rank": 1,
       "status": "cache",
-      "title": "27届暑期实习腾讯PCG前端面经",
+      "title": "被笔试耽误了一天day16（为什么携程第三题始终是0呢",
       "context": "",
       "info": "",
-      "url": "https://www.nowcoder.com/discuss/867749382026817536"
+      "url": "https://www.nowcoder.com/feed/main/detail/4e32e59cee3c4c1f8e3f8807cfe3f455"
     },
     {
       "source_id": "producthunt",
@@ -352,7 +352,7 @@
       "status": "cache",
       "title": "Stitch 2.0 by Google",
       "context": "Vibe design beautiful production-ready UI in seconds",
-      "info": " △︎ 828",
+      "info": " △︎ 829",
       "url": "https://www.producthunt.com/products/stitch-2-0-by-google-2?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
     },
     {
@@ -418,7 +418,7 @@
           "html_url": "https://github.com/zubair-trabzada/geo-seo-claude",
           "category": "SEO & Marketing",
           "description": "GEO-first SEO skill for Claude Code. Comprehensive AI search optimization for any website — citability scoring, AI crawler analysis, brand authority, schema markup, platform-specific optimization, and PDF reports.  If you want learn how to sell this to real businesses, check out the skool community",
-          "stars": 4626,
+          "stars": 4637,
           "tags": []
         },
         {
@@ -426,7 +426,7 @@
           "html_url": "https://github.com/GEO-SEO/seo-geo-audit",
           "category": "SEO & Marketing",
           "description": "Professional SEO and GEO audit workflows for brands, SaaS teams, SEO operators, agencies, and AI-search growth teams.",
-          "stars": 129,
+          "stars": 130,
           "tags": []
         }
       ],
@@ -448,7 +448,7 @@
           "status": "cache",
           "title": "luongnv89 /      claude-howto",
           "context": "A visual, example-driven guide to Claude Code — from basic concepts to advanced agents, with copy-paste templates that bring immediate value.",
-          "info": "✰ 13,497",
+          "info": "✰ 14,288",
           "url": "https://github.com/luongnv89/claude-howto"
         }
       ],
@@ -485,7 +485,7 @@
       ],
       "trends": [
         "Claude Code源码泄露，下一个王牌提前曝光",
-        "军事机密泄露竟是因为运动手表"
+        "中国最强“东西大动脉”要来了"
       ],
       "repos": [
         "StockSharp/StockSharp",
@@ -511,7 +511,7 @@
           "html_url": "https://github.com/StockSharp/StockSharp",
           "category": "Finance & Trading",
           "description": "Algorithmic trading and quantitative trading open source platform to develop trading robots (stock markets, forex, crypto, bitcoins, and options).",
-          "stars": 9506,
+          "stars": 9508,
           "tags": [
             "algorithmic-trading",
             "algorithmic-trading-engine",
@@ -524,7 +524,7 @@
           "html_url": "https://github.com/mvanhorn/last30days-skill",
           "category": "Finance & Trading",
           "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
-          "stars": 16959,
+          "stars": 17070,
           "tags": [
             "ai-prompts",
             "ai-skill",
@@ -537,7 +537,7 @@
           "html_url": "https://github.com/Jon-Becker/prediction-market-analysis",
           "category": "Finance & Trading",
           "description": "A framework for collecting and analyzing prediction market data, including the largest publicly available dataset of Polymarket and Kalshi market and trade data.",
-          "stars": 2565,
+          "stars": 2583,
           "tags": [
             "data",
             "data-science",
@@ -562,10 +562,10 @@
           "source_name": "Baidu",
           "source_rank": 1,
           "status": "cache",
-          "title": "军事机密泄露竟是因为运动手表",
-          "context": "近日，某国一起军事机密泄露事件，引发全球关注。当时该国某重要军事装备正在执行任务，一名军官跑步时佩戴的智能运动手表持续记录并公开了高精度GPS数据，致使该装备的重要敏感信息泄露，给该国国防安全造成难以弥补的重大损失。",
+          "title": "中国最强“东西大动脉”要来了",
+          "context": "长江入海口崇太长江隧道14公里江底段施工完成，标志着沿江高铁（沪渝蓉高铁）建设取得关键进展。这条5000亿的东西大动脉，将带动1.5万亿经济增长，重塑长江经济带格局。",
           "info": "",
-          "url": "https://www.baidu.com/s?wd=%E5%86%9B%E4%BA%8B%E6%9C%BA%E5%AF%86%E6%B3%84%E9%9C%B2%E7%AB%9F%E6%98%AF%E5%9B%A0%E4%B8%BA%E8%BF%90%E5%8A%A8%E6%89%8B%E8%A1%A8"
+          "url": "https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%BC%BA%E2%80%9C%E4%B8%9C%E8%A5%BF%E5%A4%A7%E5%8A%A8%E8%84%89%E2%80%9D%E8%A6%81%E6%9D%A5%E4%BA%86"
         }
       ],
       "founder_memo": {
@@ -627,7 +627,7 @@
           "html_url": "https://github.com/chenhg5/cc-connect",
           "category": "AI Coding Tools",
           "description": "Bridge local AI coding agents (Claude Code, Cursor, Gemini CLI, Codex) to messaging platforms (Feishu/Lark, DingTalk, Slack, Telegram, Discord, LINE, WeChat Work). Chat with your AI dev assistant from anywhere — no public IP required for most platforms.",
-          "stars": 3857,
+          "stars": 3891,
           "tags": []
         },
         {
@@ -635,7 +635,7 @@
           "html_url": "https://github.com/affaan-m/everything-claude-code",
           "category": "AI Coding Tools",
           "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-          "stars": 127739,
+          "stars": 128926,
           "tags": [
             "ai-agents",
             "anthropic",
@@ -648,7 +648,7 @@
           "html_url": "https://github.com/BloopAI/vibe-kanban",
           "category": "AI Coding Tools",
           "description": "Get 10X more out of Claude Code, Codex or any coding agent",
-          "stars": 24158,
+          "stars": 24173,
           "tags": [
             "agent",
             "ai-agents",
@@ -675,7 +675,7 @@
           "status": "cache",
           "title": "luongnv89 /      claude-howto",
           "context": "A visual, example-driven guide to Claude Code — from basic concepts to advanced agents, with copy-paste templates that bring immediate value.",
-          "info": "✰ 13,497",
+          "info": "✰ 14,288",
           "url": "https://github.com/luongnv89/claude-howto"
         }
       ],
@@ -710,7 +710,7 @@
       ],
       "trends": [
         "Claude Code源码泄露，下一个王牌提前曝光",
-        "军事机密泄露竟是因为运动手表"
+        "中国最强“东西大动脉”要来了"
       ],
       "repos": [
         "hacksider/Deep-Live-Cam",
@@ -736,7 +736,7 @@
           "html_url": "https://github.com/hacksider/Deep-Live-Cam",
           "category": "AI Content & Media",
           "description": "real time face swap and one-click video deepfake with only a single image",
-          "stars": 87098,
+          "stars": 87166,
           "tags": [
             "ai",
             "ai-deep-fake",
@@ -762,7 +762,7 @@
           "html_url": "https://github.com/ruvnet/RuView",
           "category": "AI Content & Media",
           "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
-          "stars": 44980,
+          "stars": 45029,
           "tags": [
             "agentic-ai",
             "densepose",
@@ -787,10 +787,10 @@
           "source_name": "Baidu",
           "source_rank": 1,
           "status": "cache",
-          "title": "军事机密泄露竟是因为运动手表",
-          "context": "近日，某国一起军事机密泄露事件，引发全球关注。当时该国某重要军事装备正在执行任务，一名军官跑步时佩戴的智能运动手表持续记录并公开了高精度GPS数据，致使该装备的重要敏感信息泄露，给该国国防安全造成难以弥补的重大损失。",
+          "title": "中国最强“东西大动脉”要来了",
+          "context": "长江入海口崇太长江隧道14公里江底段施工完成，标志着沿江高铁（沪渝蓉高铁）建设取得关键进展。这条5000亿的东西大动脉，将带动1.5万亿经济增长，重塑长江经济带格局。",
           "info": "",
-          "url": "https://www.baidu.com/s?wd=%E5%86%9B%E4%BA%8B%E6%9C%BA%E5%AF%86%E6%B3%84%E9%9C%B2%E7%AB%9F%E6%98%AF%E5%9B%A0%E4%B8%BA%E8%BF%90%E5%8A%A8%E6%89%8B%E8%A1%A8"
+          "url": "https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%BC%BA%E2%80%9C%E4%B8%9C%E8%A5%BF%E5%A4%A7%E5%8A%A8%E8%84%89%E2%80%9D%E8%A6%81%E6%9D%A5%E4%BA%86"
         }
       ],
       "founder_memo": {
