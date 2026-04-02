@@ -1,6 +1,6 @@
 {
   "date": "2026-04-02",
-  "generated_at": "2026-04-02T05:32:49+00:00",
+  "generated_at": "2026-04-02T08:46:35+00:00",
   "trend_source": "https://newsnow.busiyi.world/api/s/entire",
   "star_repo_source": "stars_cache.json",
   "mode": "live-with-deterministic-ideas",
@@ -11,8 +11,10 @@
     "AI Models & Research",
     "Data & Analytics",
     "Design & UI",
-    "Infrastructure & DevOps",
+    "Developer Tools",
+    "Finance & Trading",
     "Mobile & Desktop",
+    "SEO & Marketing",
     "Security & Privacy",
     "Web Development",
     "Web Scraping & Browser Automation"
@@ -52,7 +54,7 @@
       "id": "coolapk",
       "name": "Coolapk",
       "status": "cache",
-      "item_count": 17
+      "item_count": 19
     },
     {
       "id": "douban",
@@ -88,7 +90,7 @@
       "id": "hupu",
       "name": "Hupu",
       "status": "cache",
-      "item_count": 19
+      "item_count": 30
     },
     {
       "id": "ifeng",
@@ -148,7 +150,7 @@
       "id": "tieba",
       "name": "Tieba",
       "status": "cache",
-      "item_count": 29
+      "item_count": 30
     },
     {
       "id": "toutiao",
@@ -189,7 +191,7 @@
       "status": "cache",
       "title": "anthropics /      claude-code",
       "context": "Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows - all through natural language commands.",
-      "info": "✰ 102,682",
+      "info": "✰ 103,780",
       "url": "https://github.com/anthropics/claude-code"
     },
     {
@@ -199,7 +201,7 @@
       "status": "cache",
       "title": "openai /      codex",
       "context": "Lightweight coding agent that runs in your terminal",
-      "info": "✰ 72,021",
+      "info": "✰ 72,193",
       "url": "https://github.com/openai/codex"
     },
     {
@@ -209,7 +211,7 @@
       "status": "cache",
       "title": "Agentplace AI Agents",
       "context": "Create specialized AI agents for real tasks and workflows",
-      "info": " △︎ 704",
+      "info": " △︎ 705",
       "url": "https://www.producthunt.com/products/agentplace?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
     },
     {
@@ -219,7 +221,7 @@
       "status": "cache",
       "title": "Naoma AI Demo Agent",
       "context": "The video AI demo agent for B2B SaaS for immediate demos",
-      "info": " △︎ 668",
+      "info": " △︎ 667",
       "url": "https://www.producthunt.com/products/naoma/launches/naoma-ai-demo-agent?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
     },
     {
@@ -265,7 +267,7 @@
     {
       "source_id": "juejin",
       "source_name": "Juejin",
-      "source_rank": 16,
+      "source_rank": 17,
       "status": "cache",
       "title": "让TypeScript 再次伟大：愚人节前夜Claude Code意外开源与OpenClaw小龙虾打造 AI 原生开发新纪元",
       "context": "",
@@ -279,7 +281,7 @@
       "status": "cache",
       "title": "google-research /      timesfm",
       "context": "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
-      "info": "✰ 12,430",
+      "info": "✰ 12,608",
       "url": "https://github.com/google-research/timesfm"
     },
     {
@@ -289,7 +291,7 @@
       "status": "cache",
       "title": "luongnv89 /      claude-howto",
       "context": "A visual, example-driven guide to Claude Code — from basic concepts to advanced agents, with copy-paste templates that bring immediate value.",
-      "info": "✰ 16,000",
+      "info": "✰ 16,254",
       "url": "https://github.com/luongnv89/claude-howto"
     },
     {
@@ -299,7 +301,7 @@
       "status": "cache",
       "title": "Tobira.ai",
       "context": "A network where AI agents find deals for their humans",
-      "info": " △︎ 715",
+      "info": " △︎ 716",
       "url": "https://www.producthunt.com/products/tobira-ai?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
     },
     {
@@ -315,11 +317,11 @@
     {
       "source_id": "hackernews",
       "source_name": "Hackernews",
-      "source_rank": 26,
+      "source_rank": 18,
       "status": "cache",
       "title": "The future of code search is not regex – 100x faster than ripgrep",
       "context": "",
-      "info": "6 points",
+      "info": "40 points",
       "url": "https://news.ycombinator.com/item?id=47609752"
     },
     {
@@ -365,253 +367,51 @@
   ],
   "ideas": [
     {
-      "name": "Signal Web-Crawler Studio",
-      "summary": "Help publishers turn 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了 into a repeatable alert workflow using web and crawler tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了 creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for publishers.",
-      "build_plan": [
-        "Track 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了",
-        "Connect Web Development and Web Scraping & Browser Automation repo workflows",
-        "Ship a narrow alert for publishers"
-      ],
-      "trends": [
-        "💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了"
-      ],
-      "repos": [
-        "evershopcommerce/evershop",
-        "ChromeDevTools/chrome-devtools-mcp"
-      ],
-      "category_focus": [
-        "Web Development",
-        "Web Scraping & Browser Automation"
-      ],
-      "confidence": "high",
-      "trend_repo_match_score": 75,
-      "revenue_score": 82,
-      "niche_difficulty_score": 50,
-      "build_speed_score": 51,
-      "monetization_latency_score": 66,
-      "recurring_revenue_score": 54,
-      "founder_score": 59,
-      "opportunity_score": 71,
-      "trend_repo_match_score_10": 8,
-      "revenue_score_10": 8,
-      "niche_difficulty_score_10": 5,
-      "build_speed_score_10": 5,
-      "monetization_latency_score_10": 7,
-      "recurring_revenue_score_10": 5,
-      "founder_score_10": 6,
-      "opportunity_score_10": 7,
-      "semantic_signature": "c:cat:browser,cat:development,cat:scraping,cat:web,cat:web-development,cat:web-scraping-browser-automation,cat:workflow | w:agent,alert,automation,review,signal,workflow,workspace | t:alert,around,behavior,browser,crawler,development",
-      "repo_details": [
-        {
-          "full_name": "evershopcommerce/evershop",
-          "html_url": "https://github.com/evershopcommerce/evershop",
-          "category": "Web Development",
-          "description": "🛍️ Typescript E-commerce Platform",
-          "stars": 9965,
-          "tags": [
-            "ecommerce",
-            "ecommerce-framework",
-            "ecommerce-platform",
-            "react"
-          ]
-        },
-        {
-          "full_name": "ChromeDevTools/chrome-devtools-mcp",
-          "html_url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
-          "category": "Web Scraping & Browser Automation",
-          "description": "Chrome DevTools for coding agents",
-          "stars": 32787,
-          "tags": [
-            "browser",
-            "chrome",
-            "chrome-devtools",
-            "debugging"
-          ]
-        }
-      ],
-      "trend_details": [
-        {
-          "source_id": "juejin",
-          "source_name": "Juejin",
-          "source_rank": 3,
-          "status": "cache",
-          "title": "💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了",
-          "context": "",
-          "info": "",
-          "url": "https://juejin.cn/post/7623242804392902665"
-        }
-      ],
-      "founder_memo": {
-        "best_part": "The pricing surface is visible from day one.",
-        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
-        "fastest_mvp": "Ship only the first wedge: Track 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了.",
-        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
-        "why_high": "The pricing surface is visible from day one.",
-        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
-        "top_penalties": [
-          "Current MVP shape is too broad for a fast solo launch.",
-          "Retention loop is weak, so monthly revenue is less certain."
-        ],
-        "improve_next": [
-          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
-          "Ship only the first wedge: Track 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了."
-        ]
-      },
-      "build_decision": {
-        "label": "Validate first",
-        "tone": "caution",
-        "summary": "The niche carries trust, workflow, or compliance weight."
-      }
-    },
-    {
-      "name": "Signal Code-AI Studio",
-      "summary": "Help publishers turn Naoma AI Demo Agent into a repeatable alert workflow using code and ai tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around Naoma AI Demo Agent creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for publishers.",
-      "build_plan": [
-        "Track Naoma AI Demo Agent",
-        "Connect AI Coding Tools and AI Models & Research repo workflows",
-        "Ship a narrow alert for publishers"
-      ],
-      "trends": [
-        "Naoma AI Demo Agent"
-      ],
-      "repos": [
-        "affaan-m/everything-claude-code",
-        "AlexsJones/llmfit"
-      ],
-      "category_focus": [
-        "AI Coding Tools",
-        "AI Models & Research"
-      ],
-      "confidence": "high",
-      "trend_repo_match_score": 85,
-      "revenue_score": 72,
-      "niche_difficulty_score": 55,
-      "build_speed_score": 51,
-      "monetization_latency_score": 66,
-      "recurring_revenue_score": 54,
-      "founder_score": 58,
-      "opportunity_score": 70,
-      "trend_repo_match_score_10": 8,
-      "revenue_score_10": 7,
-      "niche_difficulty_score_10": 6,
-      "build_speed_score_10": 5,
-      "monetization_latency_score_10": 7,
-      "recurring_revenue_score_10": 5,
-      "founder_score_10": 6,
-      "opportunity_score_10": 7,
-      "semantic_signature": "c:cat:ai-coding-tools,cat:ai-models-research,cat:coding,cat:model,cat:research,cat:tool | w:agent,alert,automation,review,signal,workflow,workspace | t:alert,around,behavior,code,code-ai,coding",
-      "repo_details": [
-        {
-          "full_name": "affaan-m/everything-claude-code",
-          "html_url": "https://github.com/affaan-m/everything-claude-code",
-          "category": "AI Coding Tools",
-          "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-          "stars": 131743,
-          "tags": [
-            "ai-agents",
-            "anthropic",
-            "claude",
-            "claude-code"
-          ]
-        },
-        {
-          "full_name": "AlexsJones/llmfit",
-          "html_url": "https://github.com/AlexsJones/llmfit",
-          "category": "AI Models & Research",
-          "description": "Hundreds of models & providers. One command to find what runs on your hardware.",
-          "stars": 20704,
-          "tags": [
-            "gguf",
-            "llm",
-            "localai",
-            "mlx"
-          ]
-        }
-      ],
-      "trend_details": [
-        {
-          "source_id": "producthunt",
-          "source_name": "Producthunt",
-          "source_rank": 11,
-          "status": "cache",
-          "title": "Naoma AI Demo Agent",
-          "context": "The video AI demo agent for B2B SaaS for immediate demos",
-          "info": " △︎ 668",
-          "url": "https://www.producthunt.com/products/naoma/launches/naoma-ai-demo-agent?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
-        }
-      ],
-      "founder_memo": {
-        "best_part": "The trend signal and repo stack already line up.",
-        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
-        "fastest_mvp": "Ship only the first wedge: Track Naoma AI Demo Agent.",
-        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
-        "why_high": "The trend signal and repo stack already line up.",
-        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
-        "top_penalties": [
-          "Current MVP shape is too broad for a fast solo launch.",
-          "Retention loop is weak, so monthly revenue is less certain."
-        ],
-        "improve_next": [
-          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
-          "Ship only the first wedge: Track Naoma AI Demo Agent."
-        ]
-      },
-      "build_decision": {
-        "label": "Validate first",
-        "tone": "caution",
-        "summary": "The niche carries trust, workflow, or compliance weight."
-      }
-    },
-    {
-      "name": "Quiet Media-Design Radar",
-      "summary": "Help growth teams turn Claude Code Review into a repeatable alert workflow using media and design tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around Claude Code Review creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for growth teams.",
+      "name": "Quiet Media-SEO Watch",
+      "summary": "Help vertical consultants turn Claude Code Review into a repeatable radar workflow using media and seo tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around Claude Code Review creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for vertical consultants.",
       "build_plan": [
         "Track Claude Code Review",
-        "Connect AI Content & Media and Design & UI repo workflows",
-        "Ship a narrow alert for growth teams"
+        "Connect AI Content & Media and SEO & Marketing repo workflows",
+        "Ship a narrow radar for vertical consultants"
       ],
       "trends": [
         "Claude Code Review"
       ],
       "repos": [
         "hacksider/Deep-Live-Cam",
-        "vercel-labs/json-render"
+        "zubair-trabzada/geo-seo-claude"
       ],
       "category_focus": [
         "AI Content & Media",
-        "Design & UI"
+        "SEO & Marketing"
       ],
       "confidence": "medium",
-      "trend_repo_match_score": 59,
-      "revenue_score": 72,
-      "niche_difficulty_score": 49,
-      "build_speed_score": 64,
+      "trend_repo_match_score": 79,
+      "revenue_score": 66,
+      "niche_difficulty_score": 50,
+      "build_speed_score": 57,
       "monetization_latency_score": 59,
-      "recurring_revenue_score": 54,
-      "founder_score": 58,
-      "opportunity_score": 63,
-      "trend_repo_match_score_10": 6,
+      "recurring_revenue_score": 47,
+      "founder_score": 57,
+      "opportunity_score": 66,
+      "trend_repo_match_score_10": 8,
       "revenue_score_10": 7,
       "niche_difficulty_score_10": 5,
       "build_speed_score_10": 6,
       "monetization_latency_score_10": 6,
       "recurring_revenue_score_10": 5,
       "founder_score_10": 6,
-      "opportunity_score_10": 6,
-      "semantic_signature": "c:cat:ai-content-media,cat:content,cat:design,cat:design-ui,cat:media | a:growth,team | w:alert,automation,monitor,review,signal,workflow | t:alert,around,behavior,content,design,exploit",
+      "opportunity_score_10": 7,
+      "semantic_signature": "c:cat:ai-content-media,cat:content,cat:marketing,cat:media,cat:seo,cat:seo-marketing | w:automation,monitor,review,signal,workflow | t:around,consultant,content,focused,manual,marketing",
       "repo_details": [
         {
           "full_name": "hacksider/Deep-Live-Cam",
           "html_url": "https://github.com/hacksider/Deep-Live-Cam",
           "category": "AI Content & Media",
           "description": "real time face swap and one-click video deepfake with only a single image",
-          "stars": 87380,
+          "stars": 87428,
           "tags": [
             "ai",
             "ai-deep-fake",
@@ -620,11 +420,11 @@
           ]
         },
         {
-          "full_name": "vercel-labs/json-render",
-          "html_url": "https://github.com/vercel-labs/json-render",
-          "category": "Design & UI",
-          "description": "The Generative UI framework",
-          "stars": 13831,
+          "full_name": "zubair-trabzada/geo-seo-claude",
+          "html_url": "https://github.com/zubair-trabzada/geo-seo-claude",
+          "category": "SEO & Marketing",
+          "description": "GEO-first SEO skill for Claude Code. Comprehensive AI search optimization for any website — citability scoring, AI crawler analysis, brand authority, schema markup, platform-specific optimization, and PDF reports.  If you want learn how to sell this to real businesses, check out the skool community",
+          "stars": 4686,
           "tags": []
         }
       ],
@@ -641,18 +441,119 @@
         }
       ],
       "founder_memo": {
-        "best_part": "The pricing surface is visible from day one.",
-        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "best_part": "The trend signal and repo stack already line up.",
+        "biggest_risk": "The business model risks looking one-off instead of compounding.",
         "fastest_mvp": "Ship only the first wedge: Track Claude Code Review.",
         "first_customer": "Content platforms with moderation and rights risk",
-        "why_high": "The pricing surface is visible from day one.",
-        "why_low": "The niche carries trust, workflow, or compliance weight. Retention loop is weak, so monthly revenue is less certain.",
+        "why_high": "The trend signal and repo stack already line up.",
+        "why_low": "The business model risks looking one-off instead of compounding. Retention loop is weak, so monthly revenue is less certain.",
         "top_penalties": [
           "Retention loop is weak, so monthly revenue is less certain."
         ],
         "improve_next": [
+          "Add a recurring alert, report, or compliance loop so usage repeats monthly.",
+          "Narrow the buyer to one painful workflow and one high-urgency trigger."
+        ]
+      },
+      "build_decision": {
+        "label": "Validate first",
+        "tone": "caution",
+        "summary": "The business model risks looking one-off instead of compounding."
+      }
+    },
+    {
+      "name": "Pulse Agent-Crawler Atlas",
+      "summary": "Help solo operators turn Tobira.ai into a repeatable inbox workflow using agent and crawler tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around Tobira.ai creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for solo operators.",
+      "build_plan": [
+        "Track Tobira.ai",
+        "Connect AI Agents & Automation and Web Scraping & Browser Automation repo workflows",
+        "Ship a narrow inbox for solo operators"
+      ],
+      "trends": [
+        "Tobira.ai"
+      ],
+      "repos": [
+        "openclaw/openclaw",
+        "ChromeDevTools/chrome-devtools-mcp"
+      ],
+      "category_focus": [
+        "AI Agents & Automation",
+        "Web Scraping & Browser Automation"
+      ],
+      "confidence": "medium",
+      "trend_repo_match_score": 69,
+      "revenue_score": 76,
+      "niche_difficulty_score": 56,
+      "build_speed_score": 44,
+      "monetization_latency_score": 66,
+      "recurring_revenue_score": 54,
+      "founder_score": 55,
+      "opportunity_score": 66,
+      "trend_repo_match_score_10": 7,
+      "revenue_score_10": 8,
+      "niche_difficulty_score_10": 6,
+      "build_speed_score_10": 4,
+      "monetization_latency_score_10": 7,
+      "recurring_revenue_score_10": 5,
+      "founder_score_10": 6,
+      "opportunity_score_10": 7,
+      "semantic_signature": "c:cat:agent,cat:ai-agents-automation,cat:browser,cat:scraping,cat:web,cat:web-scraping-browser-automation,cat:workflow | a:operator | w:agent,automation,review,signal,workflow | t:agent,agent-crawler,around,atla,browser,crawler",
+      "repo_details": [
+        {
+          "full_name": "openclaw/openclaw",
+          "html_url": "https://github.com/openclaw/openclaw",
+          "category": "AI Agents & Automation",
+          "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞",
+          "stars": 345236,
+          "tags": [
+            "ai",
+            "assistant",
+            "crustacean",
+            "molty"
+          ]
+        },
+        {
+          "full_name": "ChromeDevTools/chrome-devtools-mcp",
+          "html_url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+          "category": "Web Scraping & Browser Automation",
+          "description": "Chrome DevTools for coding agents",
+          "stars": 32824,
+          "tags": [
+            "browser",
+            "chrome",
+            "chrome-devtools",
+            "debugging"
+          ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "producthunt",
+          "source_name": "Producthunt",
+          "source_rank": 4,
+          "status": "cache",
+          "title": "Tobira.ai",
+          "context": "A network where AI agents find deals for their humans",
+          "info": " △︎ 716",
+          "url": "https://www.producthunt.com/products/tobira-ai?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The pricing surface is visible from day one.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "fastest_mvp": "Ship only the first wedge: Track Tobira.ai.",
+        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "why_high": "The pricing surface is visible from day one.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
+        "top_penalties": [
+          "Current MVP shape is too broad for a fast solo launch.",
+          "Retention loop is weak, so monthly revenue is less certain."
+        ],
+        "improve_next": [
           "Narrow the buyer to one painful workflow and one high-urgency trigger.",
-          "Add a recurring alert, report, or compliance loop so usage repeats monthly."
+          "Ship only the first wedge: Track Tobira.ai."
         ]
       },
       "build_decision": {
@@ -662,70 +563,65 @@
       }
     },
     {
-      "name": "Drift Agent-Code Engine",
-      "summary": "Help trend chasers turn anthropics /      claude-code into a repeatable scanner workflow using agent and code tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around anthropics /      claude-code creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for trend chasers.",
+      "name": "Niche AI-Dev Pilot",
+      "summary": "Help micro-agencies turn anthropics /      claude-code into a repeatable desk workflow using ai and dev tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around anthropics /      claude-code creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for micro-agencies.",
       "build_plan": [
         "Track anthropics /      claude-code",
-        "Connect AI Agents & Automation and AI Coding Tools repo workflows",
-        "Ship a narrow scanner for trend chasers"
+        "Connect AI Models & Research and Developer Tools repo workflows",
+        "Ship a narrow desk for micro-agencies"
       ],
       "trends": [
         "anthropics /      claude-code"
       ],
       "repos": [
-        "openclaw/openclaw",
-        "affaan-m/everything-claude-code"
+        "AlexsJones/llmfit",
+        "tobi/qmd"
       ],
       "category_focus": [
-        "AI Agents & Automation",
-        "AI Coding Tools"
+        "AI Models & Research",
+        "Developer Tools"
       ],
-      "confidence": "high",
-      "trend_repo_match_score": 100,
-      "revenue_score": 72,
-      "niche_difficulty_score": 56,
-      "build_speed_score": 44,
+      "confidence": "medium",
+      "trend_repo_match_score": 69,
+      "revenue_score": 66,
+      "niche_difficulty_score": 66,
+      "build_speed_score": 50,
       "monetization_latency_score": 66,
       "recurring_revenue_score": 54,
-      "founder_score": 57,
-      "opportunity_score": 73,
-      "trend_repo_match_score_10": 10,
+      "founder_score": 54,
+      "opportunity_score": 62,
+      "trend_repo_match_score_10": 7,
       "revenue_score_10": 7,
-      "niche_difficulty_score_10": 6,
-      "build_speed_score_10": 4,
+      "niche_difficulty_score_10": 7,
+      "build_speed_score_10": 5,
       "monetization_latency_score_10": 7,
       "recurring_revenue_score_10": 5,
-      "founder_score_10": 6,
-      "opportunity_score_10": 7,
-      "semantic_signature": "c:cat:agent,cat:ai-agents-automation,cat:ai-coding-tools,cat:coding,cat:tool,cat:workflow | w:agent,automation,review,signal,workflow | t:agent,agent-code,around,behavior,chaser,code",
+      "founder_score_10": 5,
+      "opportunity_score_10": 6,
+      "semantic_signature": "c:cat:ai-models-research,cat:developer,cat:developer-tools,cat:model,cat:research,cat:tool | w:automation,review,signal,workflow,workspace | t:ai-dev,around,developer,focused,manual,micro-agency",
       "repo_details": [
         {
-          "full_name": "openclaw/openclaw",
-          "html_url": "https://github.com/openclaw/openclaw",
-          "category": "AI Agents & Automation",
-          "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞",
-          "stars": 344966,
+          "full_name": "AlexsJones/llmfit",
+          "html_url": "https://github.com/AlexsJones/llmfit",
+          "category": "AI Models & Research",
+          "description": "Hundreds of models & providers. One command to find what runs on your hardware.",
+          "stars": 20732,
           "tags": [
-            "ai",
-            "assistant",
-            "crustacean",
-            "molty"
+            "gguf",
+            "llm",
+            "localai",
+            "mlx"
           ]
         },
         {
-          "full_name": "affaan-m/everything-claude-code",
-          "html_url": "https://github.com/affaan-m/everything-claude-code",
-          "category": "AI Coding Tools",
-          "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-          "stars": 131743,
-          "tags": [
-            "ai-agents",
-            "anthropic",
-            "claude",
-            "claude-code"
-          ]
+          "full_name": "tobi/qmd",
+          "html_url": "https://github.com/tobi/qmd",
+          "category": "Developer Tools",
+          "description": "mini cli search engine for your docs, knowledge bases, meeting notes, whatever. Tracking current sota approaches while being all local",
+          "stars": 17477,
+          "tags": []
         }
       ],
       "trend_details": [
@@ -736,7 +632,7 @@
           "status": "cache",
           "title": "anthropics /      claude-code",
           "context": "Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows - all through natural language commands.",
-          "info": "✰ 102,682",
+          "info": "✰ 103,780",
           "url": "https://github.com/anthropics/claude-code"
         }
       ],
@@ -763,56 +659,257 @@
       }
     },
     {
-      "name": "Vector Media-Mobile Engine",
-      "summary": "Help traders turn Agentplace AI Agents into a repeatable alert workflow using media and mobile tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around Agentplace AI Agents creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for traders.",
+      "name": "Drift SEO-Web Console",
+      "summary": "Help solo operators turn Naoma AI Demo Agent into a repeatable copilot workflow using seo and web tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around Naoma AI Demo Agent creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for solo operators.",
+      "build_plan": [
+        "Track Naoma AI Demo Agent",
+        "Connect SEO & Marketing and Web Development repo workflows",
+        "Ship a narrow copilot for solo operators"
+      ],
+      "trends": [
+        "Naoma AI Demo Agent"
+      ],
+      "repos": [
+        "phuryn/pm-skills",
+        "evershopcommerce/evershop"
+      ],
+      "category_focus": [
+        "SEO & Marketing",
+        "Web Development"
+      ],
+      "confidence": "medium",
+      "trend_repo_match_score": 59,
+      "revenue_score": 66,
+      "niche_difficulty_score": 56,
+      "build_speed_score": 44,
+      "monetization_latency_score": 66,
+      "recurring_revenue_score": 54,
+      "founder_score": 54,
+      "opportunity_score": 59,
+      "trend_repo_match_score_10": 6,
+      "revenue_score_10": 7,
+      "niche_difficulty_score_10": 6,
+      "build_speed_score_10": 4,
+      "monetization_latency_score_10": 7,
+      "recurring_revenue_score_10": 5,
+      "founder_score_10": 5,
+      "opportunity_score_10": 6,
+      "semantic_signature": "c:cat:development,cat:marketing,cat:seo,cat:seo-marketing,cat:web,cat:web-development | a:operator | w:agent,automation,review,signal,workflow,workspace | t:around,copilot,development,drift,focused,manual",
+      "repo_details": [
+        {
+          "full_name": "phuryn/pm-skills",
+          "html_url": "https://github.com/phuryn/pm-skills",
+          "category": "SEO & Marketing",
+          "description": "PM Skills Marketplace: 100+ agentic skills, commands, and plugins — from discovery to strategy, execution, launch, and growth.",
+          "stars": 9286,
+          "tags": [
+            "agent-skill-repository",
+            "agent-skills",
+            "agentic-skills",
+            "claude-code-marketplace"
+          ]
+        },
+        {
+          "full_name": "evershopcommerce/evershop",
+          "html_url": "https://github.com/evershopcommerce/evershop",
+          "category": "Web Development",
+          "description": "🛍️ Typescript E-commerce Platform",
+          "stars": 9964,
+          "tags": [
+            "ecommerce",
+            "ecommerce-framework",
+            "ecommerce-platform",
+            "react"
+          ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "producthunt",
+          "source_name": "Producthunt",
+          "source_rank": 11,
+          "status": "cache",
+          "title": "Naoma AI Demo Agent",
+          "context": "The video AI demo agent for B2B SaaS for immediate demos",
+          "info": " △︎ 667",
+          "url": "https://www.producthunt.com/products/naoma/launches/naoma-ai-demo-agent?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The revenue path can start early without waiting for scale.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "fastest_mvp": "Ship only the first wedge: Track Naoma AI Demo Agent.",
+        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "why_high": "The revenue path can start early without waiting for scale.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
+        "top_penalties": [
+          "Current MVP shape is too broad for a fast solo launch.",
+          "Retention loop is weak, so monthly revenue is less certain."
+        ],
+        "improve_next": [
+          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
+          "Ship only the first wedge: Track Naoma AI Demo Agent."
+        ]
+      },
+      "build_decision": {
+        "label": "Validate first",
+        "tone": "caution",
+        "summary": "The niche carries trust, workflow, or compliance weight."
+      }
+    },
+    {
+      "name": "Atlas Agent-Data Inbox",
+      "summary": "Help community managers turn 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了 into a repeatable copilot workflow using agent and data tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了 creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for community managers.",
+      "build_plan": [
+        "Track 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了",
+        "Connect AI Agents & Automation and Data & Analytics repo workflows",
+        "Ship a narrow copilot for community managers"
+      ],
+      "trends": [
+        "💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了"
+      ],
+      "repos": [
+        "openclaw/openclaw",
+        "clockworklabs/SpacetimeDB"
+      ],
+      "category_focus": [
+        "AI Agents & Automation",
+        "Data & Analytics"
+      ],
+      "confidence": "medium",
+      "trend_repo_match_score": 59,
+      "revenue_score": 72,
+      "niche_difficulty_score": 66,
+      "build_speed_score": 44,
+      "monetization_latency_score": 59,
+      "recurring_revenue_score": 62,
+      "founder_score": 52,
+      "opportunity_score": 61,
+      "trend_repo_match_score_10": 6,
+      "revenue_score_10": 7,
+      "niche_difficulty_score_10": 7,
+      "build_speed_score_10": 4,
+      "monetization_latency_score_10": 6,
+      "recurring_revenue_score_10": 6,
+      "founder_score_10": 5,
+      "opportunity_score_10": 6,
+      "semantic_signature": "c:cat:agent,cat:ai-agents-automation,cat:analytic,cat:data,cat:data-analytics,cat:workflow | w:agent,automation,review,signal,workflow | t:agent,agent-data,analytic,around,atla,community",
+      "repo_details": [
+        {
+          "full_name": "openclaw/openclaw",
+          "html_url": "https://github.com/openclaw/openclaw",
+          "category": "AI Agents & Automation",
+          "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞",
+          "stars": 345236,
+          "tags": [
+            "ai",
+            "assistant",
+            "crustacean",
+            "molty"
+          ]
+        },
+        {
+          "full_name": "clockworklabs/SpacetimeDB",
+          "html_url": "https://github.com/clockworklabs/SpacetimeDB",
+          "category": "Data & Analytics",
+          "description": "Development at the speed of light",
+          "stars": 24314,
+          "tags": [
+            "database",
+            "dataoriented",
+            "game-development",
+            "mmorpg-server"
+          ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "juejin",
+          "source_name": "Juejin",
+          "source_rank": 3,
+          "status": "cache",
+          "title": "💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了",
+          "context": "",
+          "info": "",
+          "url": "https://juejin.cn/post/7623242804392902665"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The pricing surface is visible from day one.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "fastest_mvp": "Ship only the first wedge: Track 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了.",
+        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "why_high": "The pricing surface is visible from day one.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
+        "top_penalties": [
+          "Current MVP shape is too broad for a fast solo launch."
+        ],
+        "improve_next": [
+          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
+          "Ship only the first wedge: Track 💥 Claude Code 源码泄露？我把这个最强 AI Coding Agent 的架构扒干净了."
+        ]
+      },
+      "build_decision": {
+        "label": "Validate first",
+        "tone": "caution",
+        "summary": "The niche carries trust, workflow, or compliance weight."
+      }
+    },
+    {
+      "name": "Quiet Code-Mobile Studio",
+      "summary": "Help vertical consultants turn Agentplace AI Agents into a repeatable radar workflow using code and mobile tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around Agentplace AI Agents creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for vertical consultants.",
       "build_plan": [
         "Track Agentplace AI Agents",
-        "Connect AI Content & Media and Mobile & Desktop repo workflows",
-        "Ship a narrow alert for traders"
+        "Connect AI Coding Tools and Mobile & Desktop repo workflows",
+        "Ship a narrow radar for vertical consultants"
       ],
       "trends": [
         "Agentplace AI Agents"
       ],
       "repos": [
-        "ruvnet/RuView",
+        "affaan-m/everything-claude-code",
         "rustdesk/rustdesk"
       ],
       "category_focus": [
-        "AI Content & Media",
+        "AI Coding Tools",
         "Mobile & Desktop"
       ],
       "confidence": "medium",
       "trend_repo_match_score": 59,
       "revenue_score": 66,
-      "niche_difficulty_score": 44,
-      "build_speed_score": 58,
-      "monetization_latency_score": 59,
+      "niche_difficulty_score": 56,
+      "build_speed_score": 44,
+      "monetization_latency_score": 66,
       "recurring_revenue_score": 47,
-      "founder_score": 57,
-      "opportunity_score": 61,
+      "founder_score": 52,
+      "opportunity_score": 59,
       "trend_repo_match_score_10": 6,
       "revenue_score_10": 7,
-      "niche_difficulty_score_10": 4,
-      "build_speed_score_10": 6,
-      "monetization_latency_score_10": 6,
+      "niche_difficulty_score_10": 6,
+      "build_speed_score_10": 4,
+      "monetization_latency_score_10": 7,
       "recurring_revenue_score_10": 5,
-      "founder_score_10": 6,
+      "founder_score_10": 5,
       "opportunity_score_10": 6,
-      "semantic_signature": "c:cat:ai-content-media,cat:content,cat:desktop,cat:media,cat:mobile,cat:mobile-desktop | a:trader | w:agent,alert,automation,review,signal,workflow | t:alert,around,behavior,content,desktop,exploit",
+      "semantic_signature": "c:cat:ai-coding-tools,cat:coding,cat:desktop,cat:mobile,cat:mobile-desktop,cat:tool | w:agent,automation,monitor,review,signal,workflow,workspace | t:around,code,code-mobile,coding,consultant,desktop",
       "repo_details": [
         {
-          "full_name": "ruvnet/RuView",
-          "html_url": "https://github.com/ruvnet/RuView",
-          "category": "AI Content & Media",
-          "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
-          "stars": 45186,
+          "full_name": "affaan-m/everything-claude-code",
+          "html_url": "https://github.com/affaan-m/everything-claude-code",
+          "category": "AI Coding Tools",
+          "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+          "stars": 132227,
           "tags": [
-            "agentic-ai",
-            "densepose",
-            "esp32",
-            "firmware"
+            "ai-agents",
+            "anthropic",
+            "claude",
+            "claude-code"
           ]
         },
         {
@@ -820,7 +917,7 @@
           "html_url": "https://github.com/rustdesk/rustdesk",
           "category": "Mobile & Desktop",
           "description": "An open-source remote desktop application designed for self-hosting, as an alternative to TeamViewer.",
-          "stars": 110399,
+          "stars": 110415,
           "tags": [
             "android",
             "anydesk",
@@ -837,95 +934,197 @@
           "status": "cache",
           "title": "Agentplace AI Agents",
           "context": "Create specialized AI agents for real tasks and workflows",
-          "info": " △︎ 704",
+          "info": " △︎ 705",
           "url": "https://www.producthunt.com/products/agentplace?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
         }
       ],
       "founder_memo": {
-        "best_part": "The pricing surface is visible from day one.",
-        "biggest_risk": "The business model risks looking one-off instead of compounding.",
+        "best_part": "The revenue path can start early without waiting for scale.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
         "fastest_mvp": "Ship only the first wedge: Track Agentplace AI Agents.",
-        "first_customer": "Content platforms with moderation and rights risk",
-        "why_high": "The pricing surface is visible from day one.",
-        "why_low": "The business model risks looking one-off instead of compounding. Retention loop is weak, so monthly revenue is less certain.",
+        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "why_high": "The revenue path can start early without waiting for scale.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
         "top_penalties": [
+          "Current MVP shape is too broad for a fast solo launch.",
           "Retention loop is weak, so monthly revenue is less certain."
         ],
         "improve_next": [
-          "Add a recurring alert, report, or compliance loop so usage repeats monthly.",
-          "Narrow the buyer to one painful workflow and one high-urgency trigger."
+          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
+          "Ship only the first wedge: Track Agentplace AI Agents."
         ]
       },
       "build_decision": {
         "label": "Validate first",
         "tone": "caution",
-        "summary": "The business model risks looking one-off instead of compounding."
+        "summary": "The niche carries trust, workflow, or compliance weight."
       }
     },
     {
-      "name": "Signal AI-Data Atlas",
-      "summary": "Help publishers turn AI 写的代码，你敢上线吗？ into a repeatable alert workflow using ai and data tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around AI 写的代码，你敢上线吗？ creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for publishers.",
+      "name": "Vector Agent-AI Studio",
+      "summary": "Help community managers turn anthropics /      claude-code into a repeatable desk workflow using agent and ai tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around anthropics /      claude-code creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for community managers.",
       "build_plan": [
-        "Track AI 写的代码，你敢上线吗？",
-        "Connect AI Models & Research and Data & Analytics repo workflows",
-        "Ship a narrow alert for publishers"
+        "Track anthropics /      claude-code",
+        "Connect AI Agents & Automation and AI Models & Research repo workflows",
+        "Ship a narrow desk for community managers"
       ],
       "trends": [
-        "AI 写的代码，你敢上线吗？"
+        "anthropics /      claude-code"
       ],
       "repos": [
-        "AlexsJones/llmfit",
-        "clockworklabs/SpacetimeDB"
+        "openclaw/openclaw",
+        "AlexsJones/llmfit"
       ],
       "category_focus": [
-        "AI Models & Research",
-        "Data & Analytics"
+        "AI Agents & Automation",
+        "AI Models & Research"
       ],
       "confidence": "medium",
       "trend_repo_match_score": 59,
-      "revenue_score": 72,
-      "niche_difficulty_score": 65,
-      "build_speed_score": 57,
-      "monetization_latency_score": 66,
-      "recurring_revenue_score": 62,
-      "founder_score": 56,
-      "opportunity_score": 62,
+      "revenue_score": 66,
+      "niche_difficulty_score": 61,
+      "build_speed_score": 44,
+      "monetization_latency_score": 59,
+      "recurring_revenue_score": 54,
+      "founder_score": 51,
+      "opportunity_score": 58,
       "trend_repo_match_score_10": 6,
       "revenue_score_10": 7,
       "niche_difficulty_score_10": 6,
-      "build_speed_score_10": 6,
-      "monetization_latency_score_10": 7,
-      "recurring_revenue_score_10": 6,
-      "founder_score_10": 6,
+      "build_speed_score_10": 4,
+      "monetization_latency_score_10": 6,
+      "recurring_revenue_score_10": 5,
+      "founder_score_10": 5,
       "opportunity_score_10": 6,
-      "semantic_signature": "c:cat:ai-models-research,cat:analytic,cat:data,cat:data-analytics,cat:model,cat:research | w:alert,automation,review,signal,workflow | t:ai-data,alert,analytic,around,atla,behavior",
+      "semantic_signature": "c:cat:agent,cat:ai-agents-automation,cat:ai-models-research,cat:model,cat:research,cat:workflow | w:agent,automation,review,signal,workflow,workspace | t:agent,agent-ai,around,community,focused,manager",
       "repo_details": [
+        {
+          "full_name": "openclaw/openclaw",
+          "html_url": "https://github.com/openclaw/openclaw",
+          "category": "AI Agents & Automation",
+          "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞",
+          "stars": 345236,
+          "tags": [
+            "ai",
+            "assistant",
+            "crustacean",
+            "molty"
+          ]
+        },
         {
           "full_name": "AlexsJones/llmfit",
           "html_url": "https://github.com/AlexsJones/llmfit",
           "category": "AI Models & Research",
           "description": "Hundreds of models & providers. One command to find what runs on your hardware.",
-          "stars": 20704,
+          "stars": 20732,
           "tags": [
             "gguf",
             "llm",
             "localai",
             "mlx"
           ]
+        }
+      ],
+      "trend_details": [
+        {
+          "source_id": "github-trending-today",
+          "source_name": "Github Trending Today",
+          "source_rank": 1,
+          "status": "cache",
+          "title": "anthropics /      claude-code",
+          "context": "Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows - all through natural language commands.",
+          "info": "✰ 103,780",
+          "url": "https://github.com/anthropics/claude-code"
+        }
+      ],
+      "founder_memo": {
+        "best_part": "The pricing surface is visible from day one.",
+        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
+        "fastest_mvp": "Ship only the first wedge: Track anthropics /      claude-code.",
+        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "why_high": "The pricing surface is visible from day one.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
+        "top_penalties": [
+          "Current MVP shape is too broad for a fast solo launch.",
+          "Retention loop is weak, so monthly revenue is less certain."
+        ],
+        "improve_next": [
+          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
+          "Ship only the first wedge: Track anthropics /      claude-code."
+        ]
+      },
+      "build_decision": {
+        "label": "Validate first",
+        "tone": "caution",
+        "summary": "The niche carries trust, workflow, or compliance weight."
+      }
+    },
+    {
+      "name": "Quiet Agent-Trust Watch",
+      "summary": "Help vertical consultants turn AI 写的代码，你敢上线吗？ into a repeatable radar workflow using agent and trust tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around AI 写的代码，你敢上线吗？ creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for vertical consultants.",
+      "build_plan": [
+        "Track AI 写的代码，你敢上线吗？",
+        "Connect AI Agents & Automation and Security & Privacy repo workflows",
+        "Ship a narrow radar for vertical consultants"
+      ],
+      "trends": [
+        "AI 写的代码，你敢上线吗？"
+      ],
+      "repos": [
+        "openclaw/openclaw",
+        "Lissy93/web-check"
+      ],
+      "category_focus": [
+        "AI Agents & Automation",
+        "Security & Privacy"
+      ],
+      "confidence": "high",
+      "trend_repo_match_score": 65,
+      "revenue_score": 72,
+      "niche_difficulty_score": 65,
+      "build_speed_score": 38,
+      "monetization_latency_score": 66,
+      "recurring_revenue_score": 47,
+      "founder_score": 50,
+      "opportunity_score": 61,
+      "trend_repo_match_score_10": 6,
+      "revenue_score_10": 7,
+      "niche_difficulty_score_10": 6,
+      "build_speed_score_10": 4,
+      "monetization_latency_score_10": 7,
+      "recurring_revenue_score_10": 5,
+      "founder_score_10": 5,
+      "opportunity_score_10": 6,
+      "semantic_signature": "c:cat:agent,cat:ai-agents-automation,cat:privacy,cat:security,cat:security-privacy,cat:workflow | w:agent,automation,monitor,review,signal,workflow | t:agent,agent-trust,around,consultant,focused,manual",
+      "repo_details": [
+        {
+          "full_name": "openclaw/openclaw",
+          "html_url": "https://github.com/openclaw/openclaw",
+          "category": "AI Agents & Automation",
+          "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞",
+          "stars": 345236,
+          "tags": [
+            "ai",
+            "assistant",
+            "crustacean",
+            "molty"
+          ]
         },
         {
-          "full_name": "clockworklabs/SpacetimeDB",
-          "html_url": "https://github.com/clockworklabs/SpacetimeDB",
-          "category": "Data & Analytics",
-          "description": "Development at the speed of light",
-          "stars": 24311,
+          "full_name": "Lissy93/web-check",
+          "html_url": "https://github.com/Lissy93/web-check",
+          "category": "Security & Privacy",
+          "description": "🕵️‍♂️ All-in-one OSINT tool for analysing any website",
+          "stars": 32549,
           "tags": [
-            "database",
-            "dataoriented",
-            "game-development",
-            "mmorpg-server"
+            "osint",
+            "privacy",
+            "security",
+            "security-tools"
           ]
         }
       ],
@@ -945,10 +1144,13 @@
         "best_part": "The pricing surface is visible from day one.",
         "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
         "fastest_mvp": "Ship only the first wedge: Track AI 写的代码，你敢上线吗？.",
-        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "first_customer": "Security teams at software companies",
         "why_high": "The pricing surface is visible from day one.",
-        "why_low": "The niche carries trust, workflow, or compliance weight.",
-        "top_penalties": [],
+        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
+        "top_penalties": [
+          "Current MVP shape is too broad for a fast solo launch.",
+          "Retention loop is weak, so monthly revenue is less certain."
+        ],
         "improve_next": [
           "Narrow the buyer to one painful workflow and one high-urgency trigger.",
           "Ship only the first wedge: Track AI 写的代码，你敢上线吗？."
@@ -961,69 +1163,64 @@
       }
     },
     {
-      "name": "Vector Data-Infra Forge",
-      "summary": "Help publishers turn Tobira.ai into a repeatable sprint workflow using data and infra tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around Tobira.ai creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for publishers.",
+      "name": "Quiet Design-Market Desk",
+      "summary": "Help solo operators turn Agentplace AI Agents into a repeatable desk workflow using design and market tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around Agentplace AI Agents creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for solo operators.",
       "build_plan": [
-        "Track Tobira.ai",
-        "Connect Data & Analytics and Infrastructure & DevOps repo workflows",
-        "Ship a narrow sprint for publishers"
+        "Track Agentplace AI Agents",
+        "Connect Design & UI and Finance & Trading repo workflows",
+        "Ship a narrow desk for solo operators"
       ],
       "trends": [
-        "Tobira.ai"
+        "Agentplace AI Agents"
       ],
       "repos": [
-        "clockworklabs/SpacetimeDB",
-        "aquasecurity/trivy"
+        "vercel-labs/json-render",
+        "mvanhorn/last30days-skill"
       ],
       "category_focus": [
-        "Data & Analytics",
-        "Infrastructure & DevOps"
+        "Design & UI",
+        "Finance & Trading"
       ],
-      "confidence": "medium",
-      "trend_repo_match_score": 69,
+      "confidence": "high",
+      "trend_repo_match_score": 65,
       "revenue_score": 72,
-      "niche_difficulty_score": 66,
-      "build_speed_score": 44,
+      "niche_difficulty_score": 74,
+      "build_speed_score": 38,
       "monetization_latency_score": 66,
-      "recurring_revenue_score": 62,
-      "founder_score": 54,
-      "opportunity_score": 64,
-      "trend_repo_match_score_10": 7,
+      "recurring_revenue_score": 47,
+      "founder_score": 48,
+      "opportunity_score": 61,
+      "trend_repo_match_score_10": 6,
       "revenue_score_10": 7,
       "niche_difficulty_score_10": 7,
       "build_speed_score_10": 4,
       "monetization_latency_score_10": 7,
-      "recurring_revenue_score_10": 6,
+      "recurring_revenue_score_10": 5,
       "founder_score_10": 5,
       "opportunity_score_10": 6,
-      "semantic_signature": "c:cat:analytic,cat:data,cat:data-analytics,cat:devop,cat:infrastructure,cat:infrastructure-devops | w:automation,review,signal,workflow | t:analytic,around,behavior,data,data-infra,devop",
+      "semantic_signature": "c:cat:design,cat:design-ui,cat:finance,cat:finance-trading,cat:trading | a:operator | w:agent,automation,review,signal,workflow,workspace | t:around,design,design-market,finance,focused,manual",
       "repo_details": [
         {
-          "full_name": "clockworklabs/SpacetimeDB",
-          "html_url": "https://github.com/clockworklabs/SpacetimeDB",
-          "category": "Data & Analytics",
-          "description": "Development at the speed of light",
-          "stars": 24311,
-          "tags": [
-            "database",
-            "dataoriented",
-            "game-development",
-            "mmorpg-server"
-          ]
+          "full_name": "vercel-labs/json-render",
+          "html_url": "https://github.com/vercel-labs/json-render",
+          "category": "Design & UI",
+          "description": "The Generative UI framework",
+          "stars": 13840,
+          "tags": []
         },
         {
-          "full_name": "aquasecurity/trivy",
-          "html_url": "https://github.com/aquasecurity/trivy",
-          "category": "Infrastructure & DevOps",
-          "description": "Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more",
-          "stars": 34288,
+          "full_name": "mvanhorn/last30days-skill",
+          "html_url": "https://github.com/mvanhorn/last30days-skill",
+          "category": "Finance & Trading",
+          "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
+          "stars": 17467,
           "tags": [
-            "containers",
-            "devsecops",
-            "docker",
-            "go"
+            "ai-prompts",
+            "ai-skill",
+            "bluesky",
+            "claude"
           ]
         }
       ],
@@ -1031,27 +1228,29 @@
         {
           "source_id": "producthunt",
           "source_name": "Producthunt",
-          "source_rank": 4,
+          "source_rank": 5,
           "status": "cache",
-          "title": "Tobira.ai",
-          "context": "A network where AI agents find deals for their humans",
-          "info": " △︎ 715",
-          "url": "https://www.producthunt.com/products/tobira-ai?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+          "title": "Agentplace AI Agents",
+          "context": "Create specialized AI agents for real tasks and workflows",
+          "info": " △︎ 705",
+          "url": "https://www.producthunt.com/products/agentplace?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
         }
       ],
       "founder_memo": {
         "best_part": "The pricing surface is visible from day one.",
         "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
-        "fastest_mvp": "Ship only the first wedge: Track Tobira.ai.",
-        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
+        "fastest_mvp": "Ship only the first wedge: Track Agentplace AI Agents.",
+        "first_customer": "Operators who react to live market or risk data",
         "why_high": "The pricing surface is visible from day one.",
-        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. High-trust niche increases validation and delivery burden.",
         "top_penalties": [
-          "Current MVP shape is too broad for a fast solo launch."
+          "High-trust niche increases validation and delivery burden.",
+          "Current MVP shape is too broad for a fast solo launch.",
+          "Retention loop is weak, so monthly revenue is less certain."
         ],
         "improve_next": [
           "Narrow the buyer to one painful workflow and one high-urgency trigger.",
-          "Ship only the first wedge: Track Tobira.ai."
+          "Ship only the first wedge: Track Agentplace AI Agents."
         ]
       },
       "build_decision": {
@@ -1061,69 +1260,64 @@
       }
     },
     {
-      "name": "Vector Agent-Mobile Studio",
-      "summary": "Help publishers turn openai /      codex into a repeatable sprint workflow using agent and mobile tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around openai /      codex creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for publishers.",
+      "name": "Backchannel Dev-Market Radar",
+      "summary": "Help vertical consultants turn openai /      codex into a repeatable desk workflow using dev and market tooling.",
+      "why_now": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed. Today's NewsNow signal around openai /      codex creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
+      "revenue_model": "Charge a monthly subscription plus premium setup or review services for vertical consultants.",
       "build_plan": [
         "Track openai /      codex",
-        "Connect AI Agents & Automation and Mobile & Desktop repo workflows",
-        "Ship a narrow sprint for publishers"
+        "Connect Developer Tools and Finance & Trading repo workflows",
+        "Ship a narrow desk for vertical consultants"
       ],
       "trends": [
         "openai /      codex"
       ],
       "repos": [
-        "openclaw/openclaw",
-        "rustdesk/rustdesk"
+        "tobi/qmd",
+        "mvanhorn/last30days-skill"
       ],
       "category_focus": [
-        "AI Agents & Automation",
-        "Mobile & Desktop"
+        "Developer Tools",
+        "Finance & Trading"
       ],
       "confidence": "medium",
-      "trend_repo_match_score": 59,
+      "trend_repo_match_score": 69,
       "revenue_score": 66,
-      "niche_difficulty_score": 56,
+      "niche_difficulty_score": 79,
       "build_speed_score": 44,
       "monetization_latency_score": 66,
-      "recurring_revenue_score": 54,
-      "founder_score": 54,
-      "opportunity_score": 59,
-      "trend_repo_match_score_10": 6,
+      "recurring_revenue_score": 47,
+      "founder_score": 48,
+      "opportunity_score": 60,
+      "trend_repo_match_score_10": 7,
       "revenue_score_10": 7,
-      "niche_difficulty_score_10": 6,
+      "niche_difficulty_score_10": 8,
       "build_speed_score_10": 4,
       "monetization_latency_score_10": 7,
       "recurring_revenue_score_10": 5,
       "founder_score_10": 5,
       "opportunity_score_10": 6,
-      "semantic_signature": "c:cat:agent,cat:ai-agents-automation,cat:desktop,cat:mobile,cat:mobile-desktop,cat:workflow | w:agent,automation,review,signal,workflow,workspace | t:agent,agent-mobile,around,behavior,desktop,exploit",
+      "semantic_signature": "c:cat:developer,cat:developer-tools,cat:finance,cat:finance-trading,cat:tool,cat:trading | w:automation,monitor,review,signal,workflow,workspace | t:around,backchannel,consultant,dev-market,developer,finance",
       "repo_details": [
         {
-          "full_name": "openclaw/openclaw",
-          "html_url": "https://github.com/openclaw/openclaw",
-          "category": "AI Agents & Automation",
-          "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞",
-          "stars": 344966,
-          "tags": [
-            "ai",
-            "assistant",
-            "crustacean",
-            "molty"
-          ]
+          "full_name": "tobi/qmd",
+          "html_url": "https://github.com/tobi/qmd",
+          "category": "Developer Tools",
+          "description": "mini cli search engine for your docs, knowledge bases, meeting notes, whatever. Tracking current sota approaches while being all local",
+          "stars": 17477,
+          "tags": []
         },
         {
-          "full_name": "rustdesk/rustdesk",
-          "html_url": "https://github.com/rustdesk/rustdesk",
-          "category": "Mobile & Desktop",
-          "description": "An open-source remote desktop application designed for self-hosting, as an alternative to TeamViewer.",
-          "stars": 110399,
+          "full_name": "mvanhorn/last30days-skill",
+          "html_url": "https://github.com/mvanhorn/last30days-skill",
+          "category": "Finance & Trading",
+          "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
+          "stars": 17467,
           "tags": [
-            "android",
-            "anydesk",
-            "dart",
-            "flatpak"
+            "ai-prompts",
+            "ai-skill",
+            "bluesky",
+            "claude"
           ]
         }
       ],
@@ -1135,228 +1329,25 @@
           "status": "cache",
           "title": "openai /      codex",
           "context": "Lightweight coding agent that runs in your terminal",
-          "info": "✰ 72,021",
+          "info": "✰ 72,193",
           "url": "https://github.com/openai/codex"
         }
       ],
       "founder_memo": {
-        "best_part": "The revenue path can start early without waiting for scale.",
+        "best_part": "The trend signal and repo stack already line up.",
         "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
         "fastest_mvp": "Ship only the first wedge: Track openai /      codex.",
-        "first_customer": "Small teams with an urgent workflow and budget to pay for speed.",
-        "why_high": "The revenue path can start early without waiting for scale.",
-        "why_low": "The niche carries trust, workflow, or compliance weight. Current MVP shape is too broad for a fast solo launch.",
+        "first_customer": "Operators who react to live market or risk data",
+        "why_high": "The trend signal and repo stack already line up.",
+        "why_low": "The niche carries trust, workflow, or compliance weight. High-trust niche increases validation and delivery burden.",
         "top_penalties": [
+          "High-trust niche increases validation and delivery burden.",
           "Current MVP shape is too broad for a fast solo launch.",
           "Retention loop is weak, so monthly revenue is less certain."
         ],
         "improve_next": [
           "Narrow the buyer to one painful workflow and one high-urgency trigger.",
           "Ship only the first wedge: Track openai /      codex."
-        ]
-      },
-      "build_decision": {
-        "label": "Validate first",
-        "tone": "caution",
-        "summary": "The niche carries trust, workflow, or compliance weight."
-      }
-    },
-    {
-      "name": "Niche Trust-Crawler Pilot",
-      "summary": "Help traders turn google-research /      timesfm into a repeatable sprint workflow using trust and crawler tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around google-research /      timesfm creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for traders.",
-      "build_plan": [
-        "Track google-research /      timesfm",
-        "Connect Security & Privacy and Web Scraping & Browser Automation repo workflows",
-        "Ship a narrow sprint for traders"
-      ],
-      "trends": [
-        "google-research /      timesfm"
-      ],
-      "repos": [
-        "Lissy93/web-check",
-        "ChromeDevTools/chrome-devtools-mcp"
-      ],
-      "category_focus": [
-        "Security & Privacy",
-        "Web Scraping & Browser Automation"
-      ],
-      "confidence": "high",
-      "trend_repo_match_score": 65,
-      "revenue_score": 82,
-      "niche_difficulty_score": 70,
-      "build_speed_score": 44,
-      "monetization_latency_score": 66,
-      "recurring_revenue_score": 47,
-      "founder_score": 51,
-      "opportunity_score": 65,
-      "trend_repo_match_score_10": 6,
-      "revenue_score_10": 8,
-      "niche_difficulty_score_10": 7,
-      "build_speed_score_10": 4,
-      "monetization_latency_score_10": 7,
-      "recurring_revenue_score_10": 5,
-      "founder_score_10": 5,
-      "opportunity_score_10": 6,
-      "semantic_signature": "c:cat:browser,cat:privacy,cat:scraping,cat:security,cat:security-privacy,cat:web,cat:web-scraping-browser-automation,cat:workflow | a:trader | w:automation,review,signal,workflow,workspace | t:around,behavior,browser,crawler,exploit,fast",
-      "repo_details": [
-        {
-          "full_name": "Lissy93/web-check",
-          "html_url": "https://github.com/Lissy93/web-check",
-          "category": "Security & Privacy",
-          "description": "🕵️‍♂️ All-in-one OSINT tool for analysing any website",
-          "stars": 32547,
-          "tags": [
-            "osint",
-            "privacy",
-            "security",
-            "security-tools"
-          ]
-        },
-        {
-          "full_name": "ChromeDevTools/chrome-devtools-mcp",
-          "html_url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
-          "category": "Web Scraping & Browser Automation",
-          "description": "Chrome DevTools for coding agents",
-          "stars": 32787,
-          "tags": [
-            "browser",
-            "chrome",
-            "chrome-devtools",
-            "debugging"
-          ]
-        }
-      ],
-      "trend_details": [
-        {
-          "source_id": "github-trending-today",
-          "source_name": "Github Trending Today",
-          "source_rank": 3,
-          "status": "cache",
-          "title": "google-research /      timesfm",
-          "context": "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
-          "info": "✰ 12,430",
-          "url": "https://github.com/google-research/timesfm"
-        }
-      ],
-      "founder_memo": {
-        "best_part": "The pricing surface is visible from day one.",
-        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
-        "fastest_mvp": "Ship only the first wedge: Track google-research /      timesfm.",
-        "first_customer": "Security teams at software companies",
-        "why_high": "The pricing surface is visible from day one.",
-        "why_low": "The niche carries trust, workflow, or compliance weight. High-trust niche increases validation and delivery burden.",
-        "top_penalties": [
-          "High-trust niche increases validation and delivery burden.",
-          "Current MVP shape is too broad for a fast solo launch.",
-          "Retention loop is weak, so monthly revenue is less certain."
-        ],
-        "improve_next": [
-          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
-          "Ship only the first wedge: Track google-research /      timesfm."
-        ]
-      },
-      "build_decision": {
-        "label": "Validate first",
-        "tone": "caution",
-        "summary": "The niche carries trust, workflow, or compliance weight."
-      }
-    },
-    {
-      "name": "Drift Infra-Trust Watch",
-      "summary": "Help growth teams turn Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的 into a repeatable pulse workflow using infra and trust tooling.",
-      "why_now": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP. Today's NewsNow signal around Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的 creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-      "revenue_model": "Charge a monthly subscription plus premium setup or review services for growth teams.",
-      "build_plan": [
-        "Track Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的",
-        "Connect Infrastructure & DevOps and Security & Privacy repo workflows",
-        "Ship a narrow pulse for growth teams"
-      ],
-      "trends": [
-        "Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的"
-      ],
-      "repos": [
-        "aquasecurity/trivy",
-        "Lissy93/web-check"
-      ],
-      "category_focus": [
-        "Infrastructure & DevOps",
-        "Security & Privacy"
-      ],
-      "confidence": "medium",
-      "trend_repo_match_score": 69,
-      "revenue_score": 72,
-      "niche_difficulty_score": 70,
-      "build_speed_score": 32,
-      "monetization_latency_score": 66,
-      "recurring_revenue_score": 54,
-      "founder_score": 49,
-      "opportunity_score": 62,
-      "trend_repo_match_score_10": 7,
-      "revenue_score_10": 7,
-      "niche_difficulty_score_10": 7,
-      "build_speed_score_10": 3,
-      "monetization_latency_score_10": 7,
-      "recurring_revenue_score_10": 5,
-      "founder_score_10": 5,
-      "opportunity_score_10": 6,
-      "semantic_signature": "c:cat:devop,cat:infrastructure,cat:infrastructure-devops,cat:privacy,cat:security,cat:security-privacy | a:growth,team | w:agent,automation,monitor,review,signal,workflow | t:around,behavior,devop,drift,exploit,fast",
-      "repo_details": [
-        {
-          "full_name": "aquasecurity/trivy",
-          "html_url": "https://github.com/aquasecurity/trivy",
-          "category": "Infrastructure & DevOps",
-          "description": "Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more",
-          "stars": 34288,
-          "tags": [
-            "containers",
-            "devsecops",
-            "docker",
-            "go"
-          ]
-        },
-        {
-          "full_name": "Lissy93/web-check",
-          "html_url": "https://github.com/Lissy93/web-check",
-          "category": "Security & Privacy",
-          "description": "🕵️‍♂️ All-in-one OSINT tool for analysing any website",
-          "stars": 32547,
-          "tags": [
-            "osint",
-            "privacy",
-            "security",
-            "security-tools"
-          ]
-        }
-      ],
-      "trend_details": [
-        {
-          "source_id": "juejin",
-          "source_name": "Juejin",
-          "source_rank": 2,
-          "status": "cache",
-          "title": "Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的",
-          "context": "",
-          "info": "",
-          "url": "https://juejin.cn/post/7623066322222153728"
-        }
-      ],
-      "founder_memo": {
-        "best_part": "The pricing surface is visible from day one.",
-        "biggest_risk": "The niche carries trust, workflow, or compliance weight.",
-        "fastest_mvp": "Ship only the first wedge: Track Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的.",
-        "first_customer": "Security teams at software companies",
-        "why_high": "The pricing surface is visible from day one.",
-        "why_low": "The niche carries trust, workflow, or compliance weight. High-trust niche increases validation and delivery burden.",
-        "top_penalties": [
-          "High-trust niche increases validation and delivery burden.",
-          "Current MVP shape is too broad for a fast solo launch.",
-          "Retention loop is weak, so monthly revenue is less certain."
-        ],
-        "improve_next": [
-          "Narrow the buyer to one painful workflow and one high-urgency trigger.",
-          "Ship only the first wedge: Track Claude Code 源码泄漏：拆解一个工业级 AI Coding Agent 到底是怎么造出来的."
         ]
       },
       "build_decision": {
