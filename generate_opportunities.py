@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 import sys
 from collections import Counter, defaultdict
@@ -56,47 +57,74 @@ REPO_THEMES = [
 ]
 CREATIVE_ANGLES = [
     {
-        "label": "Underserved workflow",
-        "directive": "Target an overlooked operator with repetitive manual work and a willingness to pay for speed.",
-        "audiences": ["micro-agencies", "solo operators", "community managers", "vertical consultants"],
-        "formats": ["desk", "copilot", "radar", "inbox"],
+        "label": "Assumption inversion",
+        "directive": "Challenge the default workflow and build around the friction, latency, or trust gap everyone currently accepts.",
+        "audiences": ["category owners", "risk teams", "operators with manual bottlenecks", "technical strategists"],
+        "formats": ["protocol", "charter", "exchange", "switchboard"],
     },
     {
-        "label": "Contrarian infrastructure",
-        "directive": "Ignore the obvious AI wrapper and build the picks-and-shovels workflow around a fast-moving trend.",
-        "audiences": ["ops teams", "analysts", "compliance leads", "market researchers"],
-        "formats": ["watchtower", "console", "ledger", "monitor"],
+        "label": "Capability transplant",
+        "directive": "Steal a proven mechanism from one domain and transplant it into a completely different market with stronger urgency.",
+        "audiences": ["frontier teams", "specialist consultancies", "research operators", "industrial builders"],
+        "formats": ["mirror", "compiler", "broker", "fabric"],
     },
     {
-        "label": "Trend-to-service",
-        "directive": "Turn public trend noise into a done-for-you or productized service that can sell quickly.",
-        "audiences": ["freelancers", "boutique studios", "niche agencies", "operators with outbound motion"],
-        "formats": ["studio", "briefing", "engine", "pipeline"],
+        "label": "Second-order market",
+        "directive": "Ignore the loud headline product and monetize the reactions, exceptions, compliance gaps, and coordination overhead created around it.",
+        "audiences": ["analysts", "compliance leads", "market makers", "ecosystem aggregators"],
+        "formats": ["ledger", "prism", "relay", "exchange"],
     },
     {
-        "label": "Operational moat",
-        "directive": "Prefer sticky recurring workflows with proprietary data loops, alerts, or human-in-the-loop review.",
-        "audiences": ["research teams", "sales ops", "founder-led SaaS teams", "ecommerce operators"],
-        "formats": ["command", "ops", "hub", "tracker"],
+        "label": "Boundary collapse",
+        "directive": "Merge tools that normally live in separate teams so a new workflow only becomes possible when the boundary disappears.",
+        "audiences": ["cross-functional teams", "platform builders", "ops architects", "technical founders"],
+        "formats": ["bridge", "fabric", "operating system", "protocol"],
     },
     {
-        "label": "Cross-category remix",
-        "directive": "Combine distant repository categories so the idea feels novel instead of incremental.",
-        "audiences": ["indie hackers", "spec builders", "small software studios", "technical operators"],
-        "formats": ["lab", "forge", "switchboard", "navigator"],
+        "label": "Hidden stakeholder",
+        "directive": "Build for the user who is downstream from the trend but feels the pain first, even if they are ignored by the mainstream narrative.",
+        "audiences": ["back-office teams", "field operators", "review desks", "specialized service firms"],
+        "formats": ["lens", "charter", "switch", "foundry"],
     },
     {
-        "label": "Short-window demand",
-        "directive": "Exploit a temporary behavior, regulation, platform shift, or news spike with a fast MVP.",
-        "audiences": ["publishers", "growth teams", "traders", "trend chasers"],
-        "formats": ["alert", "pulse", "sprint", "scanner"],
+        "label": "Synthetic twin",
+        "directive": "Turn live signals into simulations, rehearsal loops, or synthetic environments that help buyers practice before acting.",
+        "audiences": ["decision teams", "training leads", "scenario planners", "high-stakes operators"],
+        "formats": ["twin", "lab", "simulator", "atlas"],
     },
 ]
-FALLBACK_PREFIXES = ["Signal", "Quiet", "Vector", "Backchannel", "Niche", "Drift", "Atlas", "Pulse", "Relay", "Frontier"]
-FALLBACK_SUFFIXES = ["Desk", "Radar", "Forge", "Watch", "Studio", "Console", "Pilot", "Inbox", "Engine", "Atlas"]
+FALLBACK_PREFIXES = ["Latent", "Counter", "Shadow", "Boundary", "Signal", "Third", "Quiet", "Vector", "Flux", "Strange"]
+FALLBACK_SUFFIXES = ["Protocol", "Exchange", "Mirror", "Foundry", "Charter", "Atlas", "Fabric", "Prism", "Relay", "Switch"]
 MAX_IDEA_COUNT = 10
-IDEA_CANDIDATE_COUNT = 14
+IDEA_CANDIDATE_COUNT = 10
 FALLBACK_IDEA_CANDIDATE_COUNT = 24
+IDEA_SIMILARITY_THRESHOLD = 0.72
+
+# Diverse summary templates for fallback generator to avoid formulaic output
+FALLBACK_SUMMARY_TEMPLATES = [
+    "Use {mechanism} from {category_a} to exploit an overlooked coordination gap in {category_b} created by {trend_title}, targeting {customer} who currently absorbs the cost manually.",
+    "Build a {category_b} system that applies {category_a} patterns to {trend_title}, allowing {customer} to reverse-engineer what competitors are testing.",
+    "Create a broker layer between {category_a} and {category_b} that profits from the latency around {trend_title}, selling speed access to {customer}.",
+    "Design a feedback loop where {category_a} observations from {trend_title} get routed to {category_b} interventions, monetized through {customer} subscriptions.",
+    "Exploit the gap between how {category_a} tools work and how {category_b} teams actually operate around {trend_title}, offering {customer} a bridge they will pay for.",
+    "Port the trust model from {category_a} into {category_b}, letting {customer} verify claims about {trend_title} before committing resources.",
+    "Turn {category_a} data about {trend_title} into a prediction market for {category_b} decisions, with {customer} as the primary traders.",
+    "Build an audit path through {trend_title} that surfaces {category_b} inefficiencies {customer} can correct before competitors notice.",
+]
+FALLBACK_REVENUE_MODELS = [
+    "Sell verification subscriptions to {customer} who need proof before approving {category_b} spend.",
+    "Take a percentage of the cost savings achieved when {customer} implements the insight.",
+    "License the coordination protocol to {category_b} teams at {category_a} companies.",
+    "Charge {customer} per decision routed through the new channel.",
+    "Offer premium access to the signal feed for {customer} tracking {category_b} dynamics.",
+]
+BREAKTHROUGH_SCORE_THRESHOLD = 68
+CROSS_DOMAIN_SCORE_THRESHOLD = 58
+SERENDIPITY_SCORE_THRESHOLD = 62
+NOVELTY_SCORE_THRESHOLD = 60
+CONVENTIONALITY_SCORE_MAX = 45
+HIDDEN_CUSTOMER_SCORE_THRESHOLD = 70
+MINIMUM_MECHANISM_FAMILIES = 2
 CATEGORY_ALIASES = {
     "SEO & Marketing": "SEO",
     "Web Scraping & Browser Automation": "Crawler",
@@ -113,36 +141,179 @@ CATEGORY_ALIASES = {
     "Productivity": "Ops",
     "Mobile & Desktop": "Mobile",
 }
-OPPORTUNITY_SYSTEM_PROMPT = """You turn current trend/news signals and a user's starred GitHub repositories into concrete small product opportunities.
-Return strict JSON only with this shape:
-{
-  "ideas": [
-    {
-      "name": "short product name",
-      "summary": "1 sentence",
-      "why_now": "1-2 sentences",
-      "revenue_model": "how it can make money",
-      "build_plan": ["3 short steps"],
-      "trends": ["exact trend titles from the provided list"],
-      "repos": ["exact owner/repo names from the provided list"],
-      "category_focus": ["1-3 short category labels"],
-      "confidence": "high or medium or low"
-    }
-  ]
+CATEGORY_VECTOR_MAP = {
+    "SEO & Marketing": {"distribution", "attention", "ranking", "demand", "conversion", "language"},
+    "Web Scraping & Browser Automation": {"capture", "extraction", "observation", "navigation", "automation", "surveillance"},
+    "AI Agents & Automation": {"delegation", "orchestration", "autonomy", "coordination", "workflow", "planning"},
+    "AI Coding Tools": {"developer", "abstraction", "iteration", "compilation", "reasoning", "productivity"},
+    "AI Content & Media": {"generation", "narrative", "remix", "creative", "multimodal", "attention"},
+    "AI Models & Research": {"reasoning", "simulation", "experimentation", "inference", "science", "forecasting"},
+    "Developer Tools": {"debugging", "tooling", "productivity", "interfaces", "compilation", "infrastructure"},
+    "Data & Analytics": {"measurement", "forecasting", "decision", "insight", "aggregation", "modeling"},
+    "Finance & Trading": {"pricing", "risk", "incentives", "market", "timing", "arbitrage"},
+    "Web Development": {"distribution", "interfaces", "delivery", "interaction", "commerce", "publishing"},
+    "Security & Privacy": {"trust", "verification", "defense", "identity", "compliance", "risk"},
+    "Infrastructure & DevOps": {"reliability", "automation", "deployment", "scale", "latency", "operations"},
+    "Design & UI": {"interfaces", "taste", "communication", "human factors", "systems", "creative"},
+    "Productivity": {"habits", "coordination", "time", "focus", "rituals", "workflow"},
+    "Mobile & Desktop": {"devices", "presence", "offline", "interaction", "portability", "personalization"},
+    "Fun & Experimental": {"play", "novelty", "culture", "exploration", "memes", "behavior"},
+    "Other": {"generalist"},
 }
+MECHANISM_FAMILY_KEYWORDS = {
+    "inversion": {"reverse", "invert", "constraint", "counter", "anti", "exception", "friction"},
+    "protocol": {"protocol", "playbook", "charter", "governance", "compliance", "handshake"},
+    "market": {"market", "exchange", "auction", "pricing", "broker", "bid", "arbitrage"},
+    "simulation": {"simulation", "twin", "forecast", "scenario", "rehearsal", "sandbox"},
+    "coordination": {"routing", "orchestration", "coordination", "dispatch", "switchboard", "workflow"},
+    "knowledge": {"graph", "memory", "mapping", "taxonomy", "knowledge", "ontology"},
+    "trust": {"verification", "proof", "audit", "trust", "guardrail", "trace"},
+    "compression": {"compression", "distill", "synthesis", "brief", "compiler", "translation"},
+    "distribution": {"distribution", "channel", "virality", "ranking", "attention", "outbound"},
+}
+GENERIC_CONCEPT_TERMS = {
+    "dashboard",
+    "assistant",
+    "copilot",
+    "workflow",
+    "monitor",
+    "alert",
+    "radar",
+    "desk",
+    "studio",
+    "console",
+    "engine",
+    "hub",
+    "platform",
+    "tooling",
+    "productivity",
+    "agency",
+    "subscription",
+    "inbox",
+    "digest",
+    "brief",
+    "operator",
+    "consultant",
+    "manager",
+    "repeatable",
+    "narrow",
+    "focused",
+    "tracker",
+    "pilot",
+    "studio",
+}
+GENERIC_PATTERNS_TO_REJECT = [
+    r"\bhelp\s+.+?\s+turn\s+.+?\s+into\b",
+    r"\bcharge a monthly subscription\b",
+    r"\bship a narrow\b",
+    r"\brepeatable\b",
+    r"\boperator workflow\b",
+    r"\b(?:daily|weekly)\s+(?:digest|brief)\b",
+    r"\bturn\s+.+?\s+into\s+(?:a|an)\s+(?:service|subscription|platform|engine|tooling|workflow)\b",
+    r"\b(?:narrow|focused)\s+(?:radar|monitor|tracker|workflow|studio|desk|brief|digest)\b",
+]
+CONTRARIAN_SIGNAL_TERMS = {
+    "instead",
+    "hidden",
+    "counter",
+    "reverse",
+    "secondary",
+    "ignored",
+    "non-obvious",
+    "unexpected",
+    "underpriced",
+    "downstream",
+    "exception",
+    "assumption",
+}
+GENERIC_CUSTOMERS = {
+    "teams",
+    "founders",
+    "operators",
+    "developers",
+    "companies",
+    "startups",
+    "agencies",
+    "analysts",
+}
+BREAKTHROUGH_OPERATORS = [
+    {
+        "label": "Constraint inversion",
+        "axes": ["constraint inversion", "hidden stakeholder", "trust wedge"],
+        "mechanism_template": "Turn the pain created by {trend_title} into the product surface: capture exceptions with {left_alias} tooling, then route them through {right_alias} systems so every failure becomes proprietary training data.",
+        "why_template": "Most teams will build the obvious wrapper around {trend_title}. This concept monetizes the costly exceptions and review burden that appear after adoption, which is where urgency and budget collect first.",
+        "customer_templates": [
+            "{trend_title} response teams inside regulated firms",
+            "service operators who clean up failed {left_alias_lower} workflows",
+            "specialists downstream from {right_alias_lower} decisions",
+        ],
+        "plan_templates": [
+            "Instrument the exception path around {trend_title}",
+            "Convert repeated failures into a scored review queue spanning {category_a} and {category_b}",
+            "Sell the review protocol before automating the whole loop",
+        ],
+    },
+    {
+        "label": "Capability transplant",
+        "axes": ["capability transplant", "cross-domain synthesis", "behavior redesign"],
+        "mechanism_template": "Import the best mechanism from {category_a} into {category_b}: use {left_alias} methods to give {right_alias_lower} teams a new operating model triggered by {trend_title}.",
+        "why_template": "{category_b} buyers do not expect a proven {category_a} pattern to solve their problem, so the idea feels discontinuous rather than incremental. The novelty comes from moving a working primitive instead of inventing new software from scratch.",
+        "customer_templates": [
+            "{right_alias_lower} teams with rising demand but stale playbooks",
+            "operators managing complex {category_b} handoffs",
+            "buyers who already pay for expertise but not yet for software in {category_b}",
+        ],
+        "plan_templates": [
+            "Map the strongest primitive from {category_a} that {category_b} lacks",
+            "Prototype one transplanted workflow around {trend_title}",
+            "Package the new ritual as a premium operating layer before broad rollout",
+        ],
+    },
+    {
+        "label": "Second-order market",
+        "axes": ["second-order demand", "market design", "timing edge"],
+        "mechanism_template": "Build a secondary market around {trend_title}: let {hidden_customer_seed} trade speed, proof, or access using a broker layer powered by {left_alias} and {right_alias}.",
+        "why_template": "The headline product attracts attention, but the scarce asset is not the headline itself. It is the response time, verification, and coordination capacity that appear around it, which are easier to monetize and harder to copy.",
+        "customer_templates": [
+            "buyers who need verified access before the market normalizes",
+            "intermediaries exposed to timing risk from {trend_title}",
+            "specialized desks coordinating around short-lived {trend_title} spikes",
+        ],
+        "plan_templates": [
+            "Identify the scarce resource created by {trend_title}",
+            "Broker it across {category_a} and {category_b} participants",
+            "Add pricing and proof so the network compounds with each transaction",
+        ],
+    },
+    {
+        "label": "Synthetic twin",
+        "axes": ["simulation loop", "decision rehearsal", "cross-domain transfer"],
+        "mechanism_template": "Create a synthetic twin for decisions triggered by {trend_title}, combining {left_alias} observation with {right_alias} prediction so buyers can rehearse actions before committing real money or trust.",
+        "why_template": "Most products help after a choice is made. This one wins earlier by simulating the decision boundary itself, which changes user behavior before mistakes happen.",
+        "customer_templates": [
+            "teams that make expensive or irreversible calls under uncertainty",
+            "decision owners who need rehearsal before live execution",
+            "operators whose mistakes ripple into customers or regulators",
+        ],
+        "plan_templates": [
+            "Capture a live decision stream linked to {trend_title}",
+            "Build a replay and rehearsal layer using {category_a} plus {category_b}",
+            "Sell scenario planning subscriptions tied to avoided mistakes",
+        ],
+    },
+]
+OPPORTUNITY_SYSTEM_PROMPT = """Generate 10 breakthrough startup ideas from today's trends and repos.
+
+Output JSON:
+{"ideas":[{"name":"X","summary":"1 sentence","mechanism":"what makes it hard to copy","why_non_obvious":"the invisible connection","hidden_customer":"specific buyer","axes":["label"],"trends":["trend"],"repos":["owner/repo"]}]}
+
 Rules:
-- Return 14 ideas.
-- Each idea must use at least 2 repositories and at least 1 trend.
-- Treat the NewsNow trend list as today's ground truth. The ideas should feel triggered by today's news cycle, not generic evergreen SaaS prompts.
-- At least 8 of the 14 ideas must be explicitly anchored to the top/headline NewsNow trends provided in the prompt.
-- Every why_now must explain what changed in today's NewsNow signals and why that creates a timely wedge right now.
-- Optimize for fast launch, leverage, and practical passive or semi-passive revenue.
-- Prefer products, data services, workflow tools, audits, monitoring, marketplaces, or niche B2B utilities.
-- Use only repository names and trend titles that appear in the provided input.
-- Keep language concrete and non-hype.
-- Avoid repeating or lightly rewording recent idea names, audiences, and value propositions from the supplied recent-history block.
-- Make at least 2 ideas noticeably contrarian or unexpected versus the obvious use case.
-- Prefer ideas that convert breaking topics into monitoring, verification, lead-gen, compliance, research, workflow, alerting, or internal tooling products for a narrow user."""
+- Use 2+ repos and 1+ trend per idea
+- 5+ ideas must anchor to headline trends
+- Think transfer, not templates: coordination layer > dashboard, broker > tool
+- AVOID: "X Assistant", "Help X use Y", "platform for X", generic customers
+- Breakthrough = reader thinks "why didn't I see that?"
+- Keep language concrete, no hype."""
 
 
 def parse_args() -> argparse.Namespace:
@@ -171,6 +342,11 @@ def parse_args() -> argparse.Namespace:
         "--site-dir",
         default="docs",
         help="Directory for generated GitHub Pages assets",
+    )
+    parser.add_argument(
+        "--quality-gate",
+        action="store_true",
+        help="Fail if the generated portfolio does not meet the breakthrough quality thresholds",
     )
     return parser.parse_args()
 
@@ -384,9 +560,13 @@ def workflow_tokens_for_idea(idea: dict[str, Any]) -> set[str]:
         [
             str(idea.get("name") or ""),
             str(idea.get("summary") or ""),
+            str(idea.get("novel_mechanism") or ""),
+            str(idea.get("why_non_obvious") or ""),
+            str(idea.get("hidden_customer") or ""),
             str(idea.get("why_now") or ""),
             str(idea.get("revenue_model") or ""),
             " ".join(str(step) for step in idea.get("build_plan", [])),
+            " ".join(str(axis) for axis in idea.get("breakthrough_axes", [])),
         ]
     )
     tokens = {
@@ -432,9 +612,13 @@ def semantic_text_tokens_for_idea(idea: dict[str, Any]) -> set[str]:
                 [
                     str(idea.get("name") or ""),
                     str(idea.get("summary") or ""),
+                    str(idea.get("novel_mechanism") or ""),
+                    str(idea.get("why_non_obvious") or ""),
+                    str(idea.get("hidden_customer") or ""),
                     str(idea.get("why_now") or ""),
                     str(idea.get("revenue_model") or ""),
                     " ".join(str(step) for step in idea.get("build_plan", [])),
+                    " ".join(str(axis) for axis in idea.get("breakthrough_axes", [])),
                 ]
             )
         )
@@ -529,6 +713,30 @@ def idea_similarity_score(left: dict[str, Any], right: dict[str, Any]) -> float:
     return score
 
 
+def idea_pattern_text(idea: dict[str, Any]) -> str:
+    return " ".join(
+        [
+            str(idea.get("name") or ""),
+            str(idea.get("summary") or ""),
+            str(idea.get("novel_mechanism") or ""),
+            str(idea.get("why_non_obvious") or ""),
+            str(idea.get("hidden_customer") or ""),
+            str(idea.get("why_now") or ""),
+            str(idea.get("revenue_model") or ""),
+            " ".join(str(step) for step in idea.get("build_plan", [])),
+            " ".join(str(axis) for axis in idea.get("breakthrough_axes", [])),
+        ]
+    ).lower()
+
+
+def generic_pattern_matches(text: str) -> list[str]:
+    return [pattern for pattern in GENERIC_PATTERNS_TO_REJECT if re.search(pattern, text)]
+
+
+def is_generic_pattern(idea: dict[str, Any]) -> bool:
+    return bool(generic_pattern_matches(idea_pattern_text(idea)))
+
+
 def load_recent_idea_snapshots(reports_dir: Path, limit: int = 18) -> list[dict[str, Any]]:
     if not reports_dir.exists():
         return []
@@ -545,14 +753,18 @@ def load_recent_idea_snapshots(reports_dir: Path, limit: int = 18) -> list[dict[
                     "date": str(report_payload.get("date") or file_path.stem),
                     "name": str(idea.get("name") or "").strip(),
                     "summary": str(idea.get("summary") or "").strip(),
-                            "why_now": str(idea.get("why_now") or "").strip(),
-                            "revenue_model": str(idea.get("revenue_model") or "").strip(),
-                            "build_plan": [str(step) for step in idea.get("build_plan", []) if isinstance(step, str)],
+                    "novel_mechanism": str(idea.get("novel_mechanism") or "").strip(),
+                    "why_non_obvious": str(idea.get("why_non_obvious") or "").strip(),
+                    "hidden_customer": str(idea.get("hidden_customer") or "").strip(),
+                    "breakthrough_axes": [str(axis) for axis in idea.get("breakthrough_axes", []) if isinstance(axis, str)],
+                    "why_now": str(idea.get("why_now") or "").strip(),
+                    "revenue_model": str(idea.get("revenue_model") or "").strip(),
+                    "build_plan": [str(step) for step in idea.get("build_plan", []) if isinstance(step, str)],
                     "repos": [str(name) for name in idea.get("repos", []) if isinstance(name, str)],
                     "trends": [str(title) for title in idea.get("trends", []) if isinstance(title, str)],
                     "category_focus": [str(label) for label in idea.get("category_focus", []) if isinstance(label, str)],
-                            "semantic_signature": str(idea.get("semantic_signature") or "").strip(),
-                            "recurrence_group_id": str(idea.get("recurrence_group_id") or "").strip(),
+                    "semantic_signature": str(idea.get("semantic_signature") or "").strip(),
+                    "recurrence_group_id": str(idea.get("recurrence_group_id") or "").strip(),
                 }
             )
             if len(snapshots) >= limit:
@@ -633,6 +845,7 @@ def build_generation_context(
         "headline_trends": trends[:6],
         "surprise_trends": pick_surprise_trends(trends, report_date),
         "repo_combos": build_repo_combo_candidates(repos, report_date, limit=FALLBACK_IDEA_CANDIDATE_COUNT),
+        "creative_operators": BREAKTHROUGH_OPERATORS,
     }
 
 
@@ -887,73 +1100,32 @@ def build_llm_prompt(
     repos: list[dict[str, Any]],
     generation_context: dict[str, Any],
 ) -> str:
-    trend_payload = [
-        {
-            "title": trend["title"],
-            "source": trend["source_name"],
-            "context": trend["context"],
-            "info": trend["info"],
-            "url": trend["url"],
-        }
-        for trend in trends
-    ]
+    # Only send top 10 repos, minimal info
     repo_payload = [
-        {
-            "full_name": repo["full_name"],
-            "category": repo["category"],
-            "description": repo["description"],
-            "tags": repo["tags"][:4],
-            "stars": repo["stargazers_count"],
-        }
-        for repo in repos
-    ]
-    recent_payload = [
-        {
-            "date": idea["date"],
-            "name": idea["name"],
-            "summary": idea["summary"],
-            "categories": idea.get("category_focus", []),
-        }
-        for idea in generation_context.get("recent_ideas", [])[:10]
-        if idea.get("name")
+        f"{repo['full_name']} | {repo['category']}"
+        for repo in repos[:10]
     ]
     angle = generation_context.get("angle", {})
-    combo_payload = generation_context.get("repo_combos", [])[:12]
+    # Only send trend titles, no context/info/url
     headline_trends = [
-        {
-            "title": trend["title"],
-            "source": trend["source_name"],
-            "context": trend["context"],
-        }
-        for trend in generation_context.get("headline_trends", [])
+        trend["title"]
+        for trend in generation_context.get("headline_trends", [])[:6]
     ]
     surprise_trends = [
-        {
-            "title": trend["title"],
-            "source": trend["source_name"],
-        }
-        for trend in generation_context.get("surprise_trends", [])
+        trend["title"]
+        for trend in generation_context.get("surprise_trends", [])[:4]
+    ]
+    creative_operators = [
+        f"{op['label']}: {', '.join(op['axes'])}"
+        for op in generation_context.get("creative_operators", [])
     ]
     return (
-        f"Report date: {report_date}\n"
-        f"Creative angle: {angle.get('label', 'Fresh opportunity search')}\n"
-        f"Angle directive: {angle.get('directive', '')}\n"
-        f"Preferred audiences: {json.dumps(angle.get('audiences', []), ensure_ascii=False)}\n"
-        f"Preferred product formats: {json.dumps(angle.get('formats', []), ensure_ascii=False)}\n\n"
-        "Priority: build ideas that react to today's NewsNow headlines first, then use surprise signals for edge cases.\n"
-        "At least 8 of the 14 ideas should map directly to the top headline trends below.\n\n"
-        "Top headline NewsNow trends to prioritize:\n"
-        f"{json.dumps(headline_trends, ensure_ascii=False, indent=2)}\n\n"
-        "Avoid repeating or lightly remixing these recent ideas:\n"
-        f"{json.dumps(recent_payload, ensure_ascii=False, indent=2)}\n\n"
-        "Use at least two of these surprise trend signals across the set:\n"
-        f"{json.dumps(surprise_trends, ensure_ascii=False, indent=2)}\n\n"
-        "Explore unfamiliar repo category pairings like these:\n"
-        f"{json.dumps(combo_payload, ensure_ascii=False, indent=2)}\n\n"
-        "Current trends:\n"
-        f"{json.dumps(trend_payload, ensure_ascii=False, indent=2)}\n\n"
-        "Available starred repos to combine:\n"
-        f"{json.dumps(repo_payload, ensure_ascii=False, indent=2)}"
+        f"Date: {report_date}\n"
+        f"Lens: {angle.get('label', 'Fresh opportunity')} — {angle.get('directive', '')}\n\n"
+        f"Trends (anchor at least 5 ideas): {', '.join(headline_trends)}\n"
+        f"Surprise trends (use 2+): {', '.join(surprise_trends)}\n\n"
+        f"Breakthrough lenses:\n" + "\n".join(f"- {op}" for op in creative_operators) + "\n\n"
+        f"Repos to combine:\n" + "\n".join(f"- {r}" for r in repo_payload)
     )
 
 
@@ -969,7 +1141,7 @@ def generate_ideas_with_llm(
     payload = {
         "model": env.get("ANTHROPIC_MODEL") or env.get("ANTHROPIC_DEFAULT_SONNET_MODEL") or "MiniMax-M2.7",
         "max_tokens": 4200,
-        "temperature": 0.78,
+        "temperature": 0.63,
         "system": OPPORTUNITY_SYSTEM_PROMPT,
         "messages": [
             {
@@ -1035,6 +1207,46 @@ def pick_repos_by_keywords(repos: list[dict[str, Any]], keywords: list[str], lim
     return [repo for repo in ranked if any(keyword in f"{repo['full_name']} {repo['category']} {repo['description']} {' '.join(repo['tags'])}".lower() for keyword in keywords)][:limit]
 
 
+def format_breakthrough_template(template: str, values: dict[str, str]) -> str:
+    return template.format(**{key: value for key, value in values.items() if isinstance(value, str)})
+
+
+def short_name(value: str) -> str:
+    cleaned = re.sub(r"\s+", " ", str(value).strip())
+    if not cleaned:
+        return ""
+    return cleaned.split("/")[0] if " / " in cleaned else cleaned.split()[0]
+
+
+def hidden_customer_seed(categories: list[str], trend_title: str) -> str:
+    lowered = " ".join(categories).lower()
+    if "security" in lowered:
+        return "trust and risk operators"
+    if "finance" in lowered or "trading" in lowered:
+        return "timing-sensitive market desks"
+    if "seo" in lowered or "marketing" in lowered:
+        return "distribution teams defending demand capture"
+    if "data" in lowered or "analytics" in lowered:
+        return "analysts who carry explanation debt"
+    return f"specialists reacting to {short_name(trend_title) or 'the shift'}"
+
+
+def format_breakthrough_name(prefix: str, left_alias: str, right_alias: str, suffix: str, operator_label: str) -> str:
+    operator_token = operator_label.split()[0]
+    return f"{prefix} {left_alias}-{right_alias} {operator_token} {suffix}"
+
+
+def fallback_revenue_model(operator_label: str) -> str:
+    normalized = operator_label.lower()
+    if "constraint" in normalized:
+        return "Sell exception review retainers plus proprietary failure data feeds."
+    if "capability" in normalized:
+        return "Charge for the operating layer first, then add implementation retainers."
+    if "second-order" in normalized:
+        return "Take broker fees on verified access and sell the resulting market data."
+    return "Sell rehearsal subscriptions tied to avoided mistakes and premium planning reviews."
+
+
 def build_dynamic_fallback_ideas(
     report_date: str,
     trends: list[dict[str, Any]],
@@ -1053,8 +1265,7 @@ def build_dynamic_fallback_ideas(
         limit=FALLBACK_IDEA_CANDIDATE_COUNT,
     )
     angle = generation_context.get("angle", CREATIVE_ANGLES[0])
-    audiences = angle.get("audiences", ["operators"])
-    formats = angle.get("formats", ["desk"])
+    operators = generation_context.get("creative_operators", BREAKTHROUGH_OPERATORS) or BREAKTHROUGH_OPERATORS
     for index, combo in enumerate(combos[:FALLBACK_IDEA_CANDIDATE_COUNT]):
         categories = combo.get("categories", [])
         if len(categories) < 2:
@@ -1064,29 +1275,56 @@ def build_dynamic_fallback_ideas(
             continue
         seed = stable_hash_int(report_date, str(index), *categories, *repos_for_idea)
         trend = prioritized_trends[index % len(prioritized_trends)] if prioritized_trends else (trends[index % len(trends)] if trends else {})
-        audience = audiences[seed % len(audiences)]
-        format_name = formats[(seed // 5) % len(formats)]
         left_alias = CATEGORY_ALIASES.get(categories[0], categories[0].split()[0])
         right_alias = CATEGORY_ALIASES.get(categories[1], categories[1].split()[0])
         prefix = FALLBACK_PREFIXES[seed % len(FALLBACK_PREFIXES)]
         suffix = FALLBACK_SUFFIXES[(seed // 11) % len(FALLBACK_SUFFIXES)]
-        idea_name = f"{prefix} {left_alias}-{right_alias} {suffix}"
+        operator = operators[(seed // 13) % len(operators)]
+        hidden_customer = operator["customer_templates"][(seed // 17) % len(operator["customer_templates"])]
+        seed_customer = hidden_customer_seed(categories, trend_title=str(trend.get("title") or ""))
+        # First compute hidden_customer_text since it's needed for template_values
+        hidden_customer_text = format_breakthrough_template(hidden_customer, {
+            "trend_title": str(trend.get("title") or "a volatile shift"),
+            "category_a": categories[0],
+            "category_b": categories[1],
+            "left_alias": left_alias,
+            "right_alias": right_alias,
+            "left_alias_lower": left_alias.lower(),
+            "right_alias_lower": right_alias.lower(),
+            "hidden_customer_seed": seed_customer,
+        })
+        template_values = {
+            "trend_title": str(trend.get("title") or "a volatile shift"),
+            "category_a": categories[0],
+            "category_b": categories[1],
+            "left_alias": left_alias,
+            "right_alias": right_alias,
+            "left_alias_lower": left_alias.lower(),
+            "right_alias_lower": right_alias.lower(),
+            "hidden_customer_seed": seed_customer,
+            "mechanism": operator["label"].lower(),
+            "customer": hidden_customer_text,
+        }
+        idea_name = format_breakthrough_name(prefix, left_alias, right_alias, suffix, operator["label"])
         trend_title = str(trend.get("title") or "a volatile trend window")
+        # Pick a diverse summary template based on seed
+        summary_template = FALLBACK_SUMMARY_TEMPLATES[seed % len(FALLBACK_SUMMARY_TEMPLATES)]
+        revenue_template = FALLBACK_REVENUE_MODELS[(seed // 19) % len(FALLBACK_REVENUE_MODELS)]
         ideas.append(
             {
                 "name": idea_name,
-                "summary": f"Help {audience} turn {trend_title} into a repeatable {format_name} workflow using {left_alias.lower()} and {right_alias.lower()} tooling.",
-                "why_now": f"{angle.get('directive', 'Market windows are moving quickly.')} Today's NewsNow signal around {trend_title} creates short-lived demand that is easier to monetize with a focused operator workflow than a broad platform.",
-                "revenue_model": f"Charge a monthly subscription plus premium setup or review services for {audience}.",
-                "build_plan": [
-                    f"Track {trend_title}",
-                    f"Connect {categories[0]} and {categories[1]} repo workflows",
-                    f"Ship a narrow {format_name} for {audience}",
-                ],
+                "summary": format_breakthrough_template(summary_template, {**template_values, "trend_title": trend_title}),
+                "novel_mechanism": format_breakthrough_template(operator["mechanism_template"], {**template_values, "trend_title": trend_title}),
+                "why_non_obvious": format_breakthrough_template(operator["why_template"], {**template_values, "trend_title": trend_title}),
+                "hidden_customer": hidden_customer_text,
+                "breakthrough_axes": operator["axes"][:4],
+                "why_now": f"{angle.get('directive', 'A new behavior just appeared.')} Today's NewsNow signal around {trend_title} changes who feels the pain first, so a specialized concept can win before the mainstream stack adapts.",
+                "revenue_model": format_breakthrough_template(revenue_template, {**template_values, "trend_title": trend_title}),
+                "build_plan": [format_breakthrough_template(step, {**template_values, "trend_title": trend_title}) for step in operator["plan_templates"][:3]],
                 "trends": [trend_title],
                 "repos": repos_for_idea,
                 "category_focus": categories[:3],
-                "confidence": "medium" if index % 3 else "high",
+                "confidence": "medium" if index % 4 else "high",
             }
         )
     return ideas
@@ -1094,7 +1332,7 @@ def build_dynamic_fallback_ideas(
 
 def ideas_are_similar(left: dict[str, Any], right: dict[str, Any]) -> bool:
     similarity = idea_similarity_score(left, right)
-    if similarity >= 0.63:
+    if similarity >= IDEA_SIMILARITY_THRESHOLD:
         return True
     left_repos = set(left.get("repos", []))
     right_repos = set(right.get("repos", []))
@@ -1116,6 +1354,8 @@ def select_fresh_ideas(
     for idea in sanitized_candidates:
         if not idea.get("name"):
             continue
+        if is_generic_pattern(idea):
+            continue
         if any(ideas_are_similar(idea, seen) for seen in comparison_pool):
             continue
         selected.append(idea)
@@ -1136,6 +1376,7 @@ def sanitize_idea(
     selected_trends = [title for title in idea.get("trends", []) if isinstance(title, str) and title in trend_titles]
     build_plan = [str(step).strip() for step in idea.get("build_plan", []) if str(step).strip()][:3]
     category_focus = [str(label).strip() for label in idea.get("category_focus", []) if str(label).strip()][:3]
+    breakthrough_axes = [str(axis).strip() for axis in idea.get("breakthrough_axes", []) if str(axis).strip()][:4]
     if len(repo_names) < 2:
         supplemental = [
             repo["full_name"]
@@ -1149,9 +1390,13 @@ def sanitize_idea(
     return {
         "name": str(idea.get("name") or "Untitled Opportunity").strip(),
         "summary": str(idea.get("summary") or "").strip(),
+        "novel_mechanism": str(idea.get("novel_mechanism") or "").strip(),
+        "why_non_obvious": str(idea.get("why_non_obvious") or "").strip(),
+        "hidden_customer": str(idea.get("hidden_customer") or "").strip(),
+        "breakthrough_axes": breakthrough_axes,
         "why_now": str(idea.get("why_now") or "").strip(),
         "revenue_model": str(idea.get("revenue_model") or "").strip(),
-        "build_plan": build_plan or ["Select a narrow niche", "Assemble the repo stack", "Ship a paid MVP"],
+        "build_plan": build_plan or ["Capture one high-signal event", "Route it through one proof loop", "Sell the first paid wedge before full automation"],
         "trends": selected_trends,
         "repos": repo_names,
         "category_focus": category_focus,
@@ -1216,10 +1461,261 @@ def attach_ten_point_scores(idea: dict[str, Any]) -> dict[str, Any]:
         "build_speed_score",
         "monetization_latency_score",
         "recurring_revenue_score",
+        "novelty_score",
+        "cross_domain_score",
+        "serendipity_score",
+        "breakthrough_score",
+        "conventionality_score",
         "founder_score",
         "opportunity_score",
     ]
     return {f"{field}_10": score_on_ten(float(idea.get(field) or 0)) for field in score_fields}
+
+
+def coerce_text_list(values: Any) -> list[str]:
+    if not isinstance(values, list):
+        return []
+    return [str(value).strip() for value in values if str(value).strip()]
+
+
+def idea_creativity_text(idea: dict[str, Any], repo_details: list[dict[str, Any]], trend_details: list[dict[str, Any]]) -> str:
+    return " ".join(
+        [
+            str(idea.get("name") or ""),
+            str(idea.get("summary") or ""),
+            str(idea.get("novel_mechanism") or ""),
+            str(idea.get("why_non_obvious") or ""),
+            str(idea.get("hidden_customer") or ""),
+            str(idea.get("why_now") or ""),
+            str(idea.get("revenue_model") or ""),
+            " ".join(coerce_text_list(idea.get("build_plan"))),
+            " ".join(coerce_text_list(idea.get("breakthrough_axes"))),
+            " ".join(str(repo.get("category") or "") for repo in repo_details),
+            " ".join(
+                f"{trend.get('title', '')} {trend.get('context', '')} {trend.get('info', '')}"
+                for trend in trend_details
+            ),
+        ]
+    )
+
+
+def idea_category_set(idea: dict[str, Any], repo_details: list[dict[str, Any]]) -> set[str]:
+    categories = {str(label).strip() for label in idea.get("category_focus", []) if str(label).strip()}
+    categories.update(str(repo.get("category") or "").strip() for repo in repo_details if str(repo.get("category") or "").strip())
+    return categories
+
+
+def category_vector_distance(categories: set[str]) -> float:
+    vectors = [CATEGORY_VECTOR_MAP.get(category, CATEGORY_VECTOR_MAP["Other"]) for category in categories if category]
+    if len(vectors) < 2:
+        return 0.0
+    union = set().union(*vectors)
+    pair_count = 0
+    total_distance = 0.0
+    for left_index, left in enumerate(vectors):
+        for right in vectors[left_index + 1 :]:
+            pair_count += 1
+            overlap = len(left & right)
+            total_distance += 1 - (overlap / max(1, len(union)))
+    return total_distance / max(1, pair_count)
+
+
+def mechanism_family_count(text: str) -> int:
+    lowered = text.lower()
+    return sum(1 for keywords in MECHANISM_FAMILY_KEYWORDS.values() if any(keyword in lowered for keyword in keywords))
+
+
+# Template phrases from BREAKTHROUGH_OPERATORS that indicate literal template usage
+TEMPLATE_LITERAL_PHRASES = {
+    "turn the pain created by",
+    "capture the exception surface",
+    "instrument the exception path",
+    "specialists downstream from",
+    "monetizes the costly exceptions",
+    "the review burden that appear after adoption",
+    "most teams will build the obvious wrapper",
+    "import the best mechanism from",
+    "proven pattern to solve their problem",
+    "build a secondary market around",
+    "create a synthetic twin for decisions triggered by",
+    "convert repeated failures into a scored review queue",
+    "sell the review protocol before automating the whole loop",
+    "package the new ritual as a premium",
+}
+
+
+def template_literal_count(text: str) -> int:
+    lowered = text.lower()
+    count = sum(1 for phrase in TEMPLATE_LITERAL_PHRASES if phrase in lowered)
+    # Penalize structural template: "move a X mechanism from A into B"
+    if re.search(r"\bmove a \w+ mechanism from \w+ into\b", lowered):
+        count += 2
+    # Penalize if the summary starts with "Move a" (formulaic opening)
+    if lowered.strip().startswith("move a "):
+        count += 1
+    return count
+
+
+def transfer_distance_score(idea: dict[str, Any], repo_details: list[dict[str, Any]]) -> int:
+    """Measure the semantic gap between source mechanism and target application."""
+    novel_mechanism = str(idea.get("novel_mechanism") or "").lower()
+    summary = str(idea.get("summary") or "").lower()
+    why_non_obvious = str(idea.get("why_non_obvious") or "").lower()
+
+    # Penalize template literal usage
+    literal_count = template_literal_count(novel_mechanism + " " + why_non_obvious)
+
+    # Measure genuine transfer: mechanism words vs target domain words
+    mechanism_words = {
+        "inversion", "transplant", "market", "twin", "synthetic",
+        "protocol", "broker", "exchange", "constraint", "wedge",
+        "exception", "review", "queue", "simulation", "mirror"
+    }
+    mechanism_hits = sum(1 for w in mechanism_words if w in novel_mechanism or w in why_non_obvious)
+
+    # Check if the idea actually describes a specific mechanism transfer
+    has_mechanism_verb = any(v in summary for v in ["import", "移植", "move", "transplant", "borrow", "steal", "adopt"])
+    has_specific_target = len([c for c in (idea.get("category_focus") or []) if c]) >= 2
+
+    score = 20
+    score += mechanism_hits * 8
+    score += 15 if has_mechanism_verb else 0
+    score += 12 if has_specific_target else 0
+    score -= literal_count * 18
+    score -= len(generic_pattern_matches(novel_mechanism + " " + why_non_obvious)) * 12
+
+    return clamp_score(score)
+
+
+def template_diversity_penalty(ideas: list[dict[str, Any]], current_idx: int) -> int:
+    """Penalize ideas that reuse the same breakthrough_axes as recent ideas."""
+    current_axes = set(coerce_text_list(ideas[current_idx].get("breakthrough_axes", [])))
+    if not current_axes:
+        return 0
+
+    penalty = 0
+    for i in range(max(0, current_idx - 4), current_idx):
+        prev_axes = set(coerce_text_list(ideas[i].get("breakthrough_axes", [])))
+        overlap = len(current_axes & prev_axes)
+        if overlap >= 2:
+            penalty += overlap * 12
+        elif overlap >= 1:
+            penalty += 6
+
+    return min(penalty, 30)
+
+
+def hidden_customer_specificity(hidden_customer: str) -> int:
+    lowered = hidden_customer.lower().strip()
+    if not lowered:
+        return 10
+    tokens = {canonical_semantic_token(token) for token in keyword_tokens(lowered)}
+    generic_tokens = {canonical_semantic_token(token) for token in GENERIC_CUSTOMERS}
+    descriptor_tokens = {token for token in tokens if token not in generic_tokens}
+    penalty = 0
+    if lowered in GENERIC_CUSTOMERS:
+        penalty += 24
+    if tokens & generic_tokens:
+        penalty += 12
+        penalty += max(0, 2 - len(descriptor_tokens)) * 10
+    penalty += max(0, 3 - len(tokens)) * 8
+    if re.search(r"\b(?:small|lean|growing|busy|modern|technical|vertical|ai)\s+(?:teams|founders|operators|developers|companies|startups|agencies|analysts)\b", lowered):
+        penalty += 16
+    if any(customer in lowered for customer in GENERIC_CUSTOMERS):
+        penalty += 8
+    bonus = 0
+    if any(marker in lowered for marker in [" at ", " inside ", " after ", " before ", " during ", " responsible for ", " approving "]):
+        bonus += 8
+    if len(descriptor_tokens) >= 3:
+        bonus += 6
+    return clamp_score(100 - penalty + bonus)
+
+
+def compute_cross_domain_score(
+    idea: dict[str, Any],
+    repo_details: list[dict[str, Any]],
+    trend_details: list[dict[str, Any]],
+) -> int:
+    categories = idea_category_set(idea, repo_details)
+    bridge_count = max(0, len(categories) - 1)
+    vector_distance = category_vector_distance(categories)
+    trend_count = len({str(trend.get("title") or "").strip() for trend in trend_details if str(trend.get("title") or "").strip()})
+    repo_count = len({str(repo.get("full_name") or "").strip() for repo in repo_details if str(repo.get("full_name") or "").strip()})
+    score = 26
+    score += min(bridge_count, 4) * 13
+    score += round(vector_distance * 28)
+    score += min(max(trend_count - 1, 0), 2) * 10
+    score += min(max(repo_count - 2, 0), 2) * 6
+    if len(categories) >= 3:
+        score += 8
+    return clamp_score(score)
+
+
+def compute_novelty_score(
+    idea: dict[str, Any],
+    repo_details: list[dict[str, Any]],
+    trend_details: list[dict[str, Any]],
+) -> int:
+    text = idea_creativity_text(idea, repo_details, trend_details)
+    tokens = keyword_tokens(text)
+    lowered = text.lower()
+    generic_penalty = sum(6 for term in GENERIC_CONCEPT_TERMS if term in tokens or term in lowered)
+    generic_penalty += len(generic_pattern_matches(lowered)) * 14
+    axes = coerce_text_list(idea.get("breakthrough_axes"))
+    mechanism_count = mechanism_family_count(" ".join([lowered, " ".join(axes).lower()]))
+    summary_text = " ".join(
+        [
+            str(idea.get("summary") or ""),
+            str(idea.get("novel_mechanism") or ""),
+            str(idea.get("why_non_obvious") or ""),
+        ]
+    ).lower()
+    contrarian_hits = sum(1 for term in CONTRARIAN_SIGNAL_TERMS if term in summary_text)
+    literal_count = template_literal_count(summary_text)
+    transfer_dist = transfer_distance_score(idea, repo_details)
+    score = 26
+    score += min(len(tokens), 24)
+    score += min(mechanism_count, 3) * 7
+    score += min(len(axes), 3) * 4
+    score += min(contrarian_hits, 3) * 5
+    score += min(len(idea_category_set(idea, repo_details)), 3) * 4
+    score += transfer_dist // 4
+    score -= generic_penalty
+    score -= literal_count * 14
+    return clamp_score(score)
+
+
+def breakthrough_certified(idea: dict[str, Any]) -> bool:
+    return (
+        int(idea.get("breakthrough_score") or 0) >= BREAKTHROUGH_SCORE_THRESHOLD
+        and int(idea.get("novelty_score") or 0) >= NOVELTY_SCORE_THRESHOLD
+        and int(idea.get("serendipity_score") or 0) >= SERENDIPITY_SCORE_THRESHOLD
+        and int(idea.get("cross_domain_score") or 0) >= CROSS_DOMAIN_SCORE_THRESHOLD
+        and int(idea.get("conventionality_score") or 0) < CONVENTIONALITY_SCORE_MAX
+        and not bool(idea.get("generic_pattern_match"))
+        and int(idea.get("hidden_customer_score") or 0) >= HIDDEN_CUSTOMER_SCORE_THRESHOLD
+        and int(idea.get("mechanism_family_count") or 0) >= MINIMUM_MECHANISM_FAMILIES
+    )
+
+
+def compute_serendipity_score(
+    idea: dict[str, Any],
+    repo_details: list[dict[str, Any]],
+    trend_details: list[dict[str, Any]],
+) -> int:
+    categories = idea_category_set(idea, repo_details)
+    text = idea_creativity_text(idea, repo_details, trend_details).lower()
+    novel_mechanism = str(idea.get("novel_mechanism") or "").lower()
+    why_non_obvious = str(idea.get("why_non_obvious") or "").lower()
+    literal_count = template_literal_count(novel_mechanism + " " + why_non_obvious)
+    score = 24
+    score += round(category_vector_distance(categories) * 24)
+    score += min(len(categories), 3) * 5
+    score += min(sum(1 for term in CONTRARIAN_SIGNAL_TERMS if term in text), 4) * 6
+    score += 10 if idea.get("hidden_customer") else 0
+    score += 8 if len(trend_details) >= 2 else 0
+    score -= literal_count * 14
+    return clamp_score(score)
 
 
 def compute_trend_repo_match_score(
@@ -1238,27 +1734,41 @@ def compute_trend_repo_match_score(
     trend_tokens = keyword_tokens(trend_text)
     repo_tokens = keyword_tokens(repo_text)
     overlap = len(trend_tokens & repo_tokens)
-    coverage = len(idea.get("trends", [])) * 5 + len(repo_details) * 6
+    idea_tokens = keyword_tokens(
+        " ".join(
+            [
+                str(idea.get("summary") or ""),
+                str(idea.get("novel_mechanism") or ""),
+                str(idea.get("why_non_obvious") or ""),
+                str(idea.get("why_now") or ""),
+            ]
+        )
+    )
+    coverage = len(idea.get("trends", [])) * 6 + len(repo_details) * 5
+    alignment = len(idea_tokens & (trend_tokens | repo_tokens))
     confidence_bonus = {"high": 10, "medium": 4, "low": 0}.get(str(idea.get("confidence") or "medium"), 0)
-    return clamp_score(38 + overlap * 10 + coverage + confidence_bonus)
+    return clamp_score(28 + overlap * 8 + alignment * 5 + coverage + confidence_bonus)
 
 
 def compute_revenue_score(idea: dict[str, Any], repo_details: list[dict[str, Any]]) -> int:
     text = " ".join(
         [
             str(idea.get("summary") or ""),
+            str(idea.get("novel_mechanism") or ""),
+            str(idea.get("hidden_customer") or ""),
             str(idea.get("why_now") or ""),
             str(idea.get("revenue_model") or ""),
             " ".join(str(step) for step in idea.get("build_plan", [])),
             " ".join(repo.get("category", "") for repo in repo_details),
         ]
     ).lower()
-    strong_terms = ["subscription", "saas", "b2b", "credits", "white-label", "api", "platform", "dashboard"]
-    medium_terms = ["alerts", "audit", "monitor", "newsletter", "marketplace", "data", "teams", "agency"]
-    score = 34
+    strong_terms = ["subscription", "saas", "b2b", "credits", "white-label", "api", "protocol", "broker", "compliance", "retainer"]
+    medium_terms = ["audit", "marketplace", "data", "workflow", "review", "research", "verification", "simulation"]
+    score = 30
     score += sum(10 for term in strong_terms if term in text)
     score += sum(6 for term in medium_terms if term in text)
     score += min(len(repo_details), 4) * 4
+    score += min(hidden_customer_specificity(str(idea.get("hidden_customer") or "")) // 10, 8)
     score += {"high": 10, "medium": 4, "low": 0}.get(str(idea.get("confidence") or "medium"), 0)
     return clamp_score(score)
 
@@ -1271,21 +1781,24 @@ def compute_niche_difficulty_score(
     text = " ".join(
         [
             str(idea.get("summary") or ""),
+            str(idea.get("novel_mechanism") or ""),
+            str(idea.get("hidden_customer") or ""),
             str(idea.get("why_now") or ""),
             str(idea.get("revenue_model") or ""),
             " ".join(repo.get("category", "") for repo in repo_details),
             " ".join(f"{trend.get('title', '')} {trend.get('context', '')}" for trend in trend_details),
         ]
     ).lower()
-    hard_terms = ["security", "trading", "finance", "health", "legal", "compliance", "enterprise", "platform", "marketplace"]
-    medium_terms = ["team", "workflow", "data", "analytics", "monitor", "research", "developer"]
-    easy_terms = ["audit", "brief", "content", "alert", "landing", "newsletter", "directory", "report"]
-    difficulty = 42
+    hard_terms = ["security", "trading", "finance", "health", "legal", "compliance", "enterprise", "marketplace", "regulator"]
+    medium_terms = ["team", "workflow", "data", "analytics", "research", "developer", "simulation", "broker"]
+    easy_terms = ["brief", "content", "landing", "newsletter", "directory", "report", "advisory"]
+    difficulty = 40
     difficulty += sum(9 for term in hard_terms if term in text)
     difficulty += sum(5 for term in medium_terms if term in text)
     difficulty -= sum(6 for term in easy_terms if term in text)
     difficulty += max(0, len(repo_details) - 2) * 4
     difficulty += max(0, len(trend_details) - 2) * 2
+    difficulty += max(0, len(idea_category_set(idea, repo_details)) - 2) * 4
     return clamp_score(difficulty)
 
 
@@ -1293,18 +1806,20 @@ def compute_build_speed_score(idea: dict[str, Any], repo_details: list[dict[str,
     text = " ".join(
         [
             str(idea.get("summary") or ""),
+            str(idea.get("novel_mechanism") or ""),
             str(idea.get("why_now") or ""),
             str(idea.get("revenue_model") or ""),
             " ".join(str(step) for step in idea.get("build_plan", [])),
             " ".join(repo.get("category", "") for repo in repo_details),
         ]
     ).lower()
-    fast_terms = ["audit", "alert", "brief", "dashboard", "newsletter", "monitor", "report", "content", "landing"]
-    slow_terms = ["marketplace", "platform", "trading", "security", "video", "agent", "infrastructure", "real-time"]
+    fast_terms = ["audit", "brief", "newsletter", "report", "content", "landing", "review", "broker", "protocol"]
+    slow_terms = ["marketplace", "trading", "security", "video", "agent", "infrastructure", "real-time", "operating system", "simulation"]
     score = 56
     score += sum(7 for term in fast_terms if term in text)
     score -= sum(6 for term in slow_terms if term in text)
     score -= max(0, len(repo_details) - 2) * 4
+    score -= max(0, len(idea_category_set(idea, repo_details)) - 2) * 3
     return clamp_score(score)
 
 
@@ -1312,15 +1827,17 @@ def compute_monetization_latency_score(idea: dict[str, Any], repo_details: list[
     text = " ".join(
         [
             str(idea.get("summary") or ""),
+            str(idea.get("hidden_customer") or ""),
             str(idea.get("revenue_model") or ""),
             " ".join(repo.get("category", "") for repo in repo_details),
         ]
     ).lower()
-    fast_terms = ["b2b", "subscription", "white-label", "agency", "audit", "service", "credits", "newsletter", "alerts"]
-    slow_terms = ["ads", "marketplace", "consumer", "creator", "community", "media", "platform"]
+    fast_terms = ["b2b", "subscription", "white-label", "audit", "service", "credits", "review", "compliance", "retainer"]
+    slow_terms = ["ads", "consumer", "creator", "community", "media", "platform"]
     score = 50
     score += sum(8 for term in fast_terms if term in text)
     score -= sum(7 for term in slow_terms if term in text)
+    score += min(hidden_customer_specificity(str(idea.get("hidden_customer") or "")) // 12, 8)
     return clamp_score(score)
 
 
@@ -1328,16 +1845,36 @@ def compute_recurring_revenue_score(idea: dict[str, Any], repo_details: list[dic
     text = " ".join(
         [
             str(idea.get("summary") or ""),
+            str(idea.get("novel_mechanism") or ""),
             str(idea.get("revenue_model") or ""),
             " ".join(repo.get("category", "") for repo in repo_details),
         ]
     ).lower()
-    recurring_terms = ["subscription", "saas", "retainer", "dashboard", "monitor", "alerts", "data", "b2b", "platform"]
+    recurring_terms = ["subscription", "saas", "retainer", "data", "b2b", "protocol", "review", "verification", "simulation"]
     one_off_terms = ["commission", "affiliate", "ad", "sponsorship", "one-time", "template"]
     score = 46
     score += sum(8 for term in recurring_terms if term in text)
     score -= sum(7 for term in one_off_terms if term in text)
     return clamp_score(score)
+
+
+def compute_breakthrough_score(
+    novelty_score: int,
+    cross_domain_score: int,
+    serendipity_score: int,
+    trend_repo_match_score: int,
+    revenue_score: int,
+    hidden_customer_score: int,
+) -> int:
+    weighted = (
+        novelty_score * 0.32
+        + cross_domain_score * 0.24
+        + serendipity_score * 0.2
+        + trend_repo_match_score * 0.1
+        + revenue_score * 0.06
+        + hidden_customer_score * 0.08
+    )
+    return clamp_score(round(weighted))
 
 
 def compute_founder_score(
@@ -1347,21 +1884,27 @@ def compute_founder_score(
     recurring_revenue_score: int,
     trend_repo_match_score: int,
     revenue_score: int,
+    breakthrough_score: int,
 ) -> int:
     difficulty_tailwind = 100 - niche_difficulty_score
     weighted = (
-        difficulty_tailwind * 0.22
-        + build_speed_score * 0.22
-        + monetization_latency_score * 0.22
-        + recurring_revenue_score * 0.18
+        difficulty_tailwind * 0.18
+        + build_speed_score * 0.18
+        + monetization_latency_score * 0.18
+        + recurring_revenue_score * 0.15
+        + breakthrough_score * 0.17
         + trend_repo_match_score * 0.08
-        + revenue_score * 0.08
+        + revenue_score * 0.06
     )
     return clamp_score(round(weighted))
 
 
 def score_explanations(idea: dict[str, Any]) -> dict[str, str]:
     strengths = [
+        ("breakthrough_score", "The concept crosses domains in a way that feels legitimately new."),
+        ("novelty_score", "The mechanism is distinct enough to avoid the usual niche-SaaS trap."),
+        ("cross_domain_score", "The repo stack bridges distant categories instead of staying inside one lane."),
+        ("serendipity_score", "It creates a surprising connection that still feels strategically coherent."),
         ("build_speed_score", "It looks shippable as a narrow first release."),
         ("monetization_latency_score", "The revenue path can start early without waiting for scale."),
         ("recurring_revenue_score", "The usage pattern supports repeatable monthly value."),
@@ -1370,6 +1913,10 @@ def score_explanations(idea: dict[str, Any]) -> dict[str, str]:
         ("niche_difficulty_score", "The niche is constrained enough for a focused wedge."),
     ]
     weaknesses = [
+        ("breakthrough_score", "The concept still reads closer to a familiar product than a discontinuous one."),
+        ("novelty_score", "The core mechanism is too generic and risks blending into standard tooling."),
+        ("cross_domain_score", "The current repo mix is still too local to create a real conceptual leap."),
+        ("serendipity_score", "The connection is understandable, but not surprising enough yet."),
         ("niche_difficulty_score", "The niche carries trust, workflow, or compliance weight."),
         ("build_speed_score", "The MVP scope is still heavier than a fast founder build."),
         ("monetization_latency_score", "Value may be obvious before willingness to pay is."),
@@ -1393,6 +1940,12 @@ def score_explanations(idea: dict[str, Any]) -> dict[str, str]:
 
 def build_penalties(idea: dict[str, Any]) -> list[str]:
     penalties: list[str] = []
+    if idea["breakthrough_score"] <= 58:
+        penalties.append("The idea still feels too close to a conventional product shape.")
+    if idea["cross_domain_score"] <= 54:
+        penalties.append("It needs a stronger bridge across distant categories or signals.")
+    if idea["serendipity_score"] <= 54:
+        penalties.append("The concept is coherent, but it does not surprise enough yet.")
     if idea["niche_difficulty_score"] >= 68:
         penalties.append("High-trust niche increases validation and delivery burden.")
     if idea["build_speed_score"] <= 56:
@@ -1418,9 +1971,13 @@ def fastest_mvp(idea: dict[str, Any]) -> str:
 
 
 def likely_first_customer(idea: dict[str, Any], repo_details: list[dict[str, Any]]) -> str:
+    hidden_customer = str(idea.get("hidden_customer") or "").strip()
+    if hidden_customer:
+        return hidden_customer
     text = " ".join(
         [
             str(idea.get("summary") or ""),
+            str(idea.get("novel_mechanism") or ""),
             str(idea.get("why_now") or ""),
             str(idea.get("revenue_model") or ""),
             " ".join(repo.get("category", "") for repo in repo_details),
@@ -1446,6 +2003,9 @@ def likely_first_customer(idea: dict[str, Any], repo_details: list[dict[str, Any
 
 def improvement_actions(idea: dict[str, Any]) -> list[str]:
     priorities = [
+        ("breakthrough_score", 100 - idea["breakthrough_score"]),
+        ("cross_domain_score", 100 - idea["cross_domain_score"]),
+        ("serendipity_score", 100 - idea["serendipity_score"]),
         ("niche_difficulty_score", idea["niche_difficulty_score"]),
         ("build_speed_score", 100 - idea["build_speed_score"]),
         ("monetization_latency_score", 100 - idea["monetization_latency_score"]),
@@ -1455,7 +2015,13 @@ def improvement_actions(idea: dict[str, Any]) -> list[str]:
     ordered = [name for name, _ in sorted(priorities, key=lambda item: item[1], reverse=True)]
     actions: list[str] = []
     for name in ordered:
-        if name == "niche_difficulty_score":
+        if name == "breakthrough_score":
+            actions.append("Replace the obvious product wrapper with a sharper mechanism, market design, or protocol.")
+        elif name == "cross_domain_score":
+            actions.append("Add a third category or borrow a proven mechanism from a distant field.")
+        elif name == "serendipity_score":
+            actions.append("Retarget the idea toward a hidden stakeholder who is downstream from the trend.")
+        elif name == "niche_difficulty_score":
             actions.append("Narrow the buyer to one painful workflow and one high-urgency trigger.")
         elif name == "build_speed_score":
             actions.append(fastest_mvp(idea))
@@ -1481,7 +2047,7 @@ def founder_memo(
         part
         for part in [
             explanations["best_part"],
-            "The score rises when it can ship, charge, and repeat without needing heavy scale."
+            "The score rises when the concept is both non-obvious and still practical to sell."
             if idea["founder_score"] >= 60
             else "",
         ]
@@ -1500,6 +2066,8 @@ def founder_memo(
         "biggest_risk": explanations["biggest_risk"],
         "fastest_mvp": fastest_mvp(idea),
         "first_customer": likely_first_customer(idea, repo_details),
+        "novel_mechanism": str(idea.get("novel_mechanism") or "").strip(),
+        "why_non_obvious": str(idea.get("why_non_obvious") or "").strip(),
         "why_high": why_high,
         "why_low": why_low,
         "top_penalties": penalties,
@@ -1510,7 +2078,8 @@ def founder_memo(
 def classify_build_decision(idea: dict[str, Any], memo: dict[str, Any]) -> dict[str, str]:
     if (
         idea["founder_score"] >= 62
-        and idea["build_speed_score"] >= 60
+        and bool(idea.get("breakthrough_certified"))
+        and idea["build_speed_score"] >= 56
         and idea["monetization_latency_score"] >= 58
         and idea["niche_difficulty_score"] <= 62
     ):
@@ -1521,8 +2090,10 @@ def classify_build_decision(idea: dict[str, Any], memo: dict[str, Any]) -> dict[
         }
     if (
         idea["founder_score"] >= 48
+        and idea["breakthrough_score"] >= 50
         and idea["opportunity_score"] >= 52
         and idea["trend_repo_match_score"] >= 50
+        and not bool(idea.get("generic_pattern_match"))
     ):
         return {
             "label": "Validate first",
@@ -1563,6 +2134,28 @@ def enrich_ideas(
         build_speed_score = compute_build_speed_score(idea, repo_details)
         monetization_latency_score = compute_monetization_latency_score(idea, repo_details)
         recurring_revenue_score = compute_recurring_revenue_score(idea, repo_details)
+        novelty_score = compute_novelty_score(idea, repo_details, trend_details)
+        cross_domain_score = compute_cross_domain_score(idea, repo_details, trend_details)
+        serendipity_score = compute_serendipity_score(idea, repo_details, trend_details)
+        hidden_customer_score = hidden_customer_specificity(str(idea.get("hidden_customer") or ""))
+        mechanism_count = mechanism_family_count(
+            " ".join(
+                [
+                    str(idea.get("novel_mechanism") or ""),
+                    str(idea.get("why_non_obvious") or ""),
+                    " ".join(coerce_text_list(idea.get("breakthrough_axes"))),
+                ]
+            ).lower()
+        )
+        generic_pattern_match = is_generic_pattern(idea)
+        breakthrough_score = compute_breakthrough_score(
+            novelty_score,
+            cross_domain_score,
+            serendipity_score,
+            match_score,
+            revenue_score,
+            hidden_customer_score,
+        )
         founder_score = compute_founder_score(
             niche_difficulty_score,
             build_speed_score,
@@ -1570,8 +2163,12 @@ def enrich_ideas(
             recurring_revenue_score,
             match_score,
             revenue_score,
+            breakthrough_score,
         )
-        opportunity_score = clamp_score(round(revenue_score * 0.35 + match_score * 0.25 + founder_score * 0.4))
+        opportunity_score = clamp_score(round(revenue_score * 0.18 + match_score * 0.18 + founder_score * 0.26 + breakthrough_score * 0.38))
+        conventionality_score = clamp_score(
+            round(100 - (novelty_score * 0.42 + cross_domain_score * 0.28 + serendipity_score * 0.3))
+        )
         idea_metrics = {
             **idea,
             "trend_repo_match_score": match_score,
@@ -1580,6 +2177,15 @@ def enrich_ideas(
             "build_speed_score": build_speed_score,
             "monetization_latency_score": monetization_latency_score,
             "recurring_revenue_score": recurring_revenue_score,
+            "novelty_score": novelty_score,
+            "cross_domain_score": cross_domain_score,
+            "serendipity_score": serendipity_score,
+            "breakthrough_score": breakthrough_score,
+            "conventionality_score": conventionality_score,
+            "hidden_customer_score": hidden_customer_score,
+            "mechanism_family_count": mechanism_count,
+            "generic_pattern_match": generic_pattern_match,
+            "transfer_distance_score": transfer_distance_score(idea, repo_details),
             "founder_score": founder_score,
             "opportunity_score": opportunity_score,
             **attach_ten_point_scores(
@@ -1590,11 +2196,17 @@ def enrich_ideas(
                     "build_speed_score": build_speed_score,
                     "monetization_latency_score": monetization_latency_score,
                     "recurring_revenue_score": recurring_revenue_score,
+                    "novelty_score": novelty_score,
+                    "cross_domain_score": cross_domain_score,
+                    "serendipity_score": serendipity_score,
+                    "breakthrough_score": breakthrough_score,
+                    "conventionality_score": conventionality_score,
                     "founder_score": founder_score,
                     "opportunity_score": opportunity_score,
                 }
             ),
         }
+        idea_metrics["breakthrough_certified"] = breakthrough_certified(idea_metrics)
         memo = founder_memo(idea_metrics, repo_details)
         build_decision = classify_build_decision(idea_metrics, memo)
         enriched.append(
@@ -1607,11 +2219,87 @@ def enrich_ideas(
                 "build_decision": build_decision,
             }
         )
-    return sorted(
+    # Sort first so template diversity penalty is applied in presentation order
+    sorted_ideas = sorted(
         enriched,
-        key=lambda item: (item["founder_score"], item["opportunity_score"], item["revenue_score"]),
+        key=lambda item: (item["breakthrough_score"], item["founder_score"], item["opportunity_score"], item["revenue_score"]),
         reverse=True,
     )
+    # Apply template diversity penalty across ideas
+    for idx, idea in enumerate(sorted_ideas):
+        penalty = template_diversity_penalty(sorted_ideas, idx)
+        if penalty > 0:
+            idea["breakthrough_score"] = max(0, idea["breakthrough_score"] - penalty)
+            idea["novelty_score"] = max(0, idea["novelty_score"] - penalty // 2)
+            idea["serendipity_score"] = max(0, idea["serendipity_score"] - penalty // 2)
+    # Re-sort after penalty application
+    return sorted(
+        sorted_ideas,
+        key=lambda item: (item["breakthrough_score"], item["founder_score"], item["opportunity_score"], item["revenue_score"]),
+        reverse=True,
+    )
+
+
+def portfolio_quality_summary(ideas: list[dict[str, Any]]) -> dict[str, Any]:
+    if not ideas:
+        return {
+            "avg_breakthrough_score": 0,
+            "avg_conventionality_score": 0,
+            "breakthrough_ideas": 0,
+            "conventional_ideas": 0,
+            "cross_domain_ideas": 0,
+            "hidden_customer_ideas": 0,
+            "certified_ideas": 0,
+            "generic_pattern_ideas": 0,
+        }
+    breakthrough_threshold = BREAKTHROUGH_SCORE_THRESHOLD
+    conventional_threshold = 62
+    return {
+        "avg_breakthrough_score": round(sum(int(idea.get("breakthrough_score") or 0) for idea in ideas) / len(ideas), 1),
+        "avg_conventionality_score": round(sum(int(idea.get("conventionality_score") or 0) for idea in ideas) / len(ideas), 1),
+        "breakthrough_ideas": sum(1 for idea in ideas if int(idea.get("breakthrough_score") or 0) >= breakthrough_threshold),
+        "conventional_ideas": sum(1 for idea in ideas if int(idea.get("conventionality_score") or 0) >= conventional_threshold),
+        "cross_domain_ideas": sum(1 for idea in ideas if int(idea.get("cross_domain_score") or 0) >= CROSS_DOMAIN_SCORE_THRESHOLD),
+        "hidden_customer_ideas": sum(1 for idea in ideas if str(idea.get("hidden_customer") or "").strip()),
+        "certified_ideas": sum(1 for idea in ideas if bool(idea.get("breakthrough_certified"))),
+        "generic_pattern_ideas": sum(1 for idea in ideas if bool(idea.get("generic_pattern_match"))),
+    }
+
+
+def breakthrough_quality_checks(ideas: list[dict[str, Any]]) -> list[str]:
+    if not ideas:
+        return ["No ideas were generated."]
+    summary = portfolio_quality_summary(ideas)
+    minimum_breakthrough_ideas = max(3, math.ceil(len(ideas) * 0.3))
+    minimum_certified_ideas = max(2, math.ceil(len(ideas) * 0.2))
+    maximum_conventional_ideas = max(2, math.floor(len(ideas) * 0.4))
+    minimum_cross_domain_ideas = max(4, math.ceil(len(ideas) * 0.4))
+    failures: list[str] = []
+    if summary["avg_breakthrough_score"] < 60:
+        failures.append(f"Average breakthrough score is too low at {summary['avg_breakthrough_score']}.")
+    if summary["avg_conventionality_score"] > 45:
+        failures.append(f"Average conventionality score is too high at {summary['avg_conventionality_score']}.")
+    if summary["breakthrough_ideas"] < minimum_breakthrough_ideas:
+        failures.append(
+            f"Only {summary['breakthrough_ideas']} ideas cleared the breakthrough threshold; need at least {minimum_breakthrough_ideas}."
+        )
+    if summary["conventional_ideas"] > maximum_conventional_ideas:
+        failures.append(
+            f"{summary['conventional_ideas']} ideas still look conventional; need {maximum_conventional_ideas} or fewer."
+        )
+    if summary["cross_domain_ideas"] < minimum_cross_domain_ideas:
+        failures.append(
+            f"Only {summary['cross_domain_ideas']} ideas show enough cross-domain synthesis; need at least {minimum_cross_domain_ideas}."
+        )
+    if summary["hidden_customer_ideas"] < len(ideas):
+        failures.append("Every idea must name a hidden customer.")
+    if summary["certified_ideas"] < minimum_certified_ideas:
+        failures.append(
+            f"Only {summary['certified_ideas']} ideas meet the full breakthrough certification bar; need at least {minimum_certified_ideas}."
+        )
+    if summary["generic_pattern_ideas"] > 0:
+        failures.append(f"{summary['generic_pattern_ideas']} ideas still match rejected generic patterns.")
+    return failures
 
 
 def render_report(
@@ -1623,6 +2311,7 @@ def render_report(
     repo_lookup: dict[str, dict[str, Any]],
     generation_mode: str,
 ) -> str:
+    quality_summary = portfolio_quality_summary(ideas)
     lines = [
         f"# Opportunity Radar - {report_date}",
         "",
@@ -1630,6 +2319,15 @@ def render_report(
         f"Trend source: {NEWSNOW_ENDPOINT}",
         f"Star repo source: stars_cache.json",
         f"Mode: {generation_mode}",
+        "",
+        "## Breakthrough Quality",
+        "",
+        f"- Average breakthrough score: {quality_summary['avg_breakthrough_score']}",
+        f"- Average conventionality score: {quality_summary['avg_conventionality_score']}",
+        f"- Breakthrough ideas (>={BREAKTHROUGH_SCORE_THRESHOLD}): {quality_summary['breakthrough_ideas']}/{len(ideas)}",
+        f"- Certified breakthrough ideas: {quality_summary['certified_ideas']}/{len(ideas)}",
+        f"- Conventional ideas (>=62 conventionality): {quality_summary['conventional_ideas']}/{len(ideas)}",
+        f"- Cross-domain ideas (>={CROSS_DOMAIN_SCORE_THRESHOLD} cross-domain): {quality_summary['cross_domain_ideas']}/{len(ideas)}",
         "",
         "## Source Health",
         "",
@@ -1652,6 +2350,14 @@ def render_report(
             lines.append(f"Repo stack: {repo_links}")
         if idea["category_focus"]:
             lines.append(f"Category focus: {', '.join(idea['category_focus'])}")
+        if idea.get("breakthrough_axes"):
+            lines.append(f"Breakthrough axes: {', '.join(idea['breakthrough_axes'])}")
+        if idea.get("hidden_customer"):
+            lines.append(f"Hidden customer: {idea['hidden_customer']}")
+        if idea.get("novel_mechanism"):
+            lines.append(f"Novel mechanism: {idea['novel_mechanism']}")
+        if idea.get("why_non_obvious"):
+            lines.append(f"Why non-obvious: {idea['why_non_obvious']}")
         if idea["why_now"]:
             lines.append(f"Why now: {idea['why_now']}")
         if idea["revenue_model"]:
@@ -1671,6 +2377,14 @@ def render_report(
             f"Radar {idea.get('opportunity_score_10', score_on_ten(idea['opportunity_score']))}/10 | "
             f"Revenue {idea.get('revenue_score_10', score_on_ten(idea['revenue_score']))}/10 | "
             f"Fit {idea.get('trend_repo_match_score_10', score_on_ten(idea['trend_repo_match_score']))}/10"
+        )
+        lines.append(
+            "Breakthrough score: "
+            f"{idea.get('breakthrough_score_10', score_on_ten(idea['breakthrough_score']))}/10 | "
+            f"Novelty {idea.get('novelty_score_10', score_on_ten(idea['novelty_score']))}/10 | "
+            f"Cross-domain {idea.get('cross_domain_score_10', score_on_ten(idea['cross_domain_score']))}/10 | "
+            f"Serendipity {idea.get('serendipity_score_10', score_on_ten(idea['serendipity_score']))}/10 | "
+            f"Conventionality {idea.get('conventionality_score_10', score_on_ten(idea['conventionality_score']))}/10"
         )
         founder_memo_payload = idea.get("founder_memo", {})
         build_decision = idea.get("build_decision", {})
@@ -1722,6 +2436,7 @@ def build_site_payload(
         "available_categories": categories,
         "source_health": source_statuses,
         "trends": trends,
+        "quality_summary": portfolio_quality_summary(ideas),
         "ideas": ideas,
     }
 
@@ -1831,11 +2546,19 @@ def build_collection_payload(report_files: list[Path]) -> dict[str, Any]:
                     "revenue_score": int(idea.get("revenue_score") or 0),
                     "opportunity_score": int(idea.get("opportunity_score") or 0),
                     "trend_repo_match_score": int(idea.get("trend_repo_match_score") or 0),
+                    "breakthrough_score": int(idea.get("breakthrough_score") or 0),
+                    "cross_domain_score": int(idea.get("cross_domain_score") or 0),
+                    "serendipity_score": int(idea.get("serendipity_score") or 0),
+                    "conventionality_score": int(idea.get("conventionality_score") or 0),
                     "confidence": str(idea.get("confidence") or ""),
                     "category_focus": [str(label) for label in idea.get("category_focus", []) if isinstance(label, str)],
                     "trends": [str(label) for label in idea.get("trends", []) if isinstance(label, str)],
                     "repos": [str(label) for label in idea.get("repos", []) if isinstance(label, str)],
                     "build_decision": idea.get("build_decision") if isinstance(idea.get("build_decision"), dict) else {},
+                    "hidden_customer": str(idea.get("hidden_customer") or "").strip(),
+                    "novel_mechanism": str(idea.get("novel_mechanism") or "").strip(),
+                    "why_non_obvious": str(idea.get("why_non_obvious") or "").strip(),
+                    "breakthrough_axes": [str(step) for step in idea.get("breakthrough_axes", []) if isinstance(step, str)],
                     "why_now": str(idea.get("why_now") or "").strip(),
                     "revenue_model": str(idea.get("revenue_model") or "").strip(),
                     "build_plan": [str(step) for step in idea.get("build_plan", []) if isinstance(step, str)],
@@ -1854,7 +2577,7 @@ def build_collection_payload(report_files: list[Path]) -> dict[str, Any]:
             if score > best_score:
                 best_score = score
                 best_group = group
-        if best_group is None or best_score < 0.63:
+        if best_group is None or best_score < IDEA_SIMILARITY_THRESHOLD:
             seed_signature = item.get("semantic_signature") or semantic_signature(item)
             group_id = hashlib.sha256(f"{seed_signature}::{item['date']}".encode("utf-8")).hexdigest()[:12]
             best_group = {
@@ -1925,8 +2648,16 @@ def build_collection_payload(report_files: list[Path]) -> dict[str, Any]:
                 "revenue_score": latest_item["revenue_score"],
                 "opportunity_score": latest_item["opportunity_score"],
                 "trend_repo_match_score": latest_item["trend_repo_match_score"],
+                "breakthrough_score": latest_item.get("breakthrough_score", 0),
+                "cross_domain_score": latest_item.get("cross_domain_score", 0),
+                "serendipity_score": latest_item.get("serendipity_score", 0),
+                "conventionality_score": latest_item.get("conventionality_score", 0),
                 "confidence": latest_item["confidence"],
                 "build_decision": latest_item["build_decision"],
+                "hidden_customer": latest_item.get("hidden_customer", ""),
+                "novel_mechanism": latest_item.get("novel_mechanism", ""),
+                "why_non_obvious": latest_item.get("why_non_obvious", ""),
+                "breakthrough_axes": latest_item.get("breakthrough_axes", []),
                 "why_now": latest_item["why_now"],
                 "revenue_model": latest_item["revenue_model"],
                 "build_plan": latest_item["build_plan"],
@@ -1941,6 +2672,8 @@ def build_collection_payload(report_files: list[Path]) -> dict[str, Any]:
                     "founder_score": member["founder_score"],
                     "revenue_score": member["revenue_score"],
                     "opportunity_score": member["opportunity_score"],
+                    "breakthrough_score": member.get("breakthrough_score", 0),
+                    "conventionality_score": member.get("conventionality_score", 0),
                 }
                 for member in reversed(members)
             ],
@@ -1965,11 +2698,19 @@ def build_collection_payload(report_files: list[Path]) -> dict[str, Any]:
                 "revenue_score": item["revenue_score"],
                 "opportunity_score": item["opportunity_score"],
                 "trend_repo_match_score": item["trend_repo_match_score"],
+                "breakthrough_score": item.get("breakthrough_score", 0),
+                "cross_domain_score": item.get("cross_domain_score", 0),
+                "serendipity_score": item.get("serendipity_score", 0),
+                "conventionality_score": item.get("conventionality_score", 0),
                 "confidence": item["confidence"],
                 "category_focus": item["category_focus"],
                 "trends": item["trends"],
                 "repos": item["repos"],
                 "build_decision": item["build_decision"],
+                "hidden_customer": item.get("hidden_customer", ""),
+                "novel_mechanism": item.get("novel_mechanism", ""),
+                "why_non_obvious": item.get("why_non_obvious", ""),
+                "breakthrough_axes": item.get("breakthrough_axes", []),
                 "semantic_signature": item["semantic_signature"] or semantic_signature(item),
                 "recurrence_group_id": group_id,
                 "recurrence_group_label": item["recurrence_group_label"],
@@ -2000,6 +2741,8 @@ def build_collection_payload(report_files: list[Path]) -> dict[str, Any]:
             "total_dates": len(reports_by_date),
             "total_groups": len(recurrence_group_payloads),
             "avg_founder_score": round(sum(founder_scores) / len(founder_scores), 1) if founder_scores else 0,
+            "avg_breakthrough_score": round(sum(int(item.get("breakthrough_score") or 0) for item in all_ideas) / len(all_ideas), 1) if all_ideas else 0,
+            "avg_conventionality_score": round(sum(int(item.get("conventionality_score") or 0) for item in all_ideas) / len(all_ideas), 1) if all_ideas else 0,
             "top_categories": [{"name": name, "count": count} for name, count in categories.most_common(6)],
             "top_trends": [{"name": name, "count": count} for name, count in trends.most_common(6)],
             "ideas_by_date": reports_by_date,
@@ -2135,6 +2878,8 @@ def main() -> int:
             if generation_mode == "live-with-llm":
                 generation_mode = "live-with-llm-plus-deterministic-top-up"
     ideas = enrich_ideas(ideas, repo_lookup, trends)
+    quality_failures = breakthrough_quality_checks(ideas)
+    quality_summary = portfolio_quality_summary(ideas)
 
     generated_at = utc_now()
     report = render_report(report_date, generated_at, source_statuses, trends, ideas, repo_lookup, generation_mode)
@@ -2150,6 +2895,16 @@ def main() -> int:
     print(f"Trends analyzed: {len(trends)}")
     print(f"Starred repos considered: {len(repo_shortlist)}")
     print(f"Ideas generated: {len(ideas)}")
+    print(
+        "Breakthrough quality: "
+        f"avg {quality_summary['avg_breakthrough_score']} | "
+        f"conventionality {quality_summary['avg_conventionality_score']} | "
+        f"breakthrough ideas {quality_summary['breakthrough_ideas']}/{len(ideas)}"
+    )
+    if args.quality_gate and quality_failures:
+        for failure in quality_failures:
+            print(f"QUALITY GATE FAILED: {failure}", file=sys.stderr)
+        return 1
     return 0
 
 

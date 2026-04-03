@@ -35,7 +35,7 @@ jobs:
           ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
           ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
           ANTHROPIC_MODEL: ${{ secrets.ANTHROPIC_MODEL }}
-        run: python3 generate_opportunities.py --config .github-actions-minimax.json
+        run: python3 generate_opportunities.py --config .github-actions-minimax.json --quality-gate
 
       - name: Commit updates
         run: |

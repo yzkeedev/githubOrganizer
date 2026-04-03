@@ -62,6 +62,11 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function copyText(value, fallback = "—") {
+  const text = String(value ?? "").trim();
+  return text || fallback;
+}
+
 function statCard(label, value) {
   const card = document.createElement("div");
   card.className = "stat";
@@ -225,10 +230,11 @@ function getCurrentIdeas() {
     return categories.has(selectedCategory);
   });
   const sorters = {
-    founder: (idea) => [idea.founder_score, idea.opportunity_score, idea.revenue_score],
-    opportunity: (idea) => [idea.opportunity_score, idea.revenue_score, idea.trend_repo_match_score],
+    breakthrough: (idea) => [idea.breakthrough_score, idea.cross_domain_score, idea.serendipity_score],
+    founder: (idea) => [idea.founder_score, idea.breakthrough_score, idea.opportunity_score],
+    opportunity: (idea) => [idea.opportunity_score, idea.breakthrough_score, idea.revenue_score],
     revenue: (idea) => [idea.revenue_score, idea.opportunity_score, idea.trend_repo_match_score],
-    match: (idea) => [idea.trend_repo_match_score, idea.opportunity_score, idea.revenue_score],
+    match: (idea) => [idea.trend_repo_match_score, idea.breakthrough_score, idea.revenue_score],
   };
   return [...filtered].sort((left, right) => {
     const leftMetrics = sorters[getSelectedSort()](left);
@@ -244,11 +250,13 @@ function getCurrentIdeas() {
 
 function renderStats(report, ideas) {
   stats.innerHTML = "";
+  const quality = report.quality_summary || {};
   stats.append(
     statCard("Showing", `${ideas.length}/${report.ideas.length}`),
+    statCard("Avg breakthrough", numericScoreText(average(ideas.map((idea) => idea.breakthrough_score)))),
     statCard("Avg founder", numericScoreText(average(ideas.map((idea) => idea.founder_score)))),
-    statCard("Avg revenue", numericScoreText(average(ideas.map((idea) => idea.revenue_score)))),
-    statCard("Avg build speed", numericScoreText(average(ideas.map((idea) => idea.build_speed_score)))),
+    statCard("Cross-domain", quality.cross_domain_ideas ?? ideas.filter((idea) => (idea.cross_domain_score || 0) >= 60).length),
+    statCard("Conventional", quality.conventional_ideas ?? ideas.filter((idea) => (idea.conventionality_score || 0) >= 62).length),
     statCard("Generated", formatDate(report.generated_at)),
   );
 }
@@ -267,6 +275,7 @@ function getTopIdea(ideas, primaryMetric, secondaryMetric = "revenue_score") {
 
 function getExecutiveBullets(report, ideas) {
   const visibleTrends = getVisibleTrends(report, ideas);
+  const topBreakthroughIdea = getTopIdea(ideas, "breakthrough_score", "cross_domain_score");
   const topFounderIdea = getTopIdea(ideas, "founder_score");
   const topRevenueIdea = getTopIdea(ideas, "revenue_score", "founder_score");
   const topFitIdea = getTopIdea(ideas, "trend_repo_match_score", "opportunity_score");
@@ -291,13 +300,19 @@ function getExecutiveBullets(report, ideas) {
     {
       title: "Best bet",
       text: topFounderIdea
-        ? `${topFounderIdea.name} leads on founder fit at ${scoreText(topFounderIdea, "founder_score")} with ${topFounderIdea.summary || "a clear build wedge."}`
+        ? `${topFounderIdea.name} leads on founder fit at ${scoreText(topFounderIdea, "founder_score")} with ${copyText(topFounderIdea.summary, "a clear build wedge.")}`
         : "No clear founder bet is available in this slice.",
+    },
+    {
+      title: "Breakthrough",
+      text: topBreakthroughIdea
+        ? `${topBreakthroughIdea.name} leads novelty at ${scoreText(topBreakthroughIdea, "breakthrough_score")} by targeting ${copyText(topBreakthroughIdea.hidden_customer, "an overlooked buyer")} with ${copyText(topBreakthroughIdea.novel_mechanism, "a differentiated mechanism")}.`
+        : "No clear breakthrough concept is available in this slice.",
     },
     {
       title: "Fast money",
       text: topRevenueIdea
-        ? `${topRevenueIdea.name} leads revenue at ${scoreText(topRevenueIdea, "revenue_score")} with ${topRevenueIdea.revenue_model || "a monetization path still forming."}`
+        ? `${topRevenueIdea.name} leads revenue at ${scoreText(topRevenueIdea, "revenue_score")} with ${copyText(topRevenueIdea.revenue_model, "a monetization path still forming.")}`
         : "No clear monetization leader is available in this slice.",
     },
     {
@@ -393,6 +408,9 @@ function getCollectionGroups() {
     if (sortMode === "founder") {
       return right.latest_item.founder_score - left.latest_item.founder_score || right.last_seen.localeCompare(left.last_seen);
     }
+    if (sortMode === "breakthrough") {
+      return right.latest_item.breakthrough_score - left.latest_item.breakthrough_score || right.last_seen.localeCompare(left.last_seen);
+    }
     if (sortMode === "revenue") {
       return right.latest_item.revenue_score - left.latest_item.revenue_score || right.last_seen.localeCompare(left.last_seen);
     }
@@ -409,9 +427,10 @@ function renderCollectionStats() {
   collectionStats.append(
     statCard("Groups", state.collection.stats.total_groups || 0),
     statCard("Dates", state.collection.stats.total_dates || 0),
+    statCard("Avg breakthrough", numericScoreText(state.collection.stats.avg_breakthrough_score || 0)),
     statCard("Avg founder", numericScoreText(state.collection.stats.avg_founder_score || 0)),
-    statCard("Recurring groups", state.collection.stats.recurring_ideas || 0),
-    statCard("Top category", topCategory)
+    statCard("Avg conventional", numericScoreText(state.collection.stats.avg_conventionality_score || 0)),
+    statCard("Top category", topCategory),
   );
 }
 
@@ -477,7 +496,7 @@ function renderCollectionNav(groups, selectedGroup) {
         <span class="collection-link-badge">${escapeHtml(group.momentum_label)}</span>
       </span>
       <span class="collection-link-meta">
-        ${escapeHtml(latestItem.date || "—")} · ${escapeHtml(group.appearance_count || 1)}x · Founder ${escapeHtml(scoreText(latestItem, "founder_score"))}
+        ${escapeHtml(latestItem.date || "—")} · ${escapeHtml(group.appearance_count || 1)}x · Breakthrough ${escapeHtml(scoreText(latestItem, "breakthrough_score"))}
       </span>
     `;
     collectionNav.appendChild(button);
@@ -548,12 +567,20 @@ function renderCollectionDetail(group) {
           <p class="copy">Founder ${escapeHtml(scoreDeltaText(group.delta_founder_score || 0))} · Revenue ${escapeHtml(scoreDeltaText(group.delta_revenue_score || 0))} · Radar ${escapeHtml(scoreDeltaText(group.delta_opportunity_score || 0))} versus the previous appearance.</p>
         </div>
         <div class="mini-block">
+          <span class="label">Hidden customer</span>
+          <p class="copy">${escapeHtml(copyText(latestItem.hidden_customer))}</p>
+        </div>
+        <div class="mini-block">
+          <span class="label">Novel mechanism</span>
+          <p class="copy">${escapeHtml(copyText(latestItem.novel_mechanism))}</p>
+        </div>
+        <div class="mini-block">
           <span class="label">Why now</span>
-          <p class="copy">${escapeHtml(latestItem.why_now || "")}</p>
+          <p class="copy">${escapeHtml(copyText(latestItem.why_now))}</p>
         </div>
         <div class="mini-block">
           <span class="label">Revenue path</span>
-          <p class="copy">${escapeHtml(latestItem.revenue_model || "")}</p>
+          <p class="copy">${escapeHtml(copyText(latestItem.revenue_model))}</p>
         </div>
       </div>
     `,
@@ -561,15 +588,20 @@ function renderCollectionDetail(group) {
       <div class="mini-grid">
         <div class="mini-block">
           <span class="label">Current scores</span>
-          <p class="copy">Founder ${escapeHtml(scoreText(latestItem, "founder_score"))} · Revenue ${escapeHtml(scoreText(latestItem, "revenue_score"))} · Radar ${escapeHtml(scoreText(latestItem, "opportunity_score"))} · Fit ${escapeHtml(scoreText(latestItem, "trend_repo_match_score"))}</p>
+          <p class="copy">Breakthrough ${escapeHtml(scoreText(latestItem, "breakthrough_score"))} · Founder ${escapeHtml(scoreText(latestItem, "founder_score"))} · Revenue ${escapeHtml(scoreText(latestItem, "revenue_score"))} · Radar ${escapeHtml(scoreText(latestItem, "opportunity_score"))}</p>
         </div>
         <div class="mini-block">
           <span class="label">Group averages</span>
           <p class="copy">Founder ${escapeHtml(numericScoreText(group.avg_founder_score || 0))} · Revenue ${escapeHtml(numericScoreText(group.avg_revenue_score || 0))} · Radar ${escapeHtml(numericScoreText(group.avg_opportunity_score || 0))}</p>
         </div>
+        <div class="mini-block">
+          <span class="label">Why non-obvious</span>
+          <p class="copy">${escapeHtml(copyText(latestItem.why_non_obvious))}</p>
+        </div>
       </div>
       <div class="meta-line">${categoryTags}</div>
       <div class="meta-line">${trendTags}</div>
+      <div class="meta-line">${(latestItem.breakthrough_axes || []).map(tag).join("")}</div>
       <div class="meta-line">${repoTags}</div>
     `,
     history: `
@@ -604,6 +636,7 @@ function renderCollectionDetail(group) {
       </div>
       <div class="collection-actions">
         ${scoreBadge("Momentum", group.momentum_score || 0)}
+        ${scoreBadge("Breakthrough", scoreText(latestItem, "breakthrough_score"))}
         ${scoreBadge("Founder", scoreText(latestItem, "founder_score"))}
         ${scoreBadge("Revenue", scoreText(latestItem, "revenue_score"))}
         <button class="button collection-open" data-path="${escapeHtml(latestItem.report_path || "")}" type="button">Open day</button>
@@ -660,6 +693,7 @@ function renderIdeas(ideas) {
     const launchPath = (idea.build_plan || []).map(escapeHtml).join(" → ");
     const signalTags = (idea.trends || []).map(tag).join("");
     const categoryTags = (idea.category_focus || []).map(tag).join("");
+    const breakthroughTags = (idea.breakthrough_axes || []).map(tag).join("");
     const confidence = tag(`Confidence: ${idea.confidence}`);
     const memo = idea.founder_memo || {};
     const decision = idea.build_decision || {};
@@ -671,14 +705,16 @@ function renderIdeas(ideas) {
           <p class="copy">${escapeHtml(idea.summary || "")}</p>
         </div>
         <div class="score-group">
+          ${scoreBadge("Breakthrough", scoreText(idea, "breakthrough_score"))}
           ${scoreBadge("Founder", scoreText(idea, "founder_score"))}
           ${scoreBadge("Radar", scoreText(idea, "opportunity_score"))}
           ${scoreBadge("Revenue", scoreText(idea, "revenue_score"))}
-          ${scoreBadge("Fit", scoreText(idea, "trend_repo_match_score"))}
+          ${scoreBadge("Novelty", scoreText(idea, "novelty_score"))}
         </div>
       </div>
       <div class="meta-line">${signalTags}</div>
       <div class="meta-line">${categoryTags}${confidence}</div>
+      <div class="meta-line">${breakthroughTags}</div>
       <details class="disclosure-panel idea-disclosure">
         <summary class="disclosure-summary disclosure-inline">
           <div class="memo-header">
@@ -690,29 +726,33 @@ function renderIdeas(ideas) {
           <div class="memo-grid">
             <div class="mini-block">
               <span class="label">Best part</span>
-              <p class="copy">${escapeHtml(memo.best_part || "")}</p>
+              <p class="copy">${escapeHtml(copyText(memo.best_part))}</p>
             </div>
             <div class="mini-block">
               <span class="label">Biggest risk</span>
-              <p class="copy">${escapeHtml(memo.biggest_risk || "")}</p>
+              <p class="copy">${escapeHtml(copyText(memo.biggest_risk))}</p>
             </div>
             <div class="mini-block">
               <span class="label">Fastest MVP</span>
-              <p class="copy">${escapeHtml(memo.fastest_mvp || "")}</p>
+              <p class="copy">${escapeHtml(copyText(memo.fastest_mvp))}</p>
             </div>
             <div class="mini-block">
               <span class="label">First customer</span>
-              <p class="copy">${escapeHtml(memo.first_customer || "")}</p>
+              <p class="copy">${escapeHtml(copyText(memo.first_customer))}</p>
+            </div>
+            <div class="mini-block">
+              <span class="label">Non-obvious edge</span>
+              <p class="copy">${escapeHtml(copyText(memo.why_non_obvious))}</p>
             </div>
           </div>
           <div class="mini-grid memo-detail-grid">
             <div class="mini-block">
               <span class="label">Why high</span>
-              <p class="copy">${escapeHtml(memo.why_high || "")}</p>
+              <p class="copy">${escapeHtml(copyText(memo.why_high))}</p>
             </div>
             <div class="mini-block">
               <span class="label">Why low</span>
-              <p class="copy">${escapeHtml(memo.why_low || "")}</p>
+              <p class="copy">${escapeHtml(copyText(memo.why_low))}</p>
             </div>
           </div>
           <div class="mini-block">
@@ -735,11 +775,19 @@ function renderIdeas(ideas) {
         <div class="mini-grid compact-grid">
           <div class="mini-block">
             <span class="label">Why now</span>
-            <p class="copy">${escapeHtml(idea.why_now || "")}</p>
+            <p class="copy">${escapeHtml(copyText(idea.why_now))}</p>
+          </div>
+          <div class="mini-block">
+            <span class="label">Novel mechanism</span>
+            <p class="copy">${escapeHtml(copyText(idea.novel_mechanism))}</p>
+          </div>
+          <div class="mini-block">
+            <span class="label">Hidden customer</span>
+            <p class="copy">${escapeHtml(copyText(idea.hidden_customer))}</p>
           </div>
           <div class="mini-block">
             <span class="label">Revenue path</span>
-            <p class="copy">${escapeHtml(idea.revenue_model || "")}</p>
+            <p class="copy">${escapeHtml(copyText(idea.revenue_model))}</p>
           </div>
           <div class="mini-block">
             <span class="label">Launch path</span>
@@ -748,6 +796,10 @@ function renderIdeas(ideas) {
           <div class="mini-block">
             <span class="label">Founder lens</span>
             <p class="copy">Difficulty ${escapeHtml(scoreText(idea, "niche_difficulty_score"))} · Build ${escapeHtml(scoreText(idea, "build_speed_score"))} · Monetization ${escapeHtml(scoreText(idea, "monetization_latency_score"))} · Recurring ${escapeHtml(scoreText(idea, "recurring_revenue_score"))}</p>
+          </div>
+          <div class="mini-block">
+            <span class="label">Breakthrough lens</span>
+            <p class="copy">Breakthrough ${escapeHtml(scoreText(idea, "breakthrough_score"))} · Cross-domain ${escapeHtml(scoreText(idea, "cross_domain_score"))} · Serendipity ${escapeHtml(scoreText(idea, "serendipity_score"))} · Conventionality ${escapeHtml(scoreText(idea, "conventionality_score"))}</p>
           </div>
           <div class="mini-block">
             <span class="label">Repo stack</span>
@@ -768,7 +820,7 @@ function renderRanking(ideas) {
     return;
   }
   const ranking = [...ideas]
-    .sort((left, right) => right.founder_score - left.founder_score || right.revenue_score - left.revenue_score)
+    .sort((left, right) => right.breakthrough_score - left.breakthrough_score || right.founder_score - left.founder_score)
     .slice(0, 3);
   for (const idea of ranking) {
     const item = document.createElement("article");
@@ -776,15 +828,15 @@ function renderRanking(ideas) {
     item.innerHTML = `
       <div class="ranking-row">
         <strong>${escapeHtml(idea.name)}</strong>
-        ${tag(`Founder ${scoreText(idea, "founder_score")}`)}
+        ${tag(`Breakthrough ${scoreText(idea, "breakthrough_score")}`)}
       </div>
       ${decisionBadge(idea.build_decision)}
-      <p class="copy">${escapeHtml(idea.summary || "")}</p>
-      <p class="copy">${escapeHtml(idea.founder_memo?.best_part || "")}</p>
+      <p class="copy">${escapeHtml(copyText(idea.summary))}</p>
+      <p class="copy">${escapeHtml(copyText(idea.why_non_obvious || idea.founder_memo?.best_part))}</p>
       <div class="meta-line">
-        ${tag(`Build ${scoreText(idea, "build_speed_score")}`)}
-        ${tag(`Recurring ${scoreText(idea, "recurring_revenue_score")}`)}
-        ${tag(`Fit ${scoreText(idea, "trend_repo_match_score")}`)}
+        ${tag(`Cross-domain ${scoreText(idea, "cross_domain_score")}`)}
+        ${tag(`Serendipity ${scoreText(idea, "serendipity_score")}`)}
+        ${tag(`Founder ${scoreText(idea, "founder_score")}`)}
         ${tag(`Revenue ${scoreText(idea, "revenue_score")}`)}
       </div>
     `;
@@ -923,7 +975,7 @@ function applyRailTabState() {
     panel.classList.toggle("is-active", panel.dataset.panel === state.currentRailTab);
   }
   const labels = {
-    ranking: "Founder bets",
+    ranking: "Breakthrough bets",
     trends: "Trend snapshot",
     sources: "Source health",
   };

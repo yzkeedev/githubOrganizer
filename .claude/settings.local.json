@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun run:*)",
+      "Bash(python3 -m py_compile generate_opportunities.py)",
+      "Bash(python3 generate_opportunities.py --dry-run --limit 2)"
+    ]
+  }
+}
