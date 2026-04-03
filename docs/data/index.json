@@ -1,7 +1,18 @@
 {
-  "generated_at": "2026-04-02T08:46:35+00:00",
-  "latest": "2026-04-02",
+  "generated_at": "2026-04-03T01:20:28+00:00",
+  "latest": "2026-04-03",
   "reports": [
+    {
+      "date": "2026-04-03",
+      "generated_at": "2026-04-03T01:20:28+00:00",
+      "mode": "live-with-deterministic-ideas",
+      "idea_count": 10,
+      "trend_count": 18,
+      "path": "data/reports/2026-04-03.json",
+      "top_idea": "Atlas Dev-Crawler Atlas",
+      "top_revenue_score": 100,
+      "top_founder_score": 59
+    },
     {
       "date": "2026-04-02",
       "generated_at": "2026-04-02T08:46:35+00:00",
